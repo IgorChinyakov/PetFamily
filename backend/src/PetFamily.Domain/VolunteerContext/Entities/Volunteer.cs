@@ -1,19 +1,17 @@
 ﻿using CSharpFunctionalExtensions;
-using PetFamily.Domain.Pets;
 using PetFamily.Domain.Pets.Value_objects;
-using PetFamily.Domain.Volunteers.Value_objects;
+using PetFamily.Domain.VolunteerContext.VolunteerVO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PetFamily.Domain.Volunteers
+namespace PetFamily.Domain.VolunteerContext.Entities
 {
     public class Volunteer : Entity<Guid>
     {
-        private readonly List<Pet> _pets = [];
-        private readonly List<Pet> _allPets = [];
+        private readonly IReadOnlyList<Pet> _pets = [];
 
         public FullName FullName { get; private set; }
         public Email Email { get; private set; }
@@ -25,12 +23,12 @@ namespace PetFamily.Domain.Volunteers
 
         private Volunteer(Guid id) : base(id) { }
 
-        public Volunteer(FullName fullName, 
-            Email email, 
-            GeneralDescription description, 
-            Experience experience, 
-            HelpDetails helpDetails, 
-            PhoneNumber phoneNumber, 
+        public Volunteer(FullName fullName,
+            Email email,
+            GeneralDescription description,
+            Experience experience,
+            HelpDetails helpDetails,
+            PhoneNumber phoneNumber,
             SocialMediaList socialMediaList)
         {
             FullName = fullName;
@@ -42,8 +40,8 @@ namespace PetFamily.Domain.Volunteers
             SocialMediaList = socialMediaList;
         }
 
-        public int ShelteredPets() => _allPets.Count(p => p.PetStatus.Value == Status.FoundHome);
-        public int SeekingHomePets() => _allPets.Count(p => p.PetStatus.Value == Status.LookingForHome);
-        public int PetsUnderTreatment() => _allPets.Count(p => p.PetStatus.Value == Status.NeedHelp);
+        public int ShelteredPets() => _pets.Count(p => p.PetStatus.Value == Status.FoundHome);
+        public int SeekingHomePets() => _pets.Count(p => p.PetStatus.Value == Status.LookingForHome);
+        public int PetsUnderTreatment() => _pets.Count(p => p.PetStatus.Value == Status.NeedHelp);
     }
 }

@@ -10,4 +10,8 @@
     <PackageReference Include="CSharpFunctionalExtensions" Version="3.4.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="VolunteerContext\SharedVO\" />
+  </ItemGroup>
+
 </Project>

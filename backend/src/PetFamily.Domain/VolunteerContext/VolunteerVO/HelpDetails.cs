@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PetFamily.Domain.Volunteers.Value_objects
+namespace PetFamily.Domain.VolunteerContext.VolunteerVO
 {
     public record HelpDetails
     {

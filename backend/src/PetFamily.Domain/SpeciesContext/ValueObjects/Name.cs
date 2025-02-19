@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PetFamily.Domain.Species.ValueObjects
+namespace PetFamily.Domain.SpeciesContext.ValueObjects
 {
     public record Name
     {

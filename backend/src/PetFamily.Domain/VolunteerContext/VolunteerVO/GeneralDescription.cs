@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace PetFamily.Domain.Volunteers.Value_objects
+namespace PetFamily.Domain.VolunteerContext.VolunteerVO
 {
     public record GeneralDescription
     {

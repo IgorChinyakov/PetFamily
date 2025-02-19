@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace PetFamily.Domain.Volunteers.Value_objects
+namespace PetFamily.Domain.VolunteerContext.VolunteerVO
 {
     public record Experience
     {
@@ -19,7 +19,7 @@ namespace PetFamily.Domain.Volunteers.Value_objects
 
         public static Result<Experience> Create(int value)
         {
-            if(value <= 0)
+            if (value <= 0)
                 return Result.Failure<Experience>("Experience must be more than zero");
 
             return new Experience(value);

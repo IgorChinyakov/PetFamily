@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PetFamily.Domain.Pets
+namespace PetFamily.Domain.VolunteerContext.Entities
 {
     public class Pet : Entity<Guid>
     {
@@ -30,20 +30,20 @@ namespace PetFamily.Domain.Pets
         {
         }
 
-        public Pet(Guid id, 
-            NickName nickName, 
-            Description description, 
-            SpeciesId speciesId, 
-            BreedId breedId, 
-            Color color, 
-            IsSterilized isSterilized, 
-            IsVaccinated isVaccinated, 
-            HealthInformation healthInformation, 
-            Address address, 
-            Weight weight, 
-            Height height, 
-            Birthday birthday, 
-            OwnerPhoneNumber ownerPhoneNumber, 
+        public Pet(Guid id,
+            NickName nickName,
+            Description description,
+            SpeciesId speciesId,
+            BreedId breedId,
+            Color color,
+            IsSterilized isSterilized,
+            IsVaccinated isVaccinated,
+            HealthInformation healthInformation,
+            Address address,
+            Weight weight,
+            Height height,
+            Birthday birthday,
+            OwnerPhoneNumber ownerPhoneNumber,
             PetStatus petStatus,
             Details details) : base(id)
         {

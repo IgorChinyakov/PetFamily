@@ -1,12 +1,12 @@
 ﻿using CSharpFunctionalExtensions;
-using PetFamily.Domain.Species.ValueObjects;
+using PetFamily.Domain.SpeciesContext.ValueObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PetFamily.Domain.Species
+namespace PetFamily.Domain.SpeciesContext.Entities
 {
     public class Breed : Entity<Guid>
     {

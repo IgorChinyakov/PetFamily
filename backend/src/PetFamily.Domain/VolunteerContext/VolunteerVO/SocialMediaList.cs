@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace PetFamily.Domain.Volunteers.Value_objects
+namespace PetFamily.Domain.VolunteerContext.VolunteerVO
 {
     public record SocialMediaList
     {
