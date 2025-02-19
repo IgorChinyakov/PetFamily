@@ -20,8 +20,8 @@ namespace PetFamily.Domain.Pets.Value_objects
         {
             if (value > DateTime.UtcNow)
                 return Result.Failure<Birthday>($"Date {value} can't be in the future");
-            if (DateTime.Compare(value, new DateTime(2000, 1, 1)) < 0)
-                return Result.Failure<Birthday>("Date is too old");
+            if (value < new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc))
+                return Result.Failure<Birthday>("Date is too old. Must be after 01/01/2000.");
 
             return new Birthday(value);
         }
