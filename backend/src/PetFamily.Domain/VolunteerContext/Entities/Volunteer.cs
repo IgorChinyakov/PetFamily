@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using PetFamily.Domain.Pets.Value_objects;
+using PetFamily.Domain.VolunteerContext.SharedVO;
 using PetFamily.Domain.VolunteerContext.VolunteerVO;
 using System;
 using System.Collections.Generic;
@@ -15,9 +16,9 @@ namespace PetFamily.Domain.VolunteerContext.Entities
 
         public FullName FullName { get; private set; }
         public Email Email { get; private set; }
-        public GeneralDescription Description { get; private set; }
+        public Description Description { get; private set; }
         public Experience Experience { get; private set; }
-        public HelpDetails HelpDetails { get; private set; }
+        public Details Details { get; private set; }
         public PhoneNumber PhoneNumber { get; private set; }
         public SocialMediaList SocialMediaList { get; private set; }
 
@@ -25,9 +26,9 @@ namespace PetFamily.Domain.VolunteerContext.Entities
 
         public Volunteer(FullName fullName,
             Email email,
-            GeneralDescription description,
+            Description description,
             Experience experience,
-            HelpDetails helpDetails,
+            Details details,
             PhoneNumber phoneNumber,
             SocialMediaList socialMediaList)
         {
@@ -35,7 +36,7 @@ namespace PetFamily.Domain.VolunteerContext.Entities
             Email = email;
             Description = description;
             Experience = experience;
-            HelpDetails = helpDetails;
+            Details = details;
             PhoneNumber = phoneNumber;
             SocialMediaList = socialMediaList;
         }

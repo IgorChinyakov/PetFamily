@@ -19,7 +19,7 @@ namespace PetFamily.Domain.Pets.Value_objects
         public static Result<Birthday> Create(DateTime value)
         {
             if (value > DateTime.UtcNow)
-                return Result.Failure<Birthday>("Incorrct date");
+                return Result.Failure<Birthday>($"Date {value} can't be in the future");
             if (DateTime.Compare(value, new DateTime(2000, 1, 1)) < 0)
                 return Result.Failure<Birthday>("Date is too old");
 
