@@ -12,6 +12,7 @@ namespace PetFamily.Domain.SpeciesContext.Entities
     {
         private readonly IReadOnlyList<Breed> _breeds = [];
 
+        public IReadOnlyList<Breed> Breeds => _breeds;
         public Name Name { get; set; }
 
         private Species(Guid id) : base(id)

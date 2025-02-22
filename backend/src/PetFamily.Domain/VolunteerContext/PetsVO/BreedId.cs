@@ -10,11 +10,11 @@ namespace PetFamily.Domain.Pets.Value_objects
 {
     public record BreedId
     {
-        public Guid Id { get; }
+        public Guid Value { get; }
 
         private BreedId(Guid id)
         {
-            Id = id;
+            Value = id;
         }
 
         public static Result<BreedId> Create(Guid id)

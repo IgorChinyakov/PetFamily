@@ -11,7 +11,7 @@ namespace PetFamily.Domain.VolunteerContext.VolunteerVO
     public record FullName
     {
         public string Name { get; }
-        public string SecondName { get; }
+        public string? SecondName { get; }
         public string FamilyName { get; }
 
         private FullName(string name, string secondName, string familyName)
