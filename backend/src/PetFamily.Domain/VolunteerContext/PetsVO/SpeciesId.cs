@@ -11,10 +11,10 @@ namespace PetFamily.Domain.Pets.Value_objects
     {
         private SpeciesId(Guid id)
         {
-            Id = id;
+            Value = id;
         }
 
-        public Guid Id { get; }
+        public Guid Value { get; }
 
         public static Result<SpeciesId> Create(Guid id)
         {

@@ -23,6 +23,7 @@ namespace PetFamily.Domain.VolunteerContext.Entities
         public Weight Weight { get; private set; }
         public Height Height { get; private set; }
         public Birthday Birthday { get; private set; }
+        public CreationDate CreationDate { get; private set; }
         public PhoneNumber OwnerPhoneNumber { get; private set; }
         public PetStatus PetStatus { get; private set; }
         public Details Details { get; private set; }
@@ -44,6 +45,7 @@ namespace PetFamily.Domain.VolunteerContext.Entities
             Weight weight,
             Height height,
             Birthday birthday,
+            CreationDate creationDate,
             PhoneNumber ownerPhoneNumber,
             PetStatus petStatus,
             Details details) : base(id)
@@ -60,6 +62,7 @@ namespace PetFamily.Domain.VolunteerContext.Entities
             Weight = weight;
             Height = height;
             Birthday = birthday;
+            CreationDate = creationDate;
             OwnerPhoneNumber = ownerPhoneNumber;
             PetStatus = petStatus;
             Details = details;

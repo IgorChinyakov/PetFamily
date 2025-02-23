@@ -13,14 +13,16 @@ namespace PetFamily.Domain.VolunteerContext.Entities
     public class Volunteer : Entity<Guid>
     {
         private readonly IReadOnlyList<Pet> _pets = [];
+        private readonly IReadOnlyList<SocialMedia> _socialMediaList = [];
 
+        public IReadOnlyList<Pet> Pets => _pets;   
+        public IReadOnlyList<SocialMedia> SocialMediaList => _socialMediaList;   
         public FullName FullName { get; private set; }
         public Email Email { get; private set; }
         public Description Description { get; private set; }
         public Experience Experience { get; private set; }
         public Details Details { get; private set; }
         public PhoneNumber PhoneNumber { get; private set; }
-        public SocialMediaList SocialMediaList { get; private set; }
 
         private Volunteer(Guid id) : base(id) { }
 
@@ -29,8 +31,7 @@ namespace PetFamily.Domain.VolunteerContext.Entities
             Description description,
             Experience experience,
             Details details,
-            PhoneNumber phoneNumber,
-            SocialMediaList socialMediaList)
+            PhoneNumber phoneNumber)
         {
             FullName = fullName;
             Email = email;
@@ -38,7 +39,6 @@ namespace PetFamily.Domain.VolunteerContext.Entities
             Experience = experience;
             Details = details;
             PhoneNumber = phoneNumber;
-            SocialMediaList = socialMediaList;
         }
 
         public int ShelteredPets() => _pets.Count(p => p.PetStatus.Value == Status.FoundHome);
