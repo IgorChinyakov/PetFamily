@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using PetFamily.Domain.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,13 +18,12 @@ namespace PetFamily.Domain.VolunteerContext.VolunteerVO
             Value = value;
         }
 
-        public static Result<Email> Create(string value)
+        public static Result<Email, Error> Create(string value)
         {
-            if (string.IsNullOrWhiteSpace(value))
-                return Result.Failure<Email>("Email is not supposed to be empty");
-
-            if (Regex.IsMatch(value, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
-                return Result.Failure<Email>("Email is not correct");
+            if (string.IsNullOrWhiteSpace(value) 
+                || !Regex.IsMatch(value, @"^[^@\s]+@[^@\s]+\.[^@\s]+$") 
+                || value.Length > Constants.MAX_LOW_TITLE_LENGTH)
+                return Errors.General.ValueIsInvalid("Email");
 
             return new Email(value);
         }

@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using PetFamily.Domain.Pets.Value_objects;
+using PetFamily.Domain.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,25 +11,27 @@ namespace PetFamily.Domain.VolunteerContext.VolunteerVO
 {
     public record FullName
     {
+        public const int MAX_LENGTH = 50;
+
         public string Name { get; }
         public string? SecondName { get; }
         public string FamilyName { get; }
 
-        private FullName(string name, string secondName, string familyName)
+        private FullName(string name, string? secondName, string familyName)
         {
             Name = name;
             SecondName = secondName;
             FamilyName = familyName;
         }
 
-        public static Result<FullName> Create(string name, string secondName, string familyName)
+        public static Result<FullName, Error> Create(string name, string? secondName, string familyName)
         {
-            if (string.IsNullOrWhiteSpace(name))
-                return Result.Failure<FullName>("City is not supposed to be empty");
-            if (string.IsNullOrWhiteSpace(secondName))
-                return Result.Failure<FullName>("Street is not supposed to be empty");
-            if (string.IsNullOrWhiteSpace(familyName))
-                return Result.Failure<FullName>("House is not supposed to be empty");
+            if (string.IsNullOrWhiteSpace(name) || name.Length > MAX_LENGTH)
+                return Errors.General.ValueIsInvalid("Name");
+            if (string.IsNullOrWhiteSpace(secondName) || secondName.Length > MAX_LENGTH)
+                return Errors.General.ValueIsInvalid("Second name");
+            if (string.IsNullOrWhiteSpace(familyName) || familyName.Length > MAX_LENGTH)
+                return Errors.General.ValueIsInvalid("Family name");
 
             return new FullName(name, secondName, familyName);
         }

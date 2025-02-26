@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using PetFamily.Domain.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,10 +18,10 @@ namespace PetFamily.Domain.VolunteerContext.VolunteerVO
             Value = value;
         }
 
-        public static Result<Experience> Create(int value)
+        public static Result<Experience, Error> Create(int value)
         {
             if (value <= 0)
-                return Result.Failure<Experience>("Experience must be more than zero");
+                return Errors.General.ValueIsInvalid("Experience");
 
             return new Experience(value);
         }

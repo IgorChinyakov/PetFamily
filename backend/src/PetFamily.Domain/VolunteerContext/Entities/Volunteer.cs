@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using PetFamily.Domain.Pets.Value_objects;
+using PetFamily.Domain.Shared;
 using PetFamily.Domain.VolunteerContext.SharedVO;
 using PetFamily.Domain.VolunteerContext.VolunteerVO;
 using System;
@@ -31,7 +32,8 @@ namespace PetFamily.Domain.VolunteerContext.Entities
             Description description,
             Experience experience,
             Details details,
-            PhoneNumber phoneNumber)
+            PhoneNumber phoneNumber,
+            List<SocialMedia> socialMedia)
         {
             FullName = fullName;
             Email = email;
@@ -39,6 +41,7 @@ namespace PetFamily.Domain.VolunteerContext.Entities
             Experience = experience;
             Details = details;
             PhoneNumber = phoneNumber;
+            _socialMediaList = socialMedia;
         }
 
         public int ShelteredPets() => _pets.Count(p => p.PetStatus.Value == Status.FoundHome);

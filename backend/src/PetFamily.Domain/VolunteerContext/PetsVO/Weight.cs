@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using PetFamily.Domain.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,10 +17,10 @@ namespace PetFamily.Domain.Pets.Value_objects
 
         public float Value { get; }
 
-        public static Result<Weight> Create(float value)
+        public static Result<Weight, Error> Create(float value)
         {
             if (value <= 0)
-                return Result.Failure<Weight>("Weight must be more than zero");
+                return Errors.General.ValueIsInvalid("Weight");
 
             return new Weight(value);
         }

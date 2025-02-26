@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.SpeciesContext.Entities;
+using PetFamily.Domain.SpeciesContext.ValueObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +24,7 @@ namespace PetFamily.Infrastructure.Configurations
                 b.Property(n => n.Value)
                 .IsRequired()
                 .HasColumnName("name")
-                .HasMaxLength(Constants.MAX_LOW_TITLE_LENGTH);
+                .HasMaxLength(Name.MAX_LENGTH);
             });
         }
     }

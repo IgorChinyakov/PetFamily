@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using PetFamily.Domain.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,12 +19,14 @@ namespace PetFamily.Domain.VolunteerContext.SharedVO
             Description = description;
         }
 
-        public static Result<Details> Create(string title, string description)
+        public static Result<Details, Error> Create(string title, string description)
         {
-            if (string.IsNullOrWhiteSpace(title))
-                return Result.Failure<Details>("Title is not supposed to be empty");
-            if (string.IsNullOrWhiteSpace(description))
-                return Result.Failure<Details>("Description is not supposed to be empty");
+            if (string.IsNullOrWhiteSpace(title) 
+                || title.Length > Constants.MAX_LOW_TITLE_LENGTH)
+                return Errors.General.ValueIsInvalid("Title");
+            if (string.IsNullOrWhiteSpace(description) 
+                || description.Length > Constants.MAX_HIGH_TITLE_LENGTH)
+                return Errors.General.ValueIsInvalid("Description");
 
             return new Details(title, description);
         }

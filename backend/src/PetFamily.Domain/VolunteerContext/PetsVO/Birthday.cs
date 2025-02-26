@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using PetFamily.Domain.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,12 +17,10 @@ namespace PetFamily.Domain.Pets.Value_objects
             Value = value;
         }
 
-        public static Result<Birthday> Create(DateTime value)
+        public static Result<Birthday, Error> Create(DateTime value)
         {
-            if (value > DateTime.UtcNow)
-                return Result.Failure<Birthday>($"Date {value} can't be in the future");
-            if (value < new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc))
-                return Result.Failure<Birthday>("Date is too old. Must be after 01/01/2000.");
+            if (value > DateTime.UtcNow || value < new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc))
+                return Errors.General.ValueIsInvalid("Date");
 
             return new Birthday(value);
         }

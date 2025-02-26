@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using PetFamily.Domain.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,10 +17,10 @@ namespace PetFamily.Domain.Pets.Value_objects
             Value = value;
         }
 
-        public static Result<Color> Create(string value)
+        public static Result<Color, Error> Create(string value)
         {
-            if (string.IsNullOrWhiteSpace(value))
-                return Result.Failure<Color>("Color is not supposed to be empty");
+            if (string.IsNullOrWhiteSpace(value) || value.Length > Constants.MAX_LOW_TITLE_LENGTH)
+                return Errors.General.ValueIsInvalid("Color");
 
             return new Color(value);
         }
