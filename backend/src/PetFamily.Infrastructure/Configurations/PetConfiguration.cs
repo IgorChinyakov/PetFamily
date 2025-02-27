@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PetFamily.Domain.Pets.Value_objects;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.VolunteerContext.Entities;
+using PetFamily.Domain.VolunteerContext.SharedVO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,17 +42,17 @@ namespace PetFamily.Infrastructure.Configurations
                 b.Property(a => a.Apartment)
                 .IsRequired(true)
                 .HasColumnName("apartment")
-                .HasMaxLength(Constants.MAX_LOW_TITLE_LENGTH);
+                .HasMaxLength(Address.MAX_LENGTH);
 
                 b.Property(a => a.Street)
                 .IsRequired(true)
                 .HasColumnName("street")
-                .HasMaxLength(Constants.MAX_LOW_TITLE_LENGTH);
+                .HasMaxLength(Address.MAX_LENGTH);
 
                 b.Property(a => a.City)
                 .IsRequired(true)
                 .HasColumnName("city")
-                .HasMaxLength(Constants.MAX_LOW_TITLE_LENGTH);
+                .HasMaxLength(Address.MAX_LENGTH);
             });
 
             builder.ComplexProperty(p => p.NickName, b =>
@@ -59,7 +60,7 @@ namespace PetFamily.Infrastructure.Configurations
                 b.Property(a => a.Value)
                 .IsRequired(true)
                 .HasColumnName("nick_name")
-                .HasMaxLength(Constants.MAX_LOW_TITLE_LENGTH);
+                .HasMaxLength(NickName.MAX_LENGTH);
             });
 
             builder.ComplexProperty(p => p.Birthday, b =>
@@ -82,7 +83,7 @@ namespace PetFamily.Infrastructure.Configurations
                 vb.Property(e => e.Value)
                 .IsRequired(true)
                 .HasColumnName("description")
-                .HasMaxLength(Constants.MAX_HIGH_TITLE_LENGTH);
+                .HasMaxLength(Description.MAX_LENGTH);
             });
 
             builder.ComplexProperty(v => v.Details, vb =>
@@ -111,7 +112,7 @@ namespace PetFamily.Infrastructure.Configurations
                 b.Property(a => a.Value)
                 .IsRequired(true)
                 .HasColumnName("health_information")
-                .HasMaxLength(Constants.MAX_LOW_TITLE_LENGTH);
+                .HasMaxLength(HealthInformation.MAX_LENGTH);
             });
 
             builder.ComplexProperty(p => p.Height, b =>

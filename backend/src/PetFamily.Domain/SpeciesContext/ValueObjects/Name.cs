@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using PetFamily.Domain.Pets.Value_objects;
+using PetFamily.Domain.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,7 @@ namespace PetFamily.Domain.SpeciesContext.ValueObjects
 {
     public record Name
     {
+        public const int MAX_LENGTH = 40;
         public string Value { get; }
 
         private Name(string value)
@@ -17,10 +19,10 @@ namespace PetFamily.Domain.SpeciesContext.ValueObjects
             Value = value;
         }
 
-        public static Result<Name> Create(string value)
+        public static Result<Name, Error> Create(string value)
         {
-            if (string.IsNullOrWhiteSpace(value))
-                return Result.Failure<Name>("Name is not supposed to be empty");
+            if (string.IsNullOrWhiteSpace(value) || value.Length > MAX_LENGTH)
+                return Errors.General.ValueIsInvalid("Name");
 
             return new Name(value);
         }

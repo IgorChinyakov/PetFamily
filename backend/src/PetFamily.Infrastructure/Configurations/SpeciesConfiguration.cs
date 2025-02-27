@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.SpeciesContext.Entities;
+using PetFamily.Domain.SpeciesContext.ValueObjects;
 using PetFamily.Domain.VolunteerContext.VolunteerVO;
 using System;
 using System.Collections.Generic;
@@ -31,7 +32,7 @@ namespace PetFamily.Infrastructure.Configurations
                 b.Property(n => n.Value)
                 .IsRequired()
                 .HasColumnName("name")
-                .HasMaxLength(Constants.MAX_LOW_TITLE_LENGTH);
+                .HasMaxLength(Name.MAX_LENGTH);
             });
         }
     }

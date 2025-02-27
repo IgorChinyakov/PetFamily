@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using PetFamily.Domain.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,10 +17,10 @@ namespace PetFamily.Domain.Pets.Value_objects
 
         public Guid Value { get; }
 
-        public static Result<SpeciesId> Create(Guid id)
+        public static Result<SpeciesId, Error> Create(Guid id)
         {
             if (id == Guid.Empty)
-                return Result.Failure<SpeciesId>("Guid is not supposed to be empty");
+                return Errors.General.ValueIsInvalid("Guid");
 
             return new SpeciesId(id);
         }

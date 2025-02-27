@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.VolunteerContext.Entities;
+using PetFamily.Domain.VolunteerContext.SharedVO;
 using PetFamily.Domain.VolunteerContext.VolunteerVO;
 using System;
 using System.Collections.Generic;
@@ -41,17 +42,17 @@ namespace PetFamily.Infrastructure.Configurations
                 vb.Property(fn => fn.Name)
                 .IsRequired(true)
                 .HasColumnName("name")
-                .HasMaxLength(Constants.MAX_LOW_TITLE_LENGTH);
+                .HasMaxLength(FullName.MAX_LENGTH);
 
                 vb.Property(fn => fn.SecondName)
                 .IsRequired(false)
                 .HasColumnName("second_name")
-                .HasMaxLength(Constants.MAX_LOW_TITLE_LENGTH);
+                .HasMaxLength(FullName.MAX_LENGTH);
 
                 vb.Property(fn => fn.FamilyName)
                 .IsRequired(true)
                 .HasColumnName("family_name")
-                .HasMaxLength(Constants.MAX_LOW_TITLE_LENGTH);
+                .HasMaxLength(FullName.MAX_LENGTH);
             });
 
             builder.ComplexProperty(v => v.Details, vb =>
@@ -71,9 +72,7 @@ namespace PetFamily.Infrastructure.Configurations
             {
                 vb.Property(e => e.Value)
                 .IsRequired(true)
-                .HasColumnName("experience")
-                .HasMaxLength(Constants.MAX_HIGH_TITLE_LENGTH);
-
+                .HasColumnName("experience");
             });
 
             builder.ComplexProperty(v => v.Email, vb =>
@@ -81,7 +80,7 @@ namespace PetFamily.Infrastructure.Configurations
                 vb.Property(e => e.Value)
                 .IsRequired(true)
                 .HasColumnName("email")
-                .HasMaxLength(Constants.MAX_HIGH_TITLE_LENGTH);
+                .HasMaxLength(Constants.MAX_LOW_TITLE_LENGTH);
             });
 
             builder.ComplexProperty(v => v.Description, vb =>
@@ -89,7 +88,7 @@ namespace PetFamily.Infrastructure.Configurations
                 vb.Property(e => e.Value)
                 .IsRequired(true)
                 .HasColumnName("description")
-                .HasMaxLength(Constants.MAX_HIGH_TITLE_LENGTH);
+                .HasMaxLength(Description.MAX_LENGTH);
             });
 
             builder.ComplexProperty(v => v.PhoneNumber, vb =>
