@@ -14,10 +14,9 @@ namespace PetFamily.Domain.SpeciesContext.Entities
 
         private Breed(Guid id) : base(id)
         {
-
         }
 
-        private Breed(Guid id, Name name) : base(id)
+        public Breed(Guid id, Name name) : base(id)
         {
             Name = name;
         }

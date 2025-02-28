@@ -20,7 +20,7 @@ namespace PetFamily.Domain.SpeciesContext.Entities
 
         }
 
-        private Species(Guid id, Name name) : base(id)
+        public Species(Guid id, Name name) : base(id)
         {
             Name = name;
         }

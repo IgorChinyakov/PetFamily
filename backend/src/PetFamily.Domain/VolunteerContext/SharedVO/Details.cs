@@ -13,6 +13,10 @@ namespace PetFamily.Domain.VolunteerContext.SharedVO
         public string Title { get; }
         public string Description { get; }
 
+        public Details()
+        {
+        }
+
         private Details(string title, string description)
         {
             Title = title;
