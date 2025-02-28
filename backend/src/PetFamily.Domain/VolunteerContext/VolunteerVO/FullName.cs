@@ -28,7 +28,7 @@ namespace PetFamily.Domain.VolunteerContext.VolunteerVO
         {
             if (string.IsNullOrWhiteSpace(name) || name.Length > MAX_LENGTH)
                 return Errors.General.ValueIsInvalid("Name");
-            if (string.IsNullOrWhiteSpace(secondName) || secondName.Length > MAX_LENGTH)
+            if (secondName != null && secondName.Length > MAX_LENGTH)
                 return Errors.General.ValueIsInvalid("Second name");
             if (string.IsNullOrWhiteSpace(familyName) || familyName.Length > MAX_LENGTH)
                 return Errors.General.ValueIsInvalid("Family name");

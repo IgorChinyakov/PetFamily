@@ -1,5 +1,6 @@
 using PetFamily.Application;
 using PetFamily.Infrastructure;
+using SwaggerThemes;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +15,7 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(Theme.NordDark);
 }
 
 app.UseHttpsRedirection();

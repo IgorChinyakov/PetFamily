@@ -27,6 +27,12 @@ namespace PetFamily.Domain.Shared
                 var label = name == null ? " " : " " + name + " ";
                 return Error.Validation("length.is.invalid", $"invalid{label}length");
             }
+
+            public static Error Conflict(string? name = null)
+            {
+                var label = name == null ? "" : name + " ";
+                return Error.Conflict("already.exists", $"{label}already exists");
+            }
         }
     }
 }

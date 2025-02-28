@@ -4,8 +4,8 @@
         string Email, 
         string Description, 
         int Experience, 
-        DetailsDto Details,
         string PhoneNumber,
+        List<DetailsDto> DetailsList,
         List<SocialMediaDto> SocialMediaList);
 
     public record FullnameDto(string Name, string? SecondName, string FamilyName);
