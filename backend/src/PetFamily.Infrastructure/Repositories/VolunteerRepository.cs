@@ -31,7 +31,9 @@ namespace PetFamily.Infrastructure.Repositories
 
         public async Task<Result<Volunteer, Error>> GetByPhoneNumber(PhoneNumber phoneNumber)
         {
-            var volunteer = await _context.Volunteers.FirstOrDefaultAsync(v => v.PhoneNumber == phoneNumber);
+            var volunteer = await _context.Volunteers
+                .Include(v => v.Pets)
+                .FirstOrDefaultAsync(v => v.PhoneNumber == phoneNumber);
 
             if (volunteer == null)
                 return Errors.General.NotFound();

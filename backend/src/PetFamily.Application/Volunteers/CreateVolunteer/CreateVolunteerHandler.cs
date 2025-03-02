@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using FluentValidation;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.VolunteerContext.Entities;
 using PetFamily.Domain.VolunteerContext.SharedVO;
@@ -14,68 +15,37 @@ namespace PetFamily.Application.Volunteers.CreateVolunteer
     public class CreateVolunteerHandler
     {
         private IVolunteerRepository _repository;
+        private IValidator<CreateVolunteerRequest> _validator;
 
-        public CreateVolunteerHandler(IVolunteerRepository repository)
+        public CreateVolunteerHandler(IVolunteerRepository repository,
+            IValidator<CreateVolunteerRequest> validator)
         {
             _repository = repository;
+            _validator = validator; 
         }
 
         public async Task<Result<Guid, Error>> Handle(CreateVolunteerRequest request, CancellationToken token = default)
         {
-            var phoneNumber = request.PhoneNumber;
-            var phoneNumberResult = PhoneNumber.Create(phoneNumber);
-            if (phoneNumberResult.IsFailure)
-                return phoneNumberResult.Error;
+            var phoneNumberResult = PhoneNumber.Create(request.PhoneNumber).Value;
+            var fullNameResult = FullName.Create(request.FullName.Name, 
+                request.FullName.SecondName, 
+                request.FullName.FamilyName).Value;
+            var emailResult = Email.Create(request.Email).Value;
+            var descriptionResult = Description.Create(request.Description).Value;
+            var experienceResult = Experience.Create(request.Experience).Value;
 
-            var volunteerResult = await _repository.GetByPhoneNumber(phoneNumberResult.Value);
+            var detailsList = request.DetailsList.Select(d => Details.Create(d.Title, d.Description).Value).ToList();
+            var socialMediaList = request.SocialMediaList.Select(d => SocialMedia.Create(d.Title, d.Link).Value).ToList();
+            
+            var volunteerResult = await _repository.GetByPhoneNumber(phoneNumberResult);
             if (volunteerResult.IsSuccess)
                 return Errors.General.Conflict("Volunteer");
 
-            var fullNameDto = request.FullName;
-            var fullNameResult = FullName.Create(fullNameDto.Name, fullNameDto.SecondName, fullNameDto.FamilyName);
-            if (fullNameResult.IsFailure)
-                return fullNameResult.Error;
-
-            var email = request.Email;
-            var emailResult = Email.Create(email);
-            if (emailResult.IsFailure)
-                return emailResult.Error;
-
-            var description = request.Description;
-            var descriptionResult = Description.Create(description);
-            if (descriptionResult.IsFailure)
-                return descriptionResult.Error;
-
-            var experience = request.Experience;
-            var experienceResult = Experience.Create(experience);
-            if (experienceResult.IsFailure)
-                return experienceResult.Error;
-
-            var detailsDtos = request.DetailsList;
-            List<Details> detailsList = new List<Details>();
-            foreach(var dto in detailsDtos)
-            {
-                var details = Details.Create(dto.Title, dto.Description);
-                if(details.IsFailure)
-                    return details.Error;
-                detailsList.Add(details.Value);
-            }
-
-            var socialMediaDtos = request.SocialMediaList;
-            List<SocialMedia> socialMediaList = new List<SocialMedia>();
-            foreach (var dto in socialMediaDtos)
-            {
-                var socialMedia = SocialMedia.Create(dto.Title, dto.Link);
-                if (socialMedia.IsFailure)
-                    return socialMedia.Error;
-                socialMediaList.Add(socialMedia.Value);
-            }
-
-            var volunteer = new Volunteer(fullNameResult.Value,
-                emailResult.Value,
-                descriptionResult.Value,
-                experienceResult.Value,
-                phoneNumberResult.Value,
+            var volunteer = new Volunteer(fullNameResult,
+                emailResult,
+                descriptionResult,
+                experienceResult,
+                phoneNumberResult,
                 detailsList,
                 socialMediaList);
 
