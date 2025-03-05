@@ -48,7 +48,7 @@ namespace PetFamily.Application.Volunteers.CreateVolunteer
             var volunteerResult = await _repository.GetByPhoneNumber(phoneNumberResult);
 
             if (volunteerResult.IsSuccess)
-                return Errors.General.Conflict("Volunteer").ToErrorsList();
+                return Errors.General.Conflict().ToErrorsList();
 
             var volunteer = new Volunteer(
                 fullNameResult,

@@ -46,7 +46,7 @@ namespace PetFamily.Domain.Shared
                 throw new ArgumentException("Invalid serialized format");
             }
 
-            if (Enum.TryParse<ErrorType>(parts[3], out var type) == false)
+            if (Enum.TryParse<ErrorType>(parts[parts.Length - 1], out var type) == false)
             {
                 throw new ArgumentException("Invalid serialized format");
             }

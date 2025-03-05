@@ -5,7 +5,7 @@ namespace PetFamily.Api.Response
     public class Envelope
     {
         public object? Result { get; }
-        public ErrorsList Errors { get; }
+        public ErrorsList? Errors { get; }
         public DateTime TimeGenerated { get; }
 
         private Envelope(object? result, ErrorsList? errors)
