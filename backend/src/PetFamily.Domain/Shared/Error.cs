@@ -14,7 +14,7 @@ namespace PetFamily.Domain.Shared
         public string? PropertyName { get; }
         public ErrorType Type { get; }
 
-        private Error(string code, string message, string? propertyName, ErrorType type)
+        private Error(string code, string message, ErrorType type, string? propertyName = null)
         {
             Code = code;
             Message = message;
@@ -22,17 +22,17 @@ namespace PetFamily.Domain.Shared
             Type = type;
         }
 
-        public static Error Validation(string code, string message, string propertyName)
-            => new Error(code, message, propertyName, ErrorType.Validation);
+        public static Error Validation(string code, string message, string? propertyName = null)
+            => new Error(code, message, ErrorType.Validation, propertyName);
 
         public static Error NotFound(string code, string message, string? propertyName)
-            => new Error(code, message, propertyName, ErrorType.NotFound);
+            => new Error(code, message, ErrorType.NotFound, propertyName);
 
         public static Error Failure(string code, string message, string? propertyName)
-            => new Error(code, message, propertyName, ErrorType.Failure);
+            => new Error(code, message, ErrorType.Failure, propertyName);
 
         public static Error Conflict(string code, string message, string? propertyName)
-            => new Error(code, message, propertyName, ErrorType.Conflict);
+            => new Error(code, message, ErrorType.Conflict, propertyName);
 
         public string Serialize()
             => string.Join(SEPARATOR, Code, Message, PropertyName, Type);
@@ -51,8 +51,10 @@ namespace PetFamily.Domain.Shared
                 throw new ArgumentException("Invalid serialized format");
             }
 
-            return new Error(parts[0], parts[1], parts[2], type);
+            return new Error(parts[0], parts[1], type, parts[2]);
         }
+
+        public ErrorsList ToErrorsList() => new([this]);
     }
 
     public enum ErrorType

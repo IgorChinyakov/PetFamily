@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using PetFamily.Api.Contracts;
 using PetFamily.Api.Extensions;
 using PetFamily.Api.Response;
 using PetFamily.Application.Volunteers.CreateVolunteer;
@@ -17,16 +18,19 @@ namespace PetFamily.Api.Controllers
         [HttpPost]
         public async Task<ActionResult<Guid>> Create(
             [FromServices] CreateVolunteerHandler handler,
-            [FromServices] IValidator<CreateVolunteerRequest> validator,
             [FromBody] CreateVolunteerRequest request,
             CancellationToken token = default)
         {
-            var validationResult = await validator.ValidateAsync(request, token);
+            var command = new CreateVolunteerCommand(
+                request.FullName, 
+                request.Email, 
+                request.Description, 
+                request.Experience, 
+                request.PhoneNumber,
+                request.DetailsList,
+                request.SocialMediaList);
 
-            if (!validationResult.IsValid)
-                return validationResult.ToValidationErrorResponse();
-
-            var result = await handler.Handle(request, token);
+            var result = await handler.Handle(command, token);
 
             if (result.IsFailure)
                 return result.Error.ToResponse();

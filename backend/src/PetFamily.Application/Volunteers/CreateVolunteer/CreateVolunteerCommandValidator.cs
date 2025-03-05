@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace PetFamily.Application.Volunteers.CreateVolunteer
 {
-    public class CreateVolunteerRequestValidator : AbstractValidator<CreateVolunteerRequest>
+    public class CreateVolunteerCommandValidator : AbstractValidator<CreateVolunteerCommand>
     {
-        public CreateVolunteerRequestValidator()
+        public CreateVolunteerCommandValidator()
         {
             RuleFor(c => c.Email).MustBeValueObject(Email.Create);
             RuleFor(c => c.Experience).MustBeValueObject(Experience.Create);
@@ -22,14 +22,10 @@ namespace PetFamily.Application.Volunteers.CreateVolunteer
             RuleFor(c => new { c.FullName.Name, c.FullName.SecondName, c.FullName.FamilyName })
                 .MustBeValueObject(fn => FullName.Create(fn.Name, fn.SecondName, fn.FamilyName));
 
-            RuleForEach(c => c.DetailsList.Select(sm => new { sm.Title, sm.Description }))
-                .NotNull()
-                .OverridePropertyName("Details")
+            RuleForEach(c => c.DetailsList)
                 .MustBeValueObject(sm => SocialMedia.Create(sm.Title, sm.Description));
 
-            RuleForEach(c => c.SocialMediaList.Select(sm => new { sm.Link, sm.Title }))
-                .NotNull()
-                .OverridePropertyName("SocialMedia")
+            RuleForEach(c => c.SocialMediaList)
                 .MustBeValueObject(sm => SocialMedia.Create(sm.Title, sm.Link));
         }
     }

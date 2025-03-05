@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using FluentValidation;
+using PetFamily.Application.Volunteers.Extensions;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.VolunteerContext.Entities;
 using PetFamily.Domain.VolunteerContext.SharedVO;
@@ -15,33 +16,42 @@ namespace PetFamily.Application.Volunteers.CreateVolunteer
     public class CreateVolunteerHandler
     {
         private IVolunteerRepository _repository;
-        private IValidator<CreateVolunteerRequest> _validator;
+        private IValidator<CreateVolunteerCommand> _validator;
 
         public CreateVolunteerHandler(IVolunteerRepository repository,
-            IValidator<CreateVolunteerRequest> validator)
+            IValidator<CreateVolunteerCommand> validator)
         {
             _repository = repository;
             _validator = validator; 
         }
 
-        public async Task<Result<Guid, Error>> Handle(CreateVolunteerRequest request, CancellationToken token = default)
+        public async Task<Result<Guid, ErrorsList>> Handle(
+            CreateVolunteerCommand command, 
+            CancellationToken token = default)
         {
-            var phoneNumberResult = PhoneNumber.Create(request.PhoneNumber).Value;
-            var fullNameResult = FullName.Create(request.FullName.Name, 
-                request.FullName.SecondName, 
-                request.FullName.FamilyName).Value;
-            var emailResult = Email.Create(request.Email).Value;
-            var descriptionResult = Description.Create(request.Description).Value;
-            var experienceResult = Experience.Create(request.Experience).Value;
+            var result = await _validator.ValidateAsync(command, token);
 
-            var detailsList = request.DetailsList.Select(d => Details.Create(d.Title, d.Description).Value).ToList();
-            var socialMediaList = request.SocialMediaList.Select(d => SocialMedia.Create(d.Title, d.Link).Value).ToList();
+            if (!result.IsValid)
+                return result.ToErrorsList();
+
+            var phoneNumberResult = PhoneNumber.Create(command.PhoneNumber).Value;
+            var fullNameResult = FullName.Create(command.FullName.Name, 
+                command.FullName.SecondName, 
+                command.FullName.FamilyName).Value;
+            var emailResult = Email.Create(command.Email).Value;
+            var descriptionResult = Description.Create(command.Description).Value;
+            var experienceResult = Experience.Create(command.Experience).Value;
+
+            var detailsList = command.DetailsList.Select(d => Details.Create(d.Title, d.Description).Value).ToList();
+            var socialMediaList = command.SocialMediaList.Select(d => SocialMedia.Create(d.Title, d.Link).Value).ToList();
             
             var volunteerResult = await _repository.GetByPhoneNumber(phoneNumberResult);
-            if (volunteerResult.IsSuccess)
-                return Errors.General.Conflict("Volunteer");
 
-            var volunteer = new Volunteer(fullNameResult,
+            if (volunteerResult.IsSuccess)
+                return Errors.General.Conflict("Volunteer").ToErrorsList();
+
+            var volunteer = new Volunteer(
+                fullNameResult,
                 emailResult,
                 descriptionResult,
                 experienceResult,
