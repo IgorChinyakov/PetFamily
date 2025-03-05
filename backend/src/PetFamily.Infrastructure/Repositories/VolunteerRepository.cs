@@ -1,5 +1,9 @@
-﻿using PetFamily.Application.Volunteers;
+﻿using CSharpFunctionalExtensions;
+using Microsoft.EntityFrameworkCore;
+using PetFamily.Application.Volunteers;
+using PetFamily.Domain.Shared;
 using PetFamily.Domain.VolunteerContext.Entities;
+using PetFamily.Domain.VolunteerContext.SharedVO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +27,18 @@ namespace PetFamily.Infrastructure.Repositories
             await _context.SaveChangesAsync(token);
 
             return volunteer.Id;
+        }
+
+        public async Task<Result<Volunteer, Error>> GetByPhoneNumber(PhoneNumber phoneNumber)
+        {
+            var volunteer = await _context.Volunteers
+                .Include(v => v.Pets)
+                .FirstOrDefaultAsync(v => v.PhoneNumber == phoneNumber);
+
+            if (volunteer == null)
+                return Errors.General.NotFound();
+
+            return volunteer;
         }
     }
 }

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PetFamily.Infrastructure;
@@ -12,9 +13,11 @@ using PetFamily.Infrastructure;
 namespace PetFamily.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250228150550_add_details_list")]
+    partial class add_details_list
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -89,11 +92,6 @@ namespace PetFamily.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("breed_id");
 
-                    b.Property<string>("DetailsList")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("details");
-
                     b.Property<Guid>("SpeciesId")
                         .HasColumnType("uuid")
                         .HasColumnName("species_id");
@@ -160,9 +158,28 @@ namespace PetFamily.Infrastructure.Migrations
 
                             b1.Property<string>("Value")
                                 .IsRequired()
+                                .ValueGeneratedOnUpdateSometimes()
                                 .HasMaxLength(1500)
                                 .HasColumnType("character varying(1500)")
                                 .HasColumnName("description");
+                        });
+
+                    b.ComplexProperty<Dictionary<string, object>>("Details", "PetFamily.Domain.VolunteerContext.Entities.Pet.Details#Details", b1 =>
+                        {
+                            b1.IsRequired();
+
+                            b1.Property<string>("Description")
+                                .IsRequired()
+                                .ValueGeneratedOnUpdateSometimes()
+                                .HasMaxLength(2000)
+                                .HasColumnType("character varying(2000)")
+                                .HasColumnName("description");
+
+                            b1.Property<string>("Title")
+                                .IsRequired()
+                                .HasMaxLength(100)
+                                .HasColumnType("character varying(100)")
+                                .HasColumnName("title");
                         });
 
                     b.ComplexProperty<Dictionary<string, object>>("HealthInformation", "PetFamily.Domain.VolunteerContext.Entities.Pet.HealthInformation#HealthInformation", b1 =>

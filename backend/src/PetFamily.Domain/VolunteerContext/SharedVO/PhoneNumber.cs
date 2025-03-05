@@ -12,7 +12,7 @@ namespace PetFamily.Domain.VolunteerContext.SharedVO
 {
     public record PhoneNumber
     {
-        public string Value { get; set; }
+        public string Value { get; }
 
         private PhoneNumber(string value)
         {

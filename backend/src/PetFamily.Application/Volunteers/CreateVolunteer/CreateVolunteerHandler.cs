@@ -1,4 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
+using FluentValidation;
+using PetFamily.Application.Volunteers.Extensions;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.VolunteerContext.Entities;
 using PetFamily.Domain.VolunteerContext.SharedVO;
@@ -14,60 +16,47 @@ namespace PetFamily.Application.Volunteers.CreateVolunteer
     public class CreateVolunteerHandler
     {
         private IVolunteerRepository _repository;
+        private IValidator<CreateVolunteerCommand> _validator;
 
-        public CreateVolunteerHandler(IVolunteerRepository repository)
+        public CreateVolunteerHandler(IVolunteerRepository repository,
+            IValidator<CreateVolunteerCommand> validator)
         {
             _repository = repository;
+            _validator = validator; 
         }
 
-        public async Task<Result<Guid, Error>> Handle(CreateVolunteerRequest request, CancellationToken token = default)
+        public async Task<Result<Guid, ErrorsList>> Handle(
+            CreateVolunteerCommand command, 
+            CancellationToken token = default)
         {
-            var fullNameDto = request.FullName;
-            var fullNameResult = FullName.Create(fullNameDto.Name, fullNameDto.SecondName, fullNameDto.FamilyName);
-            if (fullNameResult.IsFailure)
-                return fullNameResult.Error;
+            var result = await _validator.ValidateAsync(command, token);
 
-            var email = request.Email;
-            var emailResult = Email.Create(email);
-            if(emailResult.IsFailure)
-                return emailResult.Error;
+            if (!result.IsValid)
+                return result.ToErrorsList();
 
-            var description = request.Description;
-            var descriptionResult = Description.Create(description);
-            if (descriptionResult.IsFailure)
-                return descriptionResult.Error;
+            var phoneNumberResult = PhoneNumber.Create(command.PhoneNumber).Value;
+            var fullNameResult = FullName.Create(command.FullName.Name, 
+                command.FullName.SecondName, 
+                command.FullName.FamilyName).Value;
+            var emailResult = Email.Create(command.Email).Value;
+            var descriptionResult = Description.Create(command.Description).Value;
+            var experienceResult = Experience.Create(command.Experience).Value;
 
-            var experience = request.Experience;
-            var experienceResult = Experience.Create(experience);
-            if (experienceResult.IsFailure)
-                return experienceResult.Error;
+            var detailsList = command.DetailsList.Select(d => Details.Create(d.Title, d.Description).Value).ToList();
+            var socialMediaList = command.SocialMediaList.Select(d => SocialMedia.Create(d.Title, d.Link).Value).ToList();
+            
+            var volunteerResult = await _repository.GetByPhoneNumber(phoneNumberResult);
 
-            var detailsDto = request.Details;
-            var detailsResult = Details.Create(detailsDto.Title, detailsDto.Description);
-            if (detailsResult.IsFailure)
-                return detailsResult.Error;
+            if (volunteerResult.IsSuccess)
+                return Errors.General.Conflict().ToErrorsList();
 
-            var phoneNumber = request.PhoneNumber;
-            var phoneNumberResult = PhoneNumber.Create(phoneNumber);
-            if (detailsResult.IsFailure)
-                return detailsResult.Error;
-
-            var socialMediaDtos = request.SocialMediaList;
-            List<SocialMedia> socialMediaList = [];
-            foreach (var socialMediaDto in socialMediaDtos)
-            {
-                var socialMediaResult = SocialMedia.Create(socialMediaDto.Title, socialMediaDto.Link);
-                if (socialMediaResult.IsFailure)
-                    return socialMediaResult.Error;
-                socialMediaList.Add(socialMediaResult.Value);
-            }
-
-            var volunteer = new Volunteer(fullNameResult.Value, 
-                emailResult.Value, 
-                descriptionResult.Value, 
-                experienceResult.Value,
-                detailsResult.Value, 
-                phoneNumberResult.Value, 
+            var volunteer = new Volunteer(
+                fullNameResult,
+                emailResult,
+                descriptionResult,
+                experienceResult,
+                phoneNumberResult,
+                detailsList,
                 socialMediaList);
 
             var volunteerid = await _repository.Add(volunteer, token);

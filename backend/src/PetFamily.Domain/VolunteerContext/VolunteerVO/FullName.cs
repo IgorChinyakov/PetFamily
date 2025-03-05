@@ -28,10 +28,10 @@ namespace PetFamily.Domain.VolunteerContext.VolunteerVO
         {
             if (string.IsNullOrWhiteSpace(name) || name.Length > MAX_LENGTH)
                 return Errors.General.ValueIsInvalid("Name");
-            if (string.IsNullOrWhiteSpace(secondName) || secondName.Length > MAX_LENGTH)
-                return Errors.General.ValueIsInvalid("Second name");
+            if (secondName != null && secondName.Length > MAX_LENGTH)
+                return Errors.General.ValueIsInvalid("SecondName");
             if (string.IsNullOrWhiteSpace(familyName) || familyName.Length > MAX_LENGTH)
-                return Errors.General.ValueIsInvalid("Family name");
+                return Errors.General.ValueIsInvalid("FamilyName");
 
             return new FullName(name, secondName, familyName);
         }

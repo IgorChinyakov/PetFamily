@@ -14,6 +14,10 @@ namespace PetFamily.Domain.VolunteerContext.VolunteerVO
         public string Title { get; }
         public string Link { get; }
 
+        public SocialMedia()
+        {
+        }
+
         private SocialMedia(string title, string link)
         {
             Title = title;

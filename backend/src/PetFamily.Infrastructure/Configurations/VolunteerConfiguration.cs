@@ -37,6 +37,15 @@ namespace PetFamily.Infrastructure.Configurations
                         c => c.ToList()))
                 .HasColumnName("social_media");
 
+            builder.Property(v => v.DetailsList).HasConversion(
+                 v => JsonSerializer.Serialize(v, JsonSerializerOptions.Default),
+                 v => JsonSerializer.Deserialize<IReadOnlyList<Details>>(v, JsonSerializerOptions.Default)!,
+                  new ValueComparer<IReadOnlyList<Details>>(
+                        (c1, c2) => c1!.SequenceEqual(c2!),
+                        c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
+                        c => c.ToList()))
+                .HasColumnName("details");
+
             builder.ComplexProperty(v => v.FullName, vb =>
             {
                 vb.Property(fn => fn.Name)
@@ -53,19 +62,6 @@ namespace PetFamily.Infrastructure.Configurations
                 .IsRequired(true)
                 .HasColumnName("family_name")
                 .HasMaxLength(FullName.MAX_LENGTH);
-            });
-
-            builder.ComplexProperty(v => v.Details, vb =>
-            {
-                vb.Property(d => d.Title)
-                .IsRequired(true)
-                .HasColumnName("title")
-                .HasMaxLength(Constants.MAX_LOW_TITLE_LENGTH);
-
-                vb.Property(d => d.Description)
-               .IsRequired(true)
-               .HasColumnName("description")
-               .HasMaxLength(Constants.MAX_HIGH_TITLE_LENGTH);
             });
 
             builder.ComplexProperty(v => v.Experience, vb =>

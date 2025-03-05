@@ -11,6 +11,7 @@ namespace PetFamily.Domain.VolunteerContext.Entities
 {
     public class Pet : Entity<Guid>
     {
+        private readonly IReadOnlyList<Details> _detailsList = [];
         public NickName NickName { get; private set; }
         public Description Description { get; private set; }
         public SpeciesId SpeciesId { get; private set; }
@@ -26,7 +27,7 @@ namespace PetFamily.Domain.VolunteerContext.Entities
         public CreationDate CreationDate { get; private set; }
         public PhoneNumber OwnerPhoneNumber { get; private set; }
         public PetStatus PetStatus { get; private set; }
-        public Details Details { get; private set; }
+        public IReadOnlyList<Details> DetailsList => _detailsList;
 
         private Pet(Guid id) : base(id)
         {
@@ -48,7 +49,7 @@ namespace PetFamily.Domain.VolunteerContext.Entities
             CreationDate creationDate,
             PhoneNumber ownerPhoneNumber,
             PetStatus petStatus,
-            Details details) : base(id)
+            IEnumerable<Details> detailsList) : base(id)
         {
             NickName = nickName;
             Description = description;
@@ -65,7 +66,7 @@ namespace PetFamily.Domain.VolunteerContext.Entities
             CreationDate = creationDate;
             OwnerPhoneNumber = ownerPhoneNumber;
             PetStatus = petStatus;
-            Details = details;
+            _detailsList = detailsList.ToList();
         }
     }
 }
