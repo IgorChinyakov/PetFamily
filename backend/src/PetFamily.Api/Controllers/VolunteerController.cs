@@ -22,10 +22,10 @@ namespace PetFamily.Api.Controllers
             CancellationToken token = default)
         {
             var command = new CreateVolunteerCommand(
-                request.FullName, 
-                request.Email, 
-                request.Description, 
-                request.Experience, 
+                request.FullName,
+                request.Email,
+                request.Description,
+                request.Experience,
                 request.PhoneNumber,
                 request.DetailsList,
                 request.SocialMediaList);
