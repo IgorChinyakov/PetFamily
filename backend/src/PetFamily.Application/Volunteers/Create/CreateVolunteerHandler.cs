@@ -18,7 +18,8 @@ namespace PetFamily.Application.Volunteers.CreateVolunteer
         private IVolunteerRepository _repository;
         private IValidator<CreateVolunteerCommand> _validator;
 
-        public CreateVolunteerHandler(IVolunteerRepository repository,
+        public CreateVolunteerHandler(
+            IVolunteerRepository repository,
             IValidator<CreateVolunteerCommand> validator)
         {
             _repository = repository;
@@ -30,6 +31,7 @@ namespace PetFamily.Application.Volunteers.CreateVolunteer
             CancellationToken token = default)
         {
             var result = await _validator.ValidateAsync(command, token);
+
 
             if (!result.IsValid)
                 return result.ToErrorsList();

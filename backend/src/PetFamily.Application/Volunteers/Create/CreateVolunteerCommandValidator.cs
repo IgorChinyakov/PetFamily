@@ -23,7 +23,7 @@ namespace PetFamily.Application.Volunteers.CreateVolunteer
                 .MustBeValueObject(fn => FullName.Create(fn.Name, fn.SecondName, fn.FamilyName));
 
             RuleForEach(c => c.DetailsList)
-                .MustBeValueObject(sm => SocialMedia.Create(sm.Title, sm.Description));
+                .MustBeValueObject(d => SocialMedia.Create(d.Title, d.Description));
 
             RuleForEach(c => c.SocialMediaList)
                 .MustBeValueObject(sm => SocialMedia.Create(sm.Title, sm.Link));
