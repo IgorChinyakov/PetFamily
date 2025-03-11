@@ -11,5 +11,6 @@ namespace PetFamily.Application.Volunteers
         Task<Result<Volunteer, Error>> GetByPhoneNumber(PhoneNumber phoneNumber, CancellationToken token = default);
         Task<Result<Volunteer, Error>> GetById(Guid id, CancellationToken token = default);
         Task<Result<Guid, Error>> Save(Volunteer volunteer, CancellationToken token = default);
+        Task<Result<Guid, Error>> Delete(Volunteer volunteer, CancellationToken token = default);
     }
 }

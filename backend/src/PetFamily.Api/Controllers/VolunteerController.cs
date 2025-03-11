@@ -6,6 +6,7 @@ using PetFamily.Api.Extensions;
 using PetFamily.Api.Requests.Volunteers;
 using PetFamily.Api.Response;
 using PetFamily.Application.Volunteers.CreateVolunteer;
+using PetFamily.Application.Volunteers.Delete;
 using PetFamily.Application.Volunteers.UpdateDetails;
 using PetFamily.Application.Volunteers.UpdateMainInfo;
 using PetFamily.Application.Volunteers.UpdateSocialMedia;
@@ -41,7 +42,7 @@ namespace PetFamily.Api.Controllers
         }
 
         [HttpPut("{id:guid}/main-info")]
-        public async Task<ActionResult<Guid>> Update(
+        public async Task<ActionResult<Guid>> UpdateMainInfo(
             [FromServices] UpdateMainInfoHandler handler,
             [FromBody] UpdateMainInfoRequest request,
             [FromRoute] Guid id,
@@ -64,7 +65,7 @@ namespace PetFamily.Api.Controllers
         }
 
         [HttpPut("{id:guid}/social-media")]
-        public async Task<ActionResult<Guid>> Update(
+        public async Task<ActionResult<Guid>> UpdateSocialMedia(
             [FromServices] UpdateSocialMediaHandler handler,
             [FromBody] UpdateSocialMediaRequest request,
             [FromRoute] Guid id,
@@ -81,7 +82,7 @@ namespace PetFamily.Api.Controllers
         }
 
         [HttpPut("{id:guid}/details")]
-        public async Task<ActionResult<Guid>> Update(
+        public async Task<ActionResult<Guid>> UpdateDetails(
             [FromServices] UpdateDetailsHandler handler,
             [FromBody] UpdateDetailsRequest request,
             [FromRoute] Guid id,
@@ -91,6 +92,21 @@ namespace PetFamily.Api.Controllers
 
             var result = await handler.Handle(command, token);
 
+            if (result.IsFailure)
+                return result.Error.ToResponse();
+
+            return result.Value;
+        }
+
+        [HttpDelete("{id:guid}")]
+        public async Task<ActionResult<Guid>> Delete(
+            [FromServices] DeleteVolunteerHandler handler,
+            [FromRoute] Guid id,
+            CancellationToken token = default)
+        {
+            var command = new DeleteVolunteerCommand(id);
+
+            var result = await handler.Handle(command, token);
             if (result.IsFailure)
                 return result.Error.ToResponse();
 
