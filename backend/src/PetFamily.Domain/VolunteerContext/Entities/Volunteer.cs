@@ -13,13 +13,13 @@ namespace PetFamily.Domain.VolunteerContext.Entities
 {
     public class Volunteer : Entity<Guid>
     {
-        private readonly IReadOnlyList<Pet> _pets = [];
-        private readonly IReadOnlyList<SocialMedia> _socialMediaList = [];
-        private readonly IReadOnlyList<Details> _detailsList = [];
+        private IReadOnlyList<Pet> _pets = [];
+        private IReadOnlyList<SocialMedia> _socialMediaList = [];
+        private IReadOnlyList<Details> _detailsList = [];
 
-        public IReadOnlyList<Pet> Pets => _pets;   
-        public IReadOnlyList<SocialMedia> SocialMediaList => _socialMediaList;   
-        public IReadOnlyList<Details> DetailsList => _detailsList;   
+        public IReadOnlyList<Pet> Pets => _pets;
+        public IReadOnlyList<SocialMedia> SocialMediaList => _socialMediaList;
+        public IReadOnlyList<Details> DetailsList => _detailsList;
 
         public FullName FullName { get; private set; }
         public Email Email { get; private set; }
@@ -49,5 +49,29 @@ namespace PetFamily.Domain.VolunteerContext.Entities
         public int ShelteredPets() => _pets.Count(p => p.PetStatus.Value == Status.FoundHome);
         public int SeekingHomePets() => _pets.Count(p => p.PetStatus.Value == Status.LookingForHome);
         public int PetsUnderTreatment() => _pets.Count(p => p.PetStatus.Value == Status.NeedHelp);
+
+        public void UpdateMainInfo(
+            FullName fullName,
+            Description description,
+            PhoneNumber phoneNumber,
+            Email email,
+            Experience experience)
+        {
+            FullName = fullName;
+            Description = description;
+            PhoneNumber = phoneNumber;
+            Email = email;
+            Experience = experience;
+        }
+
+        public void UpdateSocialMediaList(IEnumerable<SocialMedia> socialMedia)
+        {
+            _socialMediaList = socialMedia.ToList();
+        }
+
+        public void UpdateDetailsList(IEnumerable<Details> details)
+        {
+            _detailsList = details.ToList();
+        }
     }
 }

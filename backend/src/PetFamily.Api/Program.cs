@@ -8,6 +8,7 @@ using SwaggerThemes;
 var builder = WebApplication.CreateBuilder(args);
 
 Log.Logger = new LoggerConfiguration()
+    //.MinimumLevel.Warning()
     .WriteTo.Console()
     .WriteTo.Debug()
     .WriteTo.Seq(builder.Configuration.GetConnectionString("Seq") ?? throw new ArgumentNullException("Seq"))
