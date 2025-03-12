@@ -29,16 +29,43 @@ namespace PetFamily.Infrastructure.Repositories
             return volunteer.Id;
         }
 
-        public async Task<Result<Volunteer, Error>> GetByPhoneNumber(PhoneNumber phoneNumber)
+        public async Task<Result<Volunteer, Error>> GetByPhoneNumber(PhoneNumber phoneNumber, CancellationToken token = default)
         {
             var volunteer = await _context.Volunteers
                 .Include(v => v.Pets)
-                .FirstOrDefaultAsync(v => v.PhoneNumber == phoneNumber);
+                .FirstOrDefaultAsync(v => v.PhoneNumber == phoneNumber, token);
 
             if (volunteer == null)
                 return Errors.General.NotFound();
 
             return volunteer;
+        }
+
+        public async Task<Result<Volunteer, Error>> GetById(Guid id, CancellationToken token)
+        {
+            var volunteer = await _context.Volunteers
+                .Include(v => v.Pets)
+                .FirstOrDefaultAsync(v => v.Id == id, token);
+
+            if(volunteer == null)
+                return Errors.General.NotFound();
+
+            return volunteer;
+        }
+
+        public async Task<Result<Guid, Error>> Save(Volunteer volunteer, CancellationToken token = default)
+        {
+            await _context.SaveChangesAsync(token);
+
+            return volunteer.Id;
+        }
+
+        public async Task<Result<Guid, Error>> Delete(Volunteer volunteer, CancellationToken token = default)
+        {
+            _context.Volunteers.Remove(volunteer);
+            await _context.SaveChangesAsync(token);
+
+            return volunteer.Id;
         }
     }
 }
