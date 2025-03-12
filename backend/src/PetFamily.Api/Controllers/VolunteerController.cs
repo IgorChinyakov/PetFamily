@@ -41,7 +41,7 @@ namespace PetFamily.Api.Controllers
         }
 
         [HttpPut("{id:guid}/main-info")]
-        public async Task<ActionResult<Guid>> Update(
+        public async Task<ActionResult<Guid>> UpdateMainInfo(
             [FromServices] UpdateMainInfoHandler handler,
             [FromBody] UpdateMainInfoRequest request,
             [FromRoute] Guid id,
@@ -64,7 +64,7 @@ namespace PetFamily.Api.Controllers
         }
 
         [HttpPut("{id:guid}/social-media")]
-        public async Task<ActionResult<Guid>> Update(
+        public async Task<ActionResult<Guid>> UpdateSocialMedia(
             [FromServices] UpdateSocialMediaHandler handler,
             [FromBody] UpdateSocialMediaRequest request,
             [FromRoute] Guid id,
@@ -81,7 +81,7 @@ namespace PetFamily.Api.Controllers
         }
 
         [HttpPut("{id:guid}/details")]
-        public async Task<ActionResult<Guid>> Update(
+        public async Task<ActionResult<Guid>> UpdateDetails(
             [FromServices] UpdateDetailsHandler handler,
             [FromBody] UpdateDetailsRequest request,
             [FromRoute] Guid id,
