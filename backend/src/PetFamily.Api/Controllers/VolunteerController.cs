@@ -102,12 +102,12 @@ namespace PetFamily.Api.Controllers
         public async Task<ActionResult<Guid>> Delete(
             [FromServices] DeleteVolunteerHandler handler,
             [FromRoute] Guid id,
-            [FromQuery] DeletionOptions options,
+            [FromBody] DeletionOptions options,
             CancellationToken token = default)
         {
-            var command = new DeleteVolunteerCommand(id);
+            var command = new DeleteVolunteerCommand(id, options);
 
-            var result = await handler.Handle(command, options, token);
+            var result = await handler.Handle(command, token);
             if (result.IsFailure)
                 return result.Error.ToResponse();
 

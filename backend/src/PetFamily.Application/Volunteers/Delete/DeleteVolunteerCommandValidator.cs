@@ -18,6 +18,10 @@ namespace PetFamily.Application.Volunteers.Delete
             RuleFor(d => d.Id)
                 .NotEmpty()
                 .WithError(Errors.General.ValueIsRequired());
+
+            RuleFor(d => d.Options)
+                .IsInEnum()
+                .WithError(Errors.General.ValueIsInvalid("Deletion options"));
         }
     }
 }
