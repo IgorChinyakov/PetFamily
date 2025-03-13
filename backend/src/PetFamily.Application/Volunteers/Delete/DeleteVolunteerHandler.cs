@@ -33,6 +33,7 @@ namespace PetFamily.Application.Volunteers.Delete
 
         public async Task<Result<Guid, ErrorsList>> Handle(
             DeleteVolunteerCommand command,
+            DeletionOptions options,
             CancellationToken token = default)
         {
             var result = await _validator.ValidateAsync(command, token);
@@ -45,11 +46,22 @@ namespace PetFamily.Application.Volunteers.Delete
             if (volunteerResult.IsFailure)
                 return Errors.General.ValueIsInvalid("VolunteerId").ToErrorsList();
 
-            var volunteerId = await _repository.SoftDelete(volunteerResult.Value, token);
-
+            var volunteerId = options switch
+            {
+                DeletionOptions.Soft => await _repository.SoftDelete(volunteerResult.Value, token),
+                DeletionOptions.Hard => await _repository.HardDelete(volunteerResult.Value, token),
+                _ => throw new NotImplementedException("Invalid deletion options")
+            };
+            
             _logger.LogInformation("Volunteer has been removed. Volunteer Id: {volunteerId}", volunteerId);
 
             return volunteerId;
         }
+    }
+
+    public enum DeletionOptions
+    {
+        Soft,
+        Hard
     }
 }
