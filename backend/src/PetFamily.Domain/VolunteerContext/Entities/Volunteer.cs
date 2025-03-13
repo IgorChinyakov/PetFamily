@@ -17,6 +17,8 @@ namespace PetFamily.Domain.VolunteerContext.Entities
         private IReadOnlyList<SocialMedia> _socialMediaList = [];
         private IReadOnlyList<Details> _detailsList = [];
 
+        private bool _isDeleted = false;
+
         public IReadOnlyList<Pet> Pets => _pets;
         public IReadOnlyList<SocialMedia> SocialMediaList => _socialMediaList;
         public IReadOnlyList<Details> DetailsList => _detailsList;
@@ -72,6 +74,32 @@ namespace PetFamily.Domain.VolunteerContext.Entities
         public void UpdateDetailsList(IEnumerable<Details> details)
         {
             _detailsList = details.ToList();
+        }
+
+        public void Delete()
+        {
+            if(!_isDeleted)
+            {
+                _isDeleted = true;
+
+                foreach (var pet in _pets)
+                {
+                    pet.Delete();
+                }
+            }
+        }
+
+        public void Restore()
+        {
+            if (_isDeleted)
+            {
+                _isDeleted = false;
+
+                foreach (var pet in _pets)
+                {
+                    pet.Restore();
+                }
+            }
         }
     }
 }

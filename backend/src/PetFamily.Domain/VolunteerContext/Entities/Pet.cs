@@ -12,6 +12,8 @@ namespace PetFamily.Domain.VolunteerContext.Entities
     public class Pet : Entity<Guid>
     {
         private readonly IReadOnlyList<Details> _detailsList = [];
+        private bool _isDeleted = false;
+
         public NickName NickName { get; private set; }
         public Description Description { get; private set; }
         public SpeciesId SpeciesId { get; private set; }
@@ -67,6 +69,18 @@ namespace PetFamily.Domain.VolunteerContext.Entities
             OwnerPhoneNumber = ownerPhoneNumber;
             PetStatus = petStatus;
             _detailsList = detailsList.ToList();
+        }
+
+        public void Delete()
+        {
+            if (!_isDeleted)
+                _isDeleted = true;
+        }
+
+        public void Restore()
+        {
+            if (_isDeleted)
+                _isDeleted = false;
         }
     }
 }

@@ -6,6 +6,7 @@ using PetFamily.Api.Extensions;
 using PetFamily.Api.Requests.Volunteers;
 using PetFamily.Api.Response;
 using PetFamily.Application.Volunteers.CreateVolunteer;
+using PetFamily.Application.Volunteers.Delete;
 using PetFamily.Application.Volunteers.UpdateDetails;
 using PetFamily.Application.Volunteers.UpdateMainInfo;
 using PetFamily.Application.Volunteers.UpdateSocialMedia;
@@ -91,6 +92,22 @@ namespace PetFamily.Api.Controllers
 
             var result = await handler.Handle(command, token);
 
+            if (result.IsFailure)
+                return result.Error.ToResponse();
+
+            return result.Value;
+        }
+
+        [HttpDelete("{id:guid}")]
+        public async Task<ActionResult<Guid>> Delete(
+            [FromServices] DeleteVolunteerHandler handler,
+            [FromRoute] Guid id,
+            [FromBody] DeletionOptions options,
+            CancellationToken token = default)
+        {
+            var command = new DeleteVolunteerCommand(id, options);
+
+            var result = await handler.Handle(command, token);
             if (result.IsFailure)
                 return result.Error.ToResponse();
 

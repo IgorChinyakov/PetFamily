@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using FluentValidation;
+using Microsoft.Extensions.Logging;
 using PetFamily.Application.Volunteers.Extensions;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.VolunteerContext.Entities;
@@ -15,15 +16,18 @@ namespace PetFamily.Application.Volunteers.CreateVolunteer
 {
     public class CreateVolunteerHandler
     {
-        private IVolunteerRepository _repository;
-        private IValidator<CreateVolunteerCommand> _validator;
+        private readonly IVolunteerRepository _repository;
+        private readonly IValidator<CreateVolunteerCommand> _validator;
+        private readonly ILogger<CreateVolunteerHandler> _logger;
 
         public CreateVolunteerHandler(
             IVolunteerRepository repository,
-            IValidator<CreateVolunteerCommand> validator)
+            IValidator<CreateVolunteerCommand> validator,
+            ILogger<CreateVolunteerHandler> logger)
         {
             _repository = repository;
-            _validator = validator; 
+            _validator = validator;
+            _logger = logger;
         }
 
         public async Task<Result<Guid, ErrorsList>> Handle(
@@ -61,9 +65,11 @@ namespace PetFamily.Application.Volunteers.CreateVolunteer
                 detailsList,
                 socialMediaList);
 
-            var volunteerid = await _repository.Add(volunteer, token);
+            var volunteerId = await _repository.Add(volunteer, token);
 
-            return volunteerid;
+            _logger.LogInformation("Volunteer {fullNmaeResult} with id {volunteerId} has been created", fullNameResult, volunteerId);
+
+            return volunteerId;
         }
     }
 }
