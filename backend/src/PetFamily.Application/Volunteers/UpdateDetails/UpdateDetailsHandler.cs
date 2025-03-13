@@ -1,8 +1,10 @@
 ﻿using CSharpFunctionalExtensions;
 using FluentValidation;
+using Microsoft.Extensions.Logging;
 using PetFamily.Application.Volunteers.Extensions;
 using PetFamily.Application.Volunteers.UpdateSocialMedia;
 using PetFamily.Domain.Shared;
+using PetFamily.Domain.VolunteerContext.Entities;
 using PetFamily.Domain.VolunteerContext.SharedVO;
 using PetFamily.Domain.VolunteerContext.VolunteerVO;
 using System;
@@ -17,13 +19,16 @@ namespace PetFamily.Application.Volunteers.UpdateDetails
     {
         private readonly IVolunteerRepository _repository;
         private readonly IValidator<UpdateDetailsCommand> _validator;
+        private readonly ILogger<UpdateDetailsHandler> _logger;
 
         public UpdateDetailsHandler(
             IVolunteerRepository repository,
-            IValidator<UpdateDetailsCommand> validator)
+            IValidator<UpdateDetailsCommand> validator,
+            ILogger<UpdateDetailsHandler> logger)
         {
             _repository = repository;
             _validator = validator;
+            _logger = logger;
         }
 
         public async Task<Result<Guid, ErrorsList>> Handle(
@@ -41,9 +46,11 @@ namespace PetFamily.Application.Volunteers.UpdateDetails
 
             var details = command.Details.Select(sm => Details.Create(sm.Title, sm.Description).Value);
             volunteerResult.Value.UpdateDetailsList(details);
-            await _repository.Save(volunteerResult.Value, token);
+            var volunteerId = await _repository.Save(volunteerResult.Value, token);
 
-            return volunteerResult.Value.Id;
+            _logger.LogInformation("Volunteer's details list has been updated. Volunteer Id: {volunteerId}", volunteerId);
+
+            return volunteerId;
         }
     }
 }

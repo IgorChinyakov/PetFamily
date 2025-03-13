@@ -94,6 +94,10 @@ namespace PetFamily.Infrastructure.Configurations
                 .HasColumnName("phone_number")
                 .HasMaxLength(Constants.MAX_LOW_TITLE_LENGTH);
             });
+
+            builder.Property<bool>("_isDeleted")
+                .UsePropertyAccessMode(PropertyAccessMode.Field)
+                .HasColumnName("is_deleted");
         }
     }
 }

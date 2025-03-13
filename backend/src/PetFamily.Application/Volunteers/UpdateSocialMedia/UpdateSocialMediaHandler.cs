@@ -1,6 +1,8 @@
 ﻿using CSharpFunctionalExtensions;
 using FluentValidation;
+using Microsoft.Extensions.Logging;
 using PetFamily.Application.Volunteers.Extensions;
+using PetFamily.Application.Volunteers.UpdateMainInfo;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.VolunteerContext.VolunteerVO;
 using System;
@@ -15,13 +17,16 @@ namespace PetFamily.Application.Volunteers.UpdateSocialMedia
     {
         private readonly IVolunteerRepository _repository;
         private readonly IValidator<UpdateSocialMediaCommand> _validator;
+        private readonly ILogger<UpdateSocialMediaHandler> _logger;
 
         public UpdateSocialMediaHandler(
             IVolunteerRepository repository, 
-            IValidator<UpdateSocialMediaCommand> validator)
+            IValidator<UpdateSocialMediaCommand> validator,
+            ILogger<UpdateSocialMediaHandler> logger)
         {
             _repository = repository;
-            _validator = validator; 
+            _validator = validator;
+            _logger = logger;
         }
 
         public async Task<Result<Guid, ErrorsList>> Handle(
@@ -39,9 +44,11 @@ namespace PetFamily.Application.Volunteers.UpdateSocialMedia
 
             var socialMedia = command.SocialMedia.Select(sm => SocialMedia.Create(sm.Title, sm.Link).Value); 
             volunteerResult.Value.UpdateSocialMediaList(socialMedia);
-            await _repository.Save(volunteerResult.Value, token);
+            var volunteerId = await _repository.Save(volunteerResult.Value, token);
 
-            return volunteerResult.Value.Id;
+            _logger.LogInformation("Volunteer's main info has been updated. Volunteer Id: {volunteerId}", volunteerId);
+
+            return volunteerId;
         }
     }
 }

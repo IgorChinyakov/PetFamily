@@ -19,12 +19,12 @@ namespace PetFamily.Application.Volunteers.Delete
     {
         private readonly IVolunteerRepository _repository;
         private readonly IValidator<DeleteVolunteerCommand> _validator;
-        private readonly ILogger<CreateVolunteerHandler> _logger;
+        private readonly ILogger<DeleteVolunteerHandler> _logger;
 
         public DeleteVolunteerHandler(
             IVolunteerRepository repository,
             IValidator<DeleteVolunteerCommand> validator,
-            ILogger<CreateVolunteerHandler> logger)
+            ILogger<DeleteVolunteerHandler> logger)
         {
             _repository = repository;
             _validator = validator;
@@ -45,11 +45,11 @@ namespace PetFamily.Application.Volunteers.Delete
             if (volunteerResult.IsFailure)
                 return Errors.General.ValueIsInvalid("VolunteerId").ToErrorsList();
 
-            var volunteerId = await _repository.Delete(volunteerResult.Value, token);
+            var volunteerId = await _repository.SoftDelete(volunteerResult.Value, token);
 
-            _logger.LogInformation("Deleted volunteer with id {volunteerId}", volunteerId);
+            _logger.LogInformation("Volunteer has been removed. Volunteer Id: {volunteerId}", volunteerId);
 
-            return volunteerId.Value;
+            return volunteerId;
         }
     }
 }

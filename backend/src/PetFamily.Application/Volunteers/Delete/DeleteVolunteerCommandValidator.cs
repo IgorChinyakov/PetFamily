@@ -11,9 +11,9 @@ using System.Threading.Tasks;
 
 namespace PetFamily.Application.Volunteers.Delete
 {
-    public class DeleteVolunteerValidator : AbstractValidator<DeleteVolunteerCommand>
+    public class DeleteVolunteerCommandValidator : AbstractValidator<DeleteVolunteerCommand>
     {
-        public DeleteVolunteerValidator()
+        public DeleteVolunteerCommandValidator()
         {
             RuleFor(d => d.Id)
                 .NotEmpty()
