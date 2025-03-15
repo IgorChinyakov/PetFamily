@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using PetFamily.Application.Volunteers;
+using PetFamily.Infrastructure.BackgroundServices;
 using PetFamily.Infrastructure.Repositories;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,8 @@ namespace PetFamily.Infrastructure
             services.AddScoped<ApplicationDbContext>();
 
             services.AddScoped<IVolunteerRepository, VolunteerRepository>();
+
+            services.AddHostedService<DeletedEntitiesCleanerBackgroundService>();
 
             return services;
         }
