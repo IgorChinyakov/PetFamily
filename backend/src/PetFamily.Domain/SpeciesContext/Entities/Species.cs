@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using PetFamily.Domain.Shared;
 using PetFamily.Domain.SpeciesContext.ValueObjects;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace PetFamily.Domain.SpeciesContext.Entities
 {
-    public class Species : Entity<Guid>
+    public class Species : SoftDeletableEntity
     {
         private readonly IReadOnlyList<Breed> _breeds = [];
 
@@ -17,10 +18,9 @@ namespace PetFamily.Domain.SpeciesContext.Entities
 
         private Species(Guid id) : base(id)
         {
-
         }
 
-        public Species(Guid id, Name name) : base(id)
+        public Species(Name name)
         {
             Name = name;
         }

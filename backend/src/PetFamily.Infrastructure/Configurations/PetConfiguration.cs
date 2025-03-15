@@ -148,9 +148,17 @@ namespace PetFamily.Infrastructure.Configurations
                 .HasColumnName("creation_date");
             });
 
-            builder.Property<bool>("_isDeleted")
-                .UsePropertyAccessMode(PropertyAccessMode.Field)
+            //builder.Property<bool>("_isDeleted")
+            //    .UsePropertyAccessMode(PropertyAccessMode.Field)
+            //    .HasColumnName("is_deleted");
+
+            builder.Property(v => v.IsDeleted)
                 .HasColumnName("is_deleted");
+
+            builder.Property(v => v.DeletionDate)
+                .IsRequired(false)
+                .HasDefaultValue(null)
+                .HasColumnName("deletion_date");
         }
     }
 }
