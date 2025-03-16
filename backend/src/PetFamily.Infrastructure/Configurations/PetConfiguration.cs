@@ -2,9 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using PetFamily.Domain.Pets.Value_objects;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.VolunteerContext.Entities;
+using PetFamily.Domain.VolunteerContext.PetsVO;
 using PetFamily.Domain.VolunteerContext.SharedVO;
 using System;
 using System.Collections.Generic;

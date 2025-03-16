@@ -1,6 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
-using PetFamily.Domain.Pets.Value_objects;
 using PetFamily.Domain.Shared;
+using PetFamily.Domain.VolunteerContext.PetsVO;
 using PetFamily.Domain.VolunteerContext.SharedVO;
 using PetFamily.Domain.VolunteerContext.VolunteerVO;
 using System;
@@ -13,7 +13,7 @@ namespace PetFamily.Domain.VolunteerContext.Entities
 {
     public class Volunteer : SoftDeletableEntity
     {
-        private IReadOnlyList<Pet> _pets = [];
+        private readonly List<Pet> _pets = [];
         private IReadOnlyList<SocialMedia> _socialMediaList = [];
         private IReadOnlyList<Details> _detailsList = [];
 

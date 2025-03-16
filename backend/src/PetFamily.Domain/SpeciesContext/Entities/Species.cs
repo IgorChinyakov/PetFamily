@@ -11,7 +11,7 @@ namespace PetFamily.Domain.SpeciesContext.Entities
 {
     public class Species : SoftDeletableEntity
     {
-        private readonly IReadOnlyList<Breed> _breeds = [];
+        private readonly List<Breed> _breeds = [];
 
         public IReadOnlyList<Breed> Breeds => _breeds;
         public Name Name { get; set; }

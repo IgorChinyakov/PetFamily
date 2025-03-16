@@ -1,15 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
+using PetFamily.Domain.SpeciesContext.Entities;
+using PetFamily.Domain.SpeciesContext.ValueObjects;
 
 namespace PetFamily.Infrastructure.BackgroundServices
 {
@@ -46,7 +41,18 @@ namespace PetFamily.Infrastructure.BackgroundServices
                         && v.DeletionDate.Value.AddDays(_daysBeforeDeletion) < DateTime.UtcNow)
                     .ToListAsync(stoppingToken);
 
+                var expiredSpecies = await dbContext
+                    .Species
+                    .Where(s =>
+                        s.IsDeleted &&
+                        s.DeletionDate != null
+                        && s.DeletionDate.Value.AddDays(_daysBeforeDeletion) < DateTime.UtcNow)
+                    .ToListAsync(stoppingToken);
+
                 dbContext.Volunteers.RemoveRange(expiredVolunteers);
+                dbContext.Species.RemoveRange(expiredSpecies);
+
+                await dbContext.SaveChangesAsync();
 
                 _logger.LogInformation("Deleted entities cleaner background service has worked");
                 await Task.Delay(_timeSpan, stoppingToken);

@@ -26,7 +26,7 @@ namespace PetFamily.Infrastructure.Configurations
             builder.HasMany(v => v.Pets)
                 .WithOne()
                 .HasForeignKey("volunteer_id")
-                .OnDelete(DeleteBehavior.NoAction);
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.Property(v => v.SocialMediaList).HasConversion(
                  v => JsonSerializer.Serialize(v, JsonSerializerOptions.Default),
