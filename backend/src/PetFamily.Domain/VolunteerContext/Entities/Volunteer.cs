@@ -94,5 +94,18 @@ namespace PetFamily.Domain.VolunteerContext.Entities
                 pet.Restore();
             }
         }
+
+        public UnitResult<Error> AddPet(Pet pet)
+        {
+            var serialNumberResult = SerialNumber.Create(_pets.Count + 1);
+            if (serialNumberResult.IsFailure)
+                return serialNumberResult.Error;
+
+            pet.SetSerialNumber(serialNumberResult.Value);
+
+            _pets.Add(pet);
+
+            return Result.Success<Error>();
+        }
     }
 }

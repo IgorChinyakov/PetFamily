@@ -29,6 +29,7 @@ namespace PetFamily.Domain.VolunteerContext.Entities
         public CreationDate CreationDate { get; private set; }
         public PhoneNumber OwnerPhoneNumber { get; private set; }
         public PetStatus PetStatus { get; private set; }
+        public SerialNumber SerialNumber { get; private set; }
         public IReadOnlyList<Details> DetailsList => _detailsList;
 
         private Pet(Guid id) : base(id)
@@ -70,5 +71,8 @@ namespace PetFamily.Domain.VolunteerContext.Entities
             PetStatus = petStatus;
             _detailsList = detailsList.ToList();
         }
+
+        public void SetSerialNumber(SerialNumber number) 
+            => SerialNumber = number;
     }
 }

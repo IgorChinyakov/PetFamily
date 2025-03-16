@@ -22,6 +22,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PetFamily.Infrastructure", 
 		{90739675-563E-4953-B072-63526F745AD4} = {90739675-563E-4953-B072-63526F745AD4}
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetFamily.UnitTests", "tests\PetFamily.UnitTests\PetFamily.UnitTests.csproj", "{2918F8F5-2714-42A6-8D55-FE65792354DA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,6 +46,10 @@ Global
 		{27F751A0-E745-4BE5-B2CE-5B5D0FB9253A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{27F751A0-E745-4BE5-B2CE-5B5D0FB9253A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{27F751A0-E745-4BE5-B2CE-5B5D0FB9253A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2918F8F5-2714-42A6-8D55-FE65792354DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2918F8F5-2714-42A6-8D55-FE65792354DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2918F8F5-2714-42A6-8D55-FE65792354DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2918F8F5-2714-42A6-8D55-FE65792354DA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
