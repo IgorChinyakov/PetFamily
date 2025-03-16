@@ -26,6 +26,14 @@ namespace PetFamily.Infrastructure.Configurations
                 .HasColumnName("name")
                 .HasMaxLength(Name.MAX_LENGTH);
             });
+
+            builder.Property(v => v.IsDeleted)
+               .HasColumnName("is_deleted");
+
+            builder.Property(v => v.DeletionDate)
+                .IsRequired(false)
+                .HasDefaultValue(null)
+                .HasColumnName("deletion_date");
         }
     }
 }

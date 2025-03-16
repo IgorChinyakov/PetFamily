@@ -6,7 +6,6 @@ namespace PetFamily.Api.Middlewares
     public class ExceptionMiddleware
     {
         private readonly RequestDelegate _next;
-        //private readonly ILogger _logger;
 
         public ExceptionMiddleware(RequestDelegate next)
         {

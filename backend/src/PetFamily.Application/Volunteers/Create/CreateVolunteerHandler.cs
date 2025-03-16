@@ -6,13 +6,8 @@ using PetFamily.Domain.Shared;
 using PetFamily.Domain.VolunteerContext.Entities;
 using PetFamily.Domain.VolunteerContext.SharedVO;
 using PetFamily.Domain.VolunteerContext.VolunteerVO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace PetFamily.Application.Volunteers.CreateVolunteer
+namespace PetFamily.Application.Volunteers.Create
 {
     public class CreateVolunteerHandler
     {
@@ -31,18 +26,17 @@ namespace PetFamily.Application.Volunteers.CreateVolunteer
         }
 
         public async Task<Result<Guid, ErrorsList>> Handle(
-            CreateVolunteerCommand command, 
+            CreateVolunteerCommand command,
             CancellationToken token = default)
         {
             var result = await _validator.ValidateAsync(command, token);
-
 
             if (!result.IsValid)
                 return result.ToErrorsList();
 
             var phoneNumberResult = PhoneNumber.Create(command.PhoneNumber).Value;
-            var fullNameResult = FullName.Create(command.FullName.Name, 
-                command.FullName.SecondName, 
+            var fullNameResult = FullName.Create(command.FullName.Name,
+                command.FullName.SecondName,
                 command.FullName.FamilyName).Value;
             var emailResult = Email.Create(command.Email).Value;
             var descriptionResult = Description.Create(command.Description).Value;
@@ -50,7 +44,7 @@ namespace PetFamily.Application.Volunteers.CreateVolunteer
 
             var detailsList = command.DetailsList.Select(d => Details.Create(d.Title, d.Description).Value).ToList();
             var socialMediaList = command.SocialMediaList.Select(d => SocialMedia.Create(d.Title, d.Link).Value).ToList();
-            
+
             var volunteerResult = await _repository.GetByPhoneNumber(phoneNumberResult);
 
             if (volunteerResult.IsSuccess)

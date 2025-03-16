@@ -1,6 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
-using PetFamily.Domain.Pets.Value_objects;
 using PetFamily.Domain.Shared;
+using PetFamily.Domain.VolunteerContext.PetsVO;
 using PetFamily.Domain.VolunteerContext.SharedVO;
 using PetFamily.Domain.VolunteerContext.VolunteerVO;
 using System;
@@ -11,13 +11,11 @@ using System.Threading.Tasks;
 
 namespace PetFamily.Domain.VolunteerContext.Entities
 {
-    public class Volunteer : Entity<Guid>
+    public class Volunteer : SoftDeletableEntity
     {
-        private IReadOnlyList<Pet> _pets = [];
+        private readonly List<Pet> _pets = [];
         private IReadOnlyList<SocialMedia> _socialMediaList = [];
         private IReadOnlyList<Details> _detailsList = [];
-
-        private bool _isDeleted = false;
 
         public IReadOnlyList<Pet> Pets => _pets;
         public IReadOnlyList<SocialMedia> SocialMediaList => _socialMediaList;
@@ -31,7 +29,8 @@ namespace PetFamily.Domain.VolunteerContext.Entities
 
         private Volunteer(Guid id) : base(id) { }
 
-        public Volunteer(FullName fullName,
+        public Volunteer(
+            FullName fullName,
             Email email,
             Description description,
             Experience experience,
@@ -76,29 +75,23 @@ namespace PetFamily.Domain.VolunteerContext.Entities
             _detailsList = details.ToList();
         }
 
-        public void Delete()
+        public override void Delete()
         {
-            if(!_isDeleted)
-            {
-                _isDeleted = true;
+            base.Delete();
 
-                foreach (var pet in _pets)
-                {
-                    pet.Delete();
-                }
+            foreach (var pet in _pets)
+            {
+                pet.Delete();
             }
         }
 
-        public void Restore()
+        public override void Restore()
         {
-            if (_isDeleted)
-            {
-                _isDeleted = false;
+            base.Restore();
 
-                foreach (var pet in _pets)
-                {
-                    pet.Restore();
-                }
+            foreach (var pet in _pets)
+            {
+                pet.Restore();
             }
         }
     }
