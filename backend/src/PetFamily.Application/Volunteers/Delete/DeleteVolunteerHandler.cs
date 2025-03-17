@@ -1,17 +1,8 @@
 ﻿using CSharpFunctionalExtensions;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
-using PetFamily.Application.Volunteers.CreateVolunteer;
 using PetFamily.Application.Volunteers.Extensions;
 using PetFamily.Domain.Shared;
-using PetFamily.Domain.VolunteerContext.Entities;
-using PetFamily.Domain.VolunteerContext.SharedVO;
-using PetFamily.Domain.VolunteerContext.VolunteerVO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PetFamily.Application.Volunteers.Delete
 {
@@ -19,12 +10,12 @@ namespace PetFamily.Application.Volunteers.Delete
     {
         private readonly IVolunteerRepository _repository;
         private readonly IValidator<DeleteVolunteerCommand> _validator;
-        private readonly ILogger<CreateVolunteerHandler> _logger;
+        private readonly ILogger<DeleteVolunteerHandler> _logger;
 
         public DeleteVolunteerHandler(
             IVolunteerRepository repository,
             IValidator<DeleteVolunteerCommand> validator,
-            ILogger<CreateVolunteerHandler> logger)
+            ILogger<DeleteVolunteerHandler> logger)
         {
             _repository = repository;
             _validator = validator;
@@ -45,11 +36,22 @@ namespace PetFamily.Application.Volunteers.Delete
             if (volunteerResult.IsFailure)
                 return Errors.General.ValueIsInvalid("VolunteerId").ToErrorsList();
 
-            var volunteerId = await _repository.Delete(volunteerResult.Value, token);
+            var volunteerId = command.Options switch
+            {
+                DeletionOptions.Soft => await _repository.SoftDelete(volunteerResult.Value, token),
+                DeletionOptions.Hard => await _repository.HardDelete(volunteerResult.Value, token),
+                _ => throw new NotImplementedException("Invalid deletion options")
+            };
+            
+            _logger.LogInformation("Volunteer has been removed. Volunteer Id: {volunteerId}", volunteerId);
 
-            _logger.LogInformation("Deleted volunteer with id {volunteerId}", volunteerId);
-
-            return volunteerId.Value;
+            return volunteerId;
         }
+    }
+
+    public enum DeletionOptions
+    {
+        Soft,
+        Hard
     }
 }

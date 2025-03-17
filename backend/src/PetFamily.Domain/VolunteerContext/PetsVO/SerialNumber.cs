@@ -8,21 +8,21 @@ using System.Threading.Tasks;
 
 namespace PetFamily.Domain.VolunteerContext.PetsVO
 {
-    public record Weight
+    public record SerialNumber
     {
-        private Weight(float value)
+        public int Value { get; }
+
+        private SerialNumber(int value)
         {
             Value = value;
         }
 
-        public float Value { get; }
-
-        public static Result<Weight, Error> Create(float value)
+        public static Result<SerialNumber, Error> Create(int value) 
         {
             if (value <= 0)
-                return Errors.General.ValueIsInvalid("Weight");
+                return Errors.General.ValueIsInvalid("Serial number");
 
-            return new Weight(value);
+            return new SerialNumber(value); 
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
-using PetFamily.Domain.Pets.Value_objects;
 using PetFamily.Domain.Shared;
+using PetFamily.Domain.VolunteerContext.PetsVO;
 using PetFamily.Domain.VolunteerContext.SharedVO;
 using PetFamily.Domain.VolunteerContext.VolunteerVO;
 using System;
@@ -11,9 +11,9 @@ using System.Threading.Tasks;
 
 namespace PetFamily.Domain.VolunteerContext.Entities
 {
-    public class Volunteer : Entity<Guid>
+    public class Volunteer : SoftDeletableEntity
     {
-        private IReadOnlyList<Pet> _pets = [];
+        private readonly List<Pet> _pets = [];
         private IReadOnlyList<SocialMedia> _socialMediaList = [];
         private IReadOnlyList<Details> _detailsList = [];
 
@@ -29,7 +29,8 @@ namespace PetFamily.Domain.VolunteerContext.Entities
 
         private Volunteer(Guid id) : base(id) { }
 
-        public Volunteer(FullName fullName,
+        public Volunteer(
+            FullName fullName,
             Email email,
             Description description,
             Experience experience,
@@ -72,6 +73,39 @@ namespace PetFamily.Domain.VolunteerContext.Entities
         public void UpdateDetailsList(IEnumerable<Details> details)
         {
             _detailsList = details.ToList();
+        }
+
+        public override void Delete()
+        {
+            base.Delete();
+
+            foreach (var pet in _pets)
+            {
+                pet.Delete();
+            }
+        }
+
+        public override void Restore()
+        {
+            base.Restore();
+
+            foreach (var pet in _pets)
+            {
+                pet.Restore();
+            }
+        }
+
+        public UnitResult<Error> AddPet(Pet pet)
+        {
+            var serialNumberResult = SerialNumber.Create(_pets.Count + 1);
+            if (serialNumberResult.IsFailure)
+                return serialNumberResult.Error;
+
+            pet.SetSerialNumber(serialNumberResult.Value);
+
+            _pets.Add(pet);
+
+            return Result.Success<Error>();
         }
     }
 }

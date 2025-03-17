@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PetFamily.Infrastructure;
@@ -12,9 +13,11 @@ using PetFamily.Infrastructure;
 namespace PetFamily.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250313135046_SoftDelete")]
+    partial class SoftDelete
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,14 +32,6 @@ namespace PetFamily.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("id");
-
-                    b.Property<DateTime?>("DeletionDate")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("deletion_date");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean")
-                        .HasColumnName("is_deleted");
 
                     b.Property<Guid?>("species_id")
                         .HasColumnType("uuid")
@@ -69,14 +64,6 @@ namespace PetFamily.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<DateTime?>("DeletionDate")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("deletion_date");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean")
-                        .HasColumnName("is_deleted");
-
                     b.ComplexProperty<Dictionary<string, object>>("Name", "PetFamily.Domain.SpeciesContext.Entities.Species.Name#Name", b1 =>
                         {
                             b1.IsRequired();
@@ -105,22 +92,18 @@ namespace PetFamily.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("breed_id");
 
-                    b.Property<DateTime?>("DeletionDate")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("deletion_date");
-
                     b.Property<string>("DetailsList")
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("details");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean")
-                        .HasColumnName("is_deleted");
-
                     b.Property<Guid>("SpeciesId")
                         .HasColumnType("uuid")
                         .HasColumnName("species_id");
+
+                    b.Property<bool>("_isDeleted")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_deleted");
 
                     b.Property<Guid?>("volunteer_id")
                         .HasColumnType("uuid")
@@ -283,23 +266,19 @@ namespace PetFamily.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<DateTime?>("DeletionDate")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("deletion_date");
-
                     b.Property<string>("DetailsList")
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("details");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean")
-                        .HasColumnName("is_deleted");
-
                     b.Property<string>("SocialMediaList")
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("social_media");
+
+                    b.Property<bool>("_isDeleted")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_deleted");
 
                     b.ComplexProperty<Dictionary<string, object>>("Description", "PetFamily.Domain.VolunteerContext.Entities.Volunteer.Description#Description", b1 =>
                         {
@@ -385,7 +364,7 @@ namespace PetFamily.Infrastructure.Migrations
                     b.HasOne("PetFamily.Domain.VolunteerContext.Entities.Volunteer", null)
                         .WithMany("Pets")
                         .HasForeignKey("volunteer_id")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .HasConstraintName("fk_pets_volunteers_volunteer_id");
                 });
 

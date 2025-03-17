@@ -53,16 +53,24 @@ namespace PetFamily.Infrastructure.Repositories
             return volunteer;
         }
 
-        public async Task<Result<Guid, Error>> Save(Volunteer volunteer, CancellationToken token = default)
+        public async Task<Guid> Save(Volunteer volunteer, CancellationToken token = default)
         {
             await _context.SaveChangesAsync(token);
 
             return volunteer.Id;
         }
 
-        public async Task<Result<Guid, Error>> Delete(Volunteer volunteer, CancellationToken token = default)
+        public async Task<Guid> SoftDelete(Volunteer volunteer, CancellationToken token = default)
         {
-            _context.Volunteers.Remove(volunteer);
+            volunteer.Delete();
+            await _context.SaveChangesAsync(token);
+
+            return volunteer.Id;
+        }
+
+        public async Task<Guid> HardDelete(Volunteer volunteer, CancellationToken token = default)
+        {
+            _context.Remove(volunteer);
             await _context.SaveChangesAsync(token);
 
             return volunteer.Id;

@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
-using PetFamily.Domain.Pets.Value_objects;
+using PetFamily.Domain.Shared;
+using PetFamily.Domain.VolunteerContext.PetsVO;
 using PetFamily.Domain.VolunteerContext.SharedVO;
 using System;
 using System.Collections.Generic;
@@ -9,9 +10,10 @@ using System.Threading.Tasks;
 
 namespace PetFamily.Domain.VolunteerContext.Entities
 {
-    public class Pet : Entity<Guid>
+    public class Pet : SoftDeletableEntity
     {
         private readonly IReadOnlyList<Details> _detailsList = [];
+
         public NickName NickName { get; private set; }
         public Description Description { get; private set; }
         public SpeciesId SpeciesId { get; private set; }
@@ -27,13 +29,14 @@ namespace PetFamily.Domain.VolunteerContext.Entities
         public CreationDate CreationDate { get; private set; }
         public PhoneNumber OwnerPhoneNumber { get; private set; }
         public PetStatus PetStatus { get; private set; }
+        public SerialNumber SerialNumber { get; private set; }
         public IReadOnlyList<Details> DetailsList => _detailsList;
 
         private Pet(Guid id) : base(id)
         {
         }
 
-        public Pet(Guid id,
+        public Pet(
             NickName nickName,
             Description description,
             SpeciesId speciesId,
@@ -49,7 +52,7 @@ namespace PetFamily.Domain.VolunteerContext.Entities
             CreationDate creationDate,
             PhoneNumber ownerPhoneNumber,
             PetStatus petStatus,
-            IEnumerable<Details> detailsList) : base(id)
+            IEnumerable<Details> detailsList) 
         {
             NickName = nickName;
             Description = description;
@@ -68,5 +71,8 @@ namespace PetFamily.Domain.VolunteerContext.Entities
             PetStatus = petStatus;
             _detailsList = detailsList.ToList();
         }
+
+        public void SetSerialNumber(SerialNumber number) 
+            => SerialNumber = number;
     }
 }
