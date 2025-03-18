@@ -24,5 +24,8 @@ namespace PetFamily.Domain.VolunteerContext.PetsVO
 
             return new SerialNumber(value); 
         }
+
+        public static implicit operator int(SerialNumber number)
+            => number.Value;
     }
 }

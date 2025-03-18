@@ -107,5 +107,42 @@ namespace PetFamily.Domain.VolunteerContext.Entities
 
             return Result.Success<Error>();
         }
+
+        public UnitResult<Error> MovePet(SerialNumber currentSerialNumber, SerialNumber serialNumberToMove)
+        {
+            var firstPet = _pets.Where(p => p.SerialNumber == currentSerialNumber).FirstOrDefault();
+            var secondPet = _pets.Where(p => p.SerialNumber == serialNumberToMove).FirstOrDefault();
+
+            if (firstPet == null || secondPet == null)
+                return Errors.General.NotFound();
+
+            if(currentSerialNumber == serialNumberToMove)
+                return Result.Success<Error>();
+
+            _pets.Remove(firstPet);
+
+            if (currentSerialNumber < serialNumberToMove)
+                foreach (var pet in _pets)
+                    if (pet.SerialNumber > currentSerialNumber && pet.SerialNumber <= serialNumberToMove)
+                        pet.SetSerialNumber(SerialNumber.Create(pet.SerialNumber - 1).Value);
+
+            if (currentSerialNumber > serialNumberToMove)
+                foreach (var pet in _pets)
+                    if (pet.SerialNumber >= serialNumberToMove && pet.SerialNumber < currentSerialNumber)
+                        pet.SetSerialNumber(SerialNumber.Create(pet.SerialNumber + 1).Value);
+
+            firstPet.SetSerialNumber(serialNumberToMove);
+            _pets.Add(firstPet);
+
+            _pets.Sort((firstPet, secondPet) => firstPet.SerialNumber.Value.CompareTo(secondPet.SerialNumber.Value));
+
+            return Result.Success<Error>();
+        }
+
+        public UnitResult<Error> MovePetToBeginning(SerialNumber serialNumber)
+            => MovePet(serialNumber, SerialNumber.Create(1).Value);
+
+        public UnitResult<Error> MovePetToEnd(SerialNumber serialNumber)
+            => MovePet(serialNumber, SerialNumber.Create(_pets.Count + 1).Value);
     }
 }
