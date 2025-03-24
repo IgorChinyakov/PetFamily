@@ -8,24 +8,30 @@ using System.Threading.Tasks;
 
 namespace PetFamily.Domain.VolunteerContext.PetsVO
 {
-    public record SerialNumber
+    public record Position
     {
         public int Value { get; }
 
-        private SerialNumber(int value)
+        private Position(int value)
         {
             Value = value;
         }
 
-        public static Result<SerialNumber, Error> Create(int value) 
+        public static Result<Position, Error> Create(int value) 
         {
-            if (value <= 0)
+            if (value < 1)
                 return Errors.General.ValueIsInvalid("Serial number");
 
-            return new SerialNumber(value); 
+            return new Position(value); 
         }
 
-        public static implicit operator int(SerialNumber number)
+        public Result<Position, Error> Forward()
+            => Create(Value + 1);
+
+        public Result<Position, Error> Back()
+            => Create(Value - 1); 
+
+        public static implicit operator int(Position number)
             => number.Value;
     }
 }

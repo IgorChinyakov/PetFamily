@@ -30,13 +30,14 @@ namespace PetFamily.Domain.VolunteerContext.Entities
         private Volunteer(Guid id) : base(id) { }
 
         public Volunteer(
+            Guid id,
             FullName fullName,
             Email email,
             Description description,
             Experience experience,
             PhoneNumber phoneNumber,
             IEnumerable<Details> detailsList,
-            IEnumerable<SocialMedia> socialMediaList)
+            IEnumerable<SocialMedia> socialMediaList) : base(id)
         {
             FullName = fullName;
             Email = email;
@@ -97,52 +98,85 @@ namespace PetFamily.Domain.VolunteerContext.Entities
 
         public UnitResult<Error> AddPet(Pet pet)
         {
-            var serialNumberResult = SerialNumber.Create(_pets.Count + 1);
-            if (serialNumberResult.IsFailure)
-                return serialNumberResult.Error;
+            var positionResult = Position.Create(_pets.Count + 1);
+            if (positionResult.IsFailure)
+                return positionResult.Error;
 
-            pet.SetSerialNumber(serialNumberResult.Value);
+            pet.SetPosition(positionResult.Value);
 
             _pets.Add(pet);
 
             return Result.Success<Error>();
         }
 
-        public UnitResult<Error> MovePet(SerialNumber currentSerialNumber, SerialNumber serialNumberToMove)
+        public UnitResult<Error> MovePet(Pet petToMove, Position positionToMove)
         {
-            var firstPet = _pets.Where(p => p.SerialNumber == currentSerialNumber).FirstOrDefault();
-            var secondPet = _pets.Where(p => p.SerialNumber == serialNumberToMove).FirstOrDefault();
-
-            if (firstPet == null || secondPet == null)
-                return Errors.General.NotFound();
-
-            if(currentSerialNumber == serialNumberToMove)
+            var currentPosition = petToMove.Position;
+            if (currentPosition == positionToMove || _pets.Count == 1)
                 return Result.Success<Error>();
 
-            _pets.Remove(firstPet);
+            var adjustedPosition = AdjustPostionIfOutOfRange(positionToMove);
+            if (adjustedPosition.IsFailure)
+                return adjustedPosition.Error;
 
-            if (currentSerialNumber < serialNumberToMove)
-                foreach (var pet in _pets)
-                    if (pet.SerialNumber > currentSerialNumber && pet.SerialNumber <= serialNumberToMove)
-                        pet.SetSerialNumber(SerialNumber.Create(pet.SerialNumber - 1).Value);
+            var moveResult = MovePetsBetweenPositions(adjustedPosition.Value, currentPosition);
+            if (moveResult.IsFailure)
+                return moveResult.Error;
 
-            if (currentSerialNumber > serialNumberToMove)
-                foreach (var pet in _pets)
-                    if (pet.SerialNumber >= serialNumberToMove && pet.SerialNumber < currentSerialNumber)
-                        pet.SetSerialNumber(SerialNumber.Create(pet.SerialNumber + 1).Value);
-
-            firstPet.SetSerialNumber(serialNumberToMove);
-            _pets.Add(firstPet);
-
-            _pets.Sort((firstPet, secondPet) => firstPet.SerialNumber.Value.CompareTo(secondPet.SerialNumber.Value));
+            petToMove.SetPosition(adjustedPosition.Value);
 
             return Result.Success<Error>();
         }
 
-        public UnitResult<Error> MovePetToBeginning(SerialNumber serialNumber)
-            => MovePet(serialNumber, SerialNumber.Create(1).Value);
+        private UnitResult<Error> MovePetsBetweenPositions(Position positionToMove, Position currentPosition)
+        {
+            if (currentPosition < positionToMove)
+            {
+                var petsToMove = _pets.Where(
+                    p => p.Position <= positionToMove && p.Position > currentPosition);
 
-        public UnitResult<Error> MovePetToEnd(SerialNumber serialNumber)
-            => MovePet(serialNumber, SerialNumber.Create(_pets.Count + 1).Value);
+                foreach (var pet in petsToMove)
+                {
+                    var result = pet.MoveBack();
+                    if (result.IsFailure)
+                        return result.Error;
+                }
+            }
+            else if (currentPosition > positionToMove)
+            {
+                var petsToMove = _pets.Where(
+                    p => p.Position < currentPosition && p.Position >= positionToMove);
+
+                foreach (var pet in petsToMove)
+                {
+                    var result = pet.MoveForward();
+                    if (result.IsFailure)
+                        return result.Error;
+                }
+            }
+
+            return Result.Success<Error>();
+        }
+
+        private Result<Position, Error> AdjustPostionIfOutOfRange(Position positionToMove)
+        {
+            if (positionToMove.Value <= _pets.Count)
+                return positionToMove;
+
+            var lastPosition = Position.Create(_pets.Count);
+            if (lastPosition.IsFailure)
+                return lastPosition.Error;
+
+            return lastPosition.Value;
+        }
+
+        public Result<Pet, Error> GetPetById(Guid guid)
+        {
+            var petResult = _pets.Where(p => p.Id == guid).FirstOrDefault();
+            if (petResult == null)
+                return Errors.General.NotFound(guid);
+
+            return petResult;
+        }
     }
 }

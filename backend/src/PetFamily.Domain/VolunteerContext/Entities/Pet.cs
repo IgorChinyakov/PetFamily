@@ -29,7 +29,7 @@ namespace PetFamily.Domain.VolunteerContext.Entities
         public CreationDate CreationDate { get; private set; }
         public PhoneNumber OwnerPhoneNumber { get; private set; }
         public PetStatus PetStatus { get; private set; }
-        public SerialNumber SerialNumber { get; private set; }
+        public Position Position { get; private set; }
         public IReadOnlyList<Details> DetailsList => _detailsList;
 
         private Pet(Guid id) : base(id)
@@ -37,6 +37,7 @@ namespace PetFamily.Domain.VolunteerContext.Entities
         }
 
         public Pet(
+            Guid id,
             NickName nickName,
             Description description,
             SpeciesId speciesId,
@@ -52,7 +53,7 @@ namespace PetFamily.Domain.VolunteerContext.Entities
             CreationDate creationDate,
             PhoneNumber ownerPhoneNumber,
             PetStatus petStatus,
-            IEnumerable<Details> detailsList) 
+            IEnumerable<Details> detailsList) : base(id)
         {
             NickName = nickName;
             Description = description;
@@ -72,7 +73,29 @@ namespace PetFamily.Domain.VolunteerContext.Entities
             _detailsList = detailsList.ToList();
         }
 
-        public void SetSerialNumber(SerialNumber number) 
-            => SerialNumber = number;
+        public void SetPosition(Position number) 
+            => Position = number;
+
+        public UnitResult<Error> MoveForward()
+        {
+            var newPosition = Position.Forward();
+            if (newPosition.IsFailure)
+                return newPosition.Error;
+
+            Position = newPosition.Value;
+
+            return Result.Success<Error>();
+        }
+
+        public UnitResult<Error> MoveBack()
+        {
+            var newPosition = Position.Back();
+            if (newPosition.IsFailure)
+                return newPosition.Error;
+
+            Position = newPosition.Value;
+
+            return Result.Success<Error>();
+        }
     }
 }

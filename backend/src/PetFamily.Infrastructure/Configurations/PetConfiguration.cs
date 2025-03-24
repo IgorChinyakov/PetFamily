@@ -148,11 +148,11 @@ namespace PetFamily.Infrastructure.Configurations
                 .HasColumnName("creation_date");
             });
 
-            builder.ComplexProperty(p => p.SerialNumber, b =>
+            builder.ComplexProperty(p => p.Position, b =>
             {
                 b.Property(a => a.Value)
                 .IsRequired(true)
-                .HasColumnName("serial_number");
+                .HasColumnName("position");
             });
 
             //builder.Property<bool>("_isDeleted")
