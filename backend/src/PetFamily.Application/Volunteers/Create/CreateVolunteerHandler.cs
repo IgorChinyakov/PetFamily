@@ -51,6 +51,7 @@ namespace PetFamily.Application.Volunteers.Create
                 return Errors.General.Conflict().ToErrorsList();
 
             var volunteer = new Volunteer(
+                Guid.NewGuid(),
                 fullNameResult,
                 emailResult,
                 descriptionResult,
