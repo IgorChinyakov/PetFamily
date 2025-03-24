@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using PetFamily.Api.Extensions;
 using PetFamily.Api.Requests.Volunteers;
 using PetFamily.Api.Response;
-using PetFamily.Application.Volunteers.CreateVolunteer;
+using PetFamily.Application.Volunteers.Create;
 using PetFamily.Application.Volunteers.Delete;
 using PetFamily.Application.Volunteers.UpdateDetails;
 using PetFamily.Application.Volunteers.UpdateMainInfo;

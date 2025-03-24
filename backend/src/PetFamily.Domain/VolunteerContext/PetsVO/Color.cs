@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PetFamily.Domain.Pets.Value_objects
+namespace PetFamily.Domain.VolunteerContext.PetsVO
 {
     public record Color
     {
