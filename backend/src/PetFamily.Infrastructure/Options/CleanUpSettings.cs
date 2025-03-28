@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PetFamily.Infrastructure.BackgroundServices
+namespace PetFamily.Infrastructure.Options
 {
     public class CleanUpSettings()
     {
