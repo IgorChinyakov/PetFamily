@@ -25,10 +25,10 @@ namespace PetFamily.Domain.Shared
         public static Error Validation(string code, string message, string? propertyName = null)
             => new Error(code, message, ErrorType.Validation, propertyName);
 
-        public static Error NotFound(string code, string message, string? propertyName)
+        public static Error NotFound(string code, string message, string? propertyName = null)
             => new Error(code, message, ErrorType.NotFound, propertyName);
 
-        public static Error Failure(string code, string message, string? propertyName)
+        public static Error Failure(string code, string message, string? propertyName = null)
             => new Error(code, message, ErrorType.Failure, propertyName);
 
         public static Error Conflict(string code, string message, string? propertyName)
