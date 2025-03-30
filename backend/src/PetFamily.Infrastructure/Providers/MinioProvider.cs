@@ -15,7 +15,7 @@ namespace PetFamily.Infrastructure.Providers
 {
     public class MinioProvider : IFilesProvider
     {
-        private const int PERSIGNED_EXPIRATION_TIME = 60 * 60 * 24;
+        private const int PRESIGNED_EXPIRATION_TIME = 60 * 60 * 24;
         private readonly IMinioClient _minioClient;
         private readonly ILogger<MinioProvider> _logger;
 
@@ -97,7 +97,7 @@ namespace PetFamily.Infrastructure.Providers
                 var presignedGetObjectArgs = new PresignedGetObjectArgs()
                     .WithBucket(fileMeta.BucketName)
                     .WithObject(fileMeta.ObjectName)
-                    .WithExpiry(PERSIGNED_EXPIRATION_TIME);
+                    .WithExpiry(PRESIGNED_EXPIRATION_TIME);
 
                 var result = await _minioClient
                     .PresignedGetObjectAsync(presignedGetObjectArgs);

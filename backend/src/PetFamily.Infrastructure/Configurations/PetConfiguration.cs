@@ -28,12 +28,11 @@ namespace PetFamily.Infrastructure.Configurations
                 b.Property(ps => ps.Value)
                 .IsRequired(true)
                 .HasColumnName("status");
-            });
+            }); 
 
             builder.Property(p => p.BreedId).HasConversion(
                 id => id.Value,
                 value => BreedId.Create(value).Value);
-
 
             builder.Property(p => p.SpeciesId).HasConversion(
                 id => id.Value,

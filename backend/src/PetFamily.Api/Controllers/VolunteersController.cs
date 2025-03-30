@@ -3,8 +3,11 @@ using FluentValidation;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using PetFamily.Api.Extensions;
+using PetFamily.Api.Requests.Pets;
 using PetFamily.Api.Requests.Volunteers;
 using PetFamily.Api.Response;
+using PetFamily.Application.FileProvider;
+using PetFamily.Application.Pets.Create;
 using PetFamily.Application.Volunteers.Create;
 using PetFamily.Application.Volunteers.Delete;
 using PetFamily.Application.Volunteers.UpdateDetails;
@@ -16,7 +19,7 @@ using System.Linq;
 
 namespace PetFamily.Api.Controllers
 {
-    public class VolunteerController : ApplicationController
+    public class VolunteersController : ApplicationController
     {
         [HttpPost]
         public async Task<ActionResult<Guid>> Create(
@@ -112,6 +115,48 @@ namespace PetFamily.Api.Controllers
                 return result.Error.ToResponse();
 
             return result.Value;
+        }
+
+        [HttpPost("{volunteerId:guid}/pets")]
+        public async Task<ActionResult<Guid>> CreatePet(
+            [FromServices]CreatePetHandler handler,
+            [FromRoute]Guid volunteerId,
+            [FromBody]CreatePetRequest request,
+            CancellationToken token = default)
+        {
+            var command = new CreatePetCommand(
+                volunteerId,
+                request.NickName,
+                request.Description,
+                request.SpeciesId,
+                request.BreedId,
+                request.Color,
+                request.IsSterilized,
+                request.IsVaccinated,
+                request.HealthInformation,
+                request.Address,
+                request.Weight,
+                request.Height,
+                request.Birthday,
+                request.PetStatus);
+
+            var result = await handler.Handle(command, token);
+
+            if(result.IsFailure)
+                return result.Error.ToResponse();
+
+           return result.Value;
+        }
+
+        [HttpPost("{volunteerId:guid}/pets/{petId:guid}")]
+        public async Task<ActionResult<Guid>> AddPetPhotos(
+            [FromServices] CreatePetHandler handler,
+            [FromRoute] Guid volunteerId,
+            [FromRoute] Guid petId,
+            [FromForm] IFormFileCollection files,
+            CancellationToken token = default)
+        {
+
         }
     }
 }

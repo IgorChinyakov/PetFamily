@@ -19,11 +19,11 @@ namespace PetFamily.Application.Volunteers.Create
             RuleFor(c => c.Description).MustBeValueObject(Description.Create);
             RuleFor(c => c.PhoneNumber).MustBeValueObject(PhoneNumber.Create);
 
-            RuleFor(c => new { c.FullName.Name, c.FullName.SecondName, c.FullName.FamilyName })
+            RuleFor(c => c.FullName)
                 .MustBeValueObject(fn => FullName.Create(fn.Name, fn.SecondName, fn.FamilyName));
 
             RuleForEach(c => c.DetailsList)
-                .MustBeValueObject(d => SocialMedia.Create(d.Title, d.Description));
+                .MustBeValueObject(d => Details.Create(d.Title, d.Description));
 
             RuleForEach(c => c.SocialMediaList)
                 .MustBeValueObject(sm => SocialMedia.Create(sm.Title, sm.Link));

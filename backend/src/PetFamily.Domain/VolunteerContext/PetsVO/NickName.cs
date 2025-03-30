@@ -21,7 +21,7 @@ namespace PetFamily.Domain.VolunteerContext.PetsVO
         public static Result<NickName, Error> Create(string value)
         {
             if (string.IsNullOrWhiteSpace(value) || value.Length > MAX_LENGTH)
-                return Errors.General.ValueIsInvalid(value);
+                return Errors.General.ValueIsInvalid("Nickname");
 
             return new NickName(value);
         }
