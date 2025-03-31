@@ -11,7 +11,7 @@ namespace PetFamily.Application.Interfaces
 {
     public interface IFilesProvider
     {
-        Task<Result<string, Error>> UploadFile(FileData fileData, CancellationToken cancellationToken = default);
+        Task<UnitResult<Error>> UploadFiles(FilesData fileData, CancellationToken cancellationToken = default);
 
         Task<Result<string, Error>> DeleteFile(FileMeta fileMeta, CancellationToken cancellationToken = default);
 

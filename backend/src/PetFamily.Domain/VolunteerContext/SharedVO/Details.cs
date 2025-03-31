@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace PetFamily.Domain.VolunteerContext.SharedVO
@@ -17,6 +18,7 @@ namespace PetFamily.Domain.VolunteerContext.SharedVO
         {
         }
 
+        [JsonConstructor]
         private Details(string title, string description)
         {
             Title = title;

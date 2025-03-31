@@ -44,15 +44,15 @@ namespace PetFamily.Application.Pets.Create
             if (!result.IsValid)
                 return result.ToErrorsList();
 
-            var getVolunteerResult = await 
+            var volunteerResult = await 
                 _volunteerRepository.GetById(command.VolunteerId, token);
-            if (getVolunteerResult.IsFailure)
-                return getVolunteerResult.Error.ToErrorsList();
+            if (volunteerResult.IsFailure)
+                return volunteerResult.Error.ToErrorsList();
 
-            var getSpeciesResult = await 
+            var speciesResult = await 
                 _speciesRepository.GetById(command.SpeciesId, command.BreedId, token);
-            if (getSpeciesResult.IsFailure)
-                return getSpeciesResult.Error.ToErrorsList();
+            if (speciesResult.IsFailure)
+                return speciesResult.Error.ToErrorsList();
 
             var nickName = NickName.Create(command.NickName).Value;
             var description = Description.Create(command.Description).Value;
@@ -69,8 +69,8 @@ namespace PetFamily.Application.Pets.Create
             var petStatus = PetStatus.Create(command.PetStatus).Value;
 
             var creationDate = CreationDate.Create(DateTime.UtcNow).Value;
-            var phoneNumber = getVolunteerResult.Value.PhoneNumber;
-            var detailsList = getVolunteerResult.Value.DetailsList;
+            var phoneNumber = volunteerResult.Value.PhoneNumber;
+            var detailsList = volunteerResult.Value.DetailsList.Select(dl => Details.Create(dl.Title, dl.Description).Value);
 
             var pet = new Pet(
                 Guid.Empty,
@@ -91,8 +91,8 @@ namespace PetFamily.Application.Pets.Create
                 petStatus,
                 detailsList);
 
-            getVolunteerResult.Value.AddPet(pet);
-            await _volunteerRepository.Save(getVolunteerResult.Value, token);
+            volunteerResult.Value.AddPet(pet);
+            await _volunteerRepository.Save(volunteerResult.Value, token);
 
             var petId = pet.Id;
 

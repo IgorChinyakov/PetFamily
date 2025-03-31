@@ -6,5 +6,7 @@ using System.Threading.Tasks;
 
 namespace PetFamily.Application.FileProvider
 {
-    public record FileData(Stream Stream, string BucketName, string ObjectName);
+    public record FilesData(IEnumerable<FileContent> Files, string BucketName);
+
+    public record FileContent(Stream Stream, string FileName);
 }

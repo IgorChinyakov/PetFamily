@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using PetFamily.Application.Pets.Create;
+using PetFamily.Application.Pets.UploadPhotos;
 using PetFamily.Application.Volunteers;
 using PetFamily.Application.Volunteers.Create;
 using PetFamily.Application.Volunteers.Delete;
@@ -20,6 +21,7 @@ namespace PetFamily.Application
             services.AddScoped<UpdateSocialMediaHandler>();
             services.AddScoped<UpdateDetailsHandler>();
             services.AddScoped<DeleteVolunteerHandler>();
+            services.AddScoped<UploadPhotosHandler>();
 
             services.AddValidatorsFromAssembly(typeof(Inject).Assembly);
 
