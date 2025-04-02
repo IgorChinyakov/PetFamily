@@ -28,12 +28,11 @@ namespace PetFamily.Infrastructure.Configurations
                 b.Property(ps => ps.Value)
                 .IsRequired(true)
                 .HasColumnName("status");
-            });
+            }); 
 
             builder.Property(p => p.BreedId).HasConversion(
                 id => id.Value,
                 value => BreedId.Create(value).Value);
-
 
             builder.Property(p => p.SpeciesId).HasConversion(
                 id => id.Value,
@@ -96,6 +95,15 @@ namespace PetFamily.Infrastructure.Configurations
                          c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
                          c => c.ToList()))
                  .HasColumnName("details");
+
+            builder.Property(v => v.Files).HasConversion(
+                  v => JsonSerializer.Serialize(v, JsonSerializerOptions.Default),
+                  v => JsonSerializer.Deserialize<IReadOnlyList<PetFile>>(v, JsonSerializerOptions.Default)!,
+                   new ValueComparer<IReadOnlyList<PetFile>>(
+                         (c1, c2) => c1!.SequenceEqual(c2!),
+                         c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
+                         c => c.ToList()))
+                 .HasColumnName("file_paths");
 
             builder.ComplexProperty(v => v.OwnerPhoneNumber, vb =>
             {

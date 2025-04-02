@@ -13,6 +13,7 @@ namespace PetFamily.Domain.VolunteerContext.Entities
     public class Pet : SoftDeletableEntity
     {
         private readonly IReadOnlyList<Details> _detailsList = [];
+        private IReadOnlyList<PetFile> _files = [];
 
         public NickName NickName { get; private set; }
         public Description Description { get; private set; }
@@ -31,6 +32,7 @@ namespace PetFamily.Domain.VolunteerContext.Entities
         public PetStatus PetStatus { get; private set; }
         public Position Position { get; private set; }
         public IReadOnlyList<Details> DetailsList => _detailsList;
+        public IReadOnlyList<PetFile> Files => _files;
 
         private Pet(Guid id) : base(id)
         {
@@ -75,6 +77,13 @@ namespace PetFamily.Domain.VolunteerContext.Entities
 
         public void SetPosition(Position number) 
             => Position = number;
+
+        public void AddFiles(IEnumerable<PetFile> files)
+        {
+            var newFiles = _files.ToList();
+            newFiles.AddRange(files);
+            _files = newFiles;
+        }
 
         public UnitResult<Error> MoveForward()
         {

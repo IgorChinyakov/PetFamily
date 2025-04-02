@@ -1,5 +1,7 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
+using PetFamily.Application.Pets.Create;
+using PetFamily.Application.Pets.UploadPhotos;
 using PetFamily.Application.Volunteers;
 using PetFamily.Application.Volunteers.Create;
 using PetFamily.Application.Volunteers.Delete;
@@ -13,11 +15,13 @@ namespace PetFamily.Application
     {
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
+            services.AddScoped<CreatePetHandler>();
             services.AddScoped<CreateVolunteerHandler>();
             services.AddScoped<UpdateMainInfoHandler>();
             services.AddScoped<UpdateSocialMediaHandler>();
             services.AddScoped<UpdateDetailsHandler>();
             services.AddScoped<DeleteVolunteerHandler>();
+            services.AddScoped<UploadPhotosHandler>();
 
             services.AddValidatorsFromAssembly(typeof(Inject).Assembly);
 

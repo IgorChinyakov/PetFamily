@@ -5,6 +5,7 @@ using PetFamily.Domain.VolunteerContext.SharedVO;
 using PetFamily.Domain.VolunteerContext.VolunteerVO;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
