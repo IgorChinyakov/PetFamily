@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using PetFamily.Application.Pets.Create;
+using PetFamily.Application.Pets.Move;
 using PetFamily.Application.Pets.UploadPhotos;
 using PetFamily.Application.Volunteers;
 using PetFamily.Application.Volunteers.Create;
@@ -16,6 +17,7 @@ namespace PetFamily.Application
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
             services.AddScoped<CreatePetHandler>();
+            services.AddScoped<MovePetHandler>();
             services.AddScoped<CreateVolunteerHandler>();
             services.AddScoped<UpdateMainInfoHandler>();
             services.AddScoped<UpdateSocialMediaHandler>();

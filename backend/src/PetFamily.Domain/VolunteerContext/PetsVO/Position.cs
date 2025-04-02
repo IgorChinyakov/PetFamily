@@ -20,7 +20,7 @@ namespace PetFamily.Domain.VolunteerContext.PetsVO
         public static Result<Position, Error> Create(int value) 
         {
             if (value < 1)
-                return Errors.General.ValueIsInvalid("Serial number");
+                return Errors.General.ValueIsInvalid("Position");
 
             return new Position(value); 
         }

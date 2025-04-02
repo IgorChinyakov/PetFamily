@@ -1,9 +1,12 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Identity.Data;
+using Microsoft.Extensions.Logging;
 using PetFamily.Application.FileProvider;
 using PetFamily.Application.Interfaces;
+using PetFamily.Application.Pets.Move;
 using PetFamily.Application.Volunteers;
 using PetFamily.Domain.Shared;
+using PetFamily.Domain.VolunteerContext.Entities;
 using PetFamily.Domain.VolunteerContext.PetsVO;
 
 namespace PetFamily.Application.Pets.UploadPhotos
@@ -12,12 +15,16 @@ namespace PetFamily.Application.Pets.UploadPhotos
     {
         private readonly IVolunteerRepository _volunteerRepository;
         private readonly IFilesProvider _filesProvider;
+        private readonly ILogger<MovePetHandler> _logger;
 
         public UploadPhotosHandler(
-            IVolunteerRepository volunteerRepository, IFilesProvider filesProvider)
+            IVolunteerRepository volunteerRepository, 
+            IFilesProvider filesProvider, 
+            ILogger<MovePetHandler> logger)
         {
             _volunteerRepository = volunteerRepository;
             _filesProvider = filesProvider;
+            _logger = logger;
         }
 
         public async Task<UnitResult<ErrorsList>> Handle(
@@ -58,6 +65,8 @@ namespace PetFamily.Application.Pets.UploadPhotos
             petResult.Value.AddFiles(petFiles);
 
             await _volunteerRepository.Save(volunteerResult.Value);
+
+            _logger.LogInformation("Photos for pet with id {petResult} have been uploaded", petResult.Value.Id);
 
             return Result.Success<ErrorsList>();
         }
