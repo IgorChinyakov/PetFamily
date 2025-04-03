@@ -129,6 +129,14 @@ namespace PetFamily.Domain.VolunteerContext.Entities
             return Result.Success<Error>();
         }
 
+        public Result<Pet, Error> GetPetById(Guid guid)
+        {
+            var petResult = _pets.Where(p => p.Id == guid).FirstOrDefault();
+            if (petResult == null)
+                return Errors.General.NotFound(guid);
+
+            return petResult;
+        }
         private UnitResult<Error> MovePetsBetweenPositions(Position positionToMove, Position currentPosition)
         {
             if (currentPosition < positionToMove)
@@ -169,15 +177,6 @@ namespace PetFamily.Domain.VolunteerContext.Entities
                 return lastPosition.Error;
 
             return lastPosition.Value;
-        }
-
-        public Result<Pet, Error> GetPetById(Guid guid)
-        {
-            var petResult = _pets.Where(p => p.Id == guid).FirstOrDefault();
-            if (petResult == null)
-                return Errors.General.NotFound(guid);
-
-            return petResult;
         }
     }
 }

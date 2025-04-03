@@ -5,6 +5,7 @@ using PetFamily.Api.Requests.Volunteers;
 using PetFamily.Api.Response;
 using PetFamily.Application.FileProvider;
 using PetFamily.Application.Pets.Create;
+using PetFamily.Application.Pets.Move;
 using PetFamily.Application.Pets.UploadPhotos;
 using PetFamily.Application.Volunteers.Create;
 using PetFamily.Application.Volunteers.Delete;
@@ -163,18 +164,36 @@ namespace PetFamily.Api.Controllers
                 }
 
                 var command = new UploadPhotosCommand(fileDtos, volunteerId, petId, BUCKET_NAME);
-                
+
                 var result = await handler.Handle(command, token);
                 if (result.IsFailure)
                     return result.Error.ToResponse();
-                
+
                 return Ok();
             }
             finally
-                {
+            {
                 foreach (var fileDto in fileDtos)
                     await fileDto.Stream.DisposeAsync();
             }
+        }
+
+        [HttpPost("{volunteerId:guid}/pets/{petId:guid}/pet-movement")]
+        public async Task<ActionResult<Guid>> MovePet(
+            [FromServices] MovePetHandler handler,
+            [FromBody] MovePetRequest request,
+            [FromRoute] Guid volunteerId,
+            [FromRoute] Guid petId,
+            CancellationToken token = default)
+        {
+            var command = new MovePetCommand(
+                volunteerId, petId, request.Position);
+
+            var movementResult = await handler.Handle(command, token);
+            if(movementResult.IsFailure)
+                return movementResult.Error.ToResponse();
+           
+            return Ok();
         }
     }
 }

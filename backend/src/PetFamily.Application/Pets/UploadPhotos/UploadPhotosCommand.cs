@@ -7,5 +7,9 @@ using System.Threading.Tasks;
 
 namespace PetFamily.Application.Pets.UploadPhotos
 {
-    public record UploadPhotosCommand(IEnumerable<FileDto> FileDtos, Guid VolunteerId, Guid PetId, string BucketName);
+    public record UploadPhotosCommand(
+        IEnumerable<FileDto> FileDtos, 
+        Guid VolunteerId, 
+        Guid PetId, 
+        string BucketName);
 }
