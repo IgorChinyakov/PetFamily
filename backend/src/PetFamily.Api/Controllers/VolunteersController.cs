@@ -178,7 +178,7 @@ namespace PetFamily.Api.Controllers
             }
         }
 
-        [HttpPost("pet-movement/{volunteerId:guid}/pets/{petId:guid}")]
+        [HttpPost("{volunteerId:guid}/pets/{petId:guid}/pet-movement")]
         public async Task<ActionResult<Guid>> MovePet(
             [FromServices] MovePetHandler handler,
             [FromBody] MovePetRequest request,
