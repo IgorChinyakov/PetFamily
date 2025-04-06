@@ -32,15 +32,15 @@ namespace PetFamily.Infrastructure.BackgroundServices
         {
             _logger.LogInformation("Minio files cleaner service has started");
 
-            await using var scope = _scopeFactory.CreateAsyncScope();
-
-            var filesProvider = scope.ServiceProvider.GetRequiredService<IFilesProvider>();
-            
             while (!stoppingToken.IsCancellationRequested)
             {
+                await using var scope = _scopeFactory.CreateAsyncScope();
+
+                var filesProvider = scope.ServiceProvider.GetRequiredService<IFilesProvider>();
+
                 var paths = await _messageQueue.ReadAsync(stoppingToken);
 
-                foreach ( var path in paths) 
+                foreach (var path in paths)
                     await filesProvider.RemoveFile(path, stoppingToken);
 
                 _logger.LogInformation("Minio files cleaner service has removed unsuccesfully uploaded files");

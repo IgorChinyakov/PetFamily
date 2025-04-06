@@ -27,12 +27,13 @@ namespace PetFamily.Infrastructure.BackgroundServices
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             _logger.LogInformation("Deleted entities cleaner background service has started");
-            await using var scope = _scopeFactory.CreateAsyncScope();
-
-            var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
             while (!stoppingToken.IsCancellationRequested)
             {
+                await using var scope = _scopeFactory.CreateAsyncScope();
+
+                var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
                 var expiredVolunteers = await dbContext
                     .Volunteers
                     .Where(v =>
