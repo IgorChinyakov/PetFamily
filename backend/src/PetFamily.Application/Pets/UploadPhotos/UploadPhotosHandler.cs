@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.Extensions.Logging;
 using PetFamily.Application.FileProvider;
 using PetFamily.Application.Interfaces;
+using PetFamily.Application.Messaging;
 using PetFamily.Application.Pets.Move;
 using PetFamily.Application.Volunteers;
 using PetFamily.Domain.Shared;
@@ -16,15 +17,18 @@ namespace PetFamily.Application.Pets.UploadPhotos
         private readonly IVolunteerRepository _volunteerRepository;
         private readonly IFilesProvider _filesProvider;
         private readonly ILogger<MovePetHandler> _logger;
+        private readonly IMessageQueue<IEnumerable<FileMeta>> _messageQueue;
 
         public UploadPhotosHandler(
             IVolunteerRepository volunteerRepository, 
             IFilesProvider filesProvider, 
-            ILogger<MovePetHandler> logger)
+            ILogger<MovePetHandler> logger,
+            IMessageQueue<IEnumerable<FileMeta>> messageQueue)
         {
             _volunteerRepository = volunteerRepository;
             _filesProvider = filesProvider;
             _logger = logger;
+            _messageQueue = messageQueue;
         }
 
         public async Task<UnitResult<ErrorsList>> Handle(
@@ -60,7 +64,12 @@ namespace PetFamily.Application.Pets.UploadPhotos
 
             var uploadResult = await _filesProvider.UploadFiles(fileData, token);
             if(uploadResult.IsFailure)
+            {
+                //добавить данные о путях в channel
+                var fileMetas = fileContents.Select(fc => new FileMeta(command.BucketName, fc.FileName));
+                await _messageQueue.WriteAsync(fileMetas);
                 return uploadResult.Error.ToErrorsList();
+            }
 
             petResult.Value.AddFiles(petFiles);
 

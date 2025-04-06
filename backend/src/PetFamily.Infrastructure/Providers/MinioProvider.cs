@@ -83,20 +83,28 @@ namespace PetFamily.Infrastructure.Providers
             return Result.Success<Error>();
         }
 
-        public async Task<Result<string, Error>> DeleteFile(
+        public async Task<Result<string, Error>> RemoveFile(
             FileMeta fileMeta,
             CancellationToken cancellationToken = default)
         {
             try
             {
+                var statArgs = new StatObjectArgs()
+                    .WithBucket(fileMeta.BucketName)
+                    .WithObject(fileMeta.FilePath);
+
+                var objectStat = await _minioClient.StatObjectAsync(statArgs, cancellationToken);
+                if (objectStat is null)
+                    return fileMeta.FilePath;
+
                 var removeObjectArgs = new RemoveObjectArgs()
                     .WithBucket(fileMeta.BucketName)
-                    .WithObject(fileMeta.ObjectName);
+                    .WithObject(fileMeta.FilePath);
 
                 await _minioClient
                     .RemoveObjectAsync(removeObjectArgs, cancellationToken);
 
-                return fileMeta.ObjectName;
+                return fileMeta.FilePath;
             }
             catch (Exception ex)
             {
@@ -113,7 +121,7 @@ namespace PetFamily.Infrastructure.Providers
             {
                 var presignedGetObjectArgs = new PresignedGetObjectArgs()
                     .WithBucket(fileMeta.BucketName)
-                    .WithObject(fileMeta.ObjectName)
+                    .WithObject(fileMeta.FilePath)
                     .WithExpiry(PRESIGNED_EXPIRATION_TIME);
 
                 var result = await _minioClient
