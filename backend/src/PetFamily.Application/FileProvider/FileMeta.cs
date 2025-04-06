@@ -6,5 +6,5 @@ using System.Threading.Tasks;
 
 namespace PetFamily.Application.FileProvider
 {
-    public record FileMeta(string BucketName, string ObjectName);
+    public record FileMeta(string BucketName, string FilePath);
 }

@@ -13,7 +13,7 @@ namespace PetFamily.Application.Interfaces
     {
         Task<UnitResult<Error>> UploadFiles(FilesData fileData, CancellationToken cancellationToken = default);
 
-        Task<Result<string, Error>> DeleteFile(FileMeta fileMeta, CancellationToken cancellationToken = default);
+        Task<Result<string, Error>> RemoveFile(FileMeta fileMeta, CancellationToken cancellationToken = default);
 
         Task<Result<string, Error>> PresignedGetObject(FileMeta fileMeta, CancellationToken cancellationToken = default);
     }

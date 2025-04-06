@@ -2,10 +2,13 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Minio;
+using PetFamily.Application.FileProvider;
 using PetFamily.Application.Interfaces;
+using PetFamily.Application.Messaging;
 using PetFamily.Application.Specieses;
 using PetFamily.Application.Volunteers;
 using PetFamily.Infrastructure.BackgroundServices;
+using PetFamily.Infrastructure.MessageQueues;
 using PetFamily.Infrastructure.Options;
 using PetFamily.Infrastructure.Providers;
 using PetFamily.Infrastructure.Repositories;
@@ -31,6 +34,9 @@ namespace PetFamily.Infrastructure
             services.AddScoped<IFilesProvider, MinioProvider>();
 
             services.AddHostedService<DeletedEntitiesCleanerBackgroundService>();
+            services.AddHostedService<FilesCleanerBackgroundService>();
+
+            services.AddSingleton<IMessageQueue<IEnumerable<FileMeta>>, InMemoryMessageQueue<IEnumerable<FileMeta>>>();
 
             services.AddMinio(configuration);
 

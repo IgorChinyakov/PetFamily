@@ -26,6 +26,8 @@ namespace PetFamily.Infrastructure.BackgroundServices
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            _logger.LogInformation("Deleted entities cleaner background service has started");
+
             while (!stoppingToken.IsCancellationRequested)
             {
                 await using var scope = _scopeFactory.CreateAsyncScope();
