@@ -8,6 +8,6 @@ using System.Threading.Tasks;
 namespace PetFamily.Application.Volunteers.UpdateDetails
 {
     public record UpdateDetailsCommand(
-        Guid Id, 
+        Guid VolunteerId, 
         IEnumerable<DetailsDto> Details);
 }

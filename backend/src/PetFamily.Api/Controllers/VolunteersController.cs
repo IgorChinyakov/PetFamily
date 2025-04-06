@@ -25,14 +25,7 @@ namespace PetFamily.Api.Controllers
             [FromBody] CreateVolunteerRequest request,
             CancellationToken token = default)
         {
-            var command = new CreateVolunteerCommand(
-                request.FullName,
-                request.Email,
-                request.Description,
-                request.Experience,
-                request.PhoneNumber,
-                request.DetailsList,
-                request.SocialMediaList);
+            var command = request.ToCommand();
 
             var result = await handler.Handle(command, token);
 
@@ -49,13 +42,7 @@ namespace PetFamily.Api.Controllers
             [FromRoute] Guid id,
             CancellationToken token = default)
         {
-            var command = new UpdateMainInfoCommand(
-                id,
-                request.FullName,
-                request.Email,
-                request.Description,
-                request.Experience,
-                request.PhoneNumber);
+            var command = request.ToCommand(id);
 
             var result = await handler.Handle(command, token);
 
@@ -72,7 +59,7 @@ namespace PetFamily.Api.Controllers
             [FromRoute] Guid id,
             CancellationToken token = default)
         {
-            var command = new UpdateSocialMediaCommand(id, request.SocialMedia);
+            var command = request.ToCommand(id);
 
             var result = await handler.Handle(command, token);
 
@@ -89,7 +76,7 @@ namespace PetFamily.Api.Controllers
             [FromRoute] Guid id,
             CancellationToken token = default)
         {
-            var command = new UpdateDetailsCommand(id, request.Details);
+            var command = request.ToCommand(id);
 
             var result = await handler.Handle(command, token);
 
@@ -122,21 +109,7 @@ namespace PetFamily.Api.Controllers
             [FromBody] CreatePetRequest request,
             CancellationToken token = default)
         {
-            var command = new CreatePetCommand(
-                volunteerId,
-                request.NickName,
-                request.Description,
-                request.SpeciesId,
-                request.BreedId,
-                request.Color,
-                request.IsSterilized,
-                request.IsVaccinated,
-                request.HealthInformation,
-                request.Address,
-                request.Weight,
-                request.Height,
-                request.Birthday,
-                request.PetStatus);
+            var command = request.ToCommand(volunteerId);
 
             var result = await handler.Handle(command, token);
 
@@ -186,8 +159,7 @@ namespace PetFamily.Api.Controllers
             [FromRoute] Guid petId,
             CancellationToken token = default)
         {
-            var command = new MovePetCommand(
-                volunteerId, petId, request.Position);
+            var command = request.ToCommand(volunteerId, petId);
 
             var movementResult = await handler.Handle(command, token);
             if(movementResult.IsFailure)

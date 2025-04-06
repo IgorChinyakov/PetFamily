@@ -39,7 +39,7 @@ namespace PetFamily.Application.Volunteers.UpdateMainInfo
             if (!validationResult.IsValid)
                 return validationResult.ToErrorsList();
 
-            var volunteerGetByIdResult = await _repository.GetById(command.Id);
+            var volunteerGetByIdResult = await _repository.GetById(command.VolunteerId);
 
             if (volunteerGetByIdResult.IsFailure)
                 return Errors.General.ValueIsInvalid("VolunteerId").ToErrorsList();

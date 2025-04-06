@@ -1,4 +1,6 @@
-﻿using PetFamily.Application.Volunteers.DTOs;
+﻿using PetFamily.Application.Pets.Create;
+using PetFamily.Application.Pets.Move;
+using PetFamily.Application.Volunteers.DTOs;
 using PetFamily.Domain.VolunteerContext.PetsVO;
 
 namespace PetFamily.Api.Requests.Pets
@@ -16,5 +18,23 @@ namespace PetFamily.Api.Requests.Pets
         float Weight,
         float Height,
         DateTime Birthday,
-        Status PetStatus);
+        Status PetStatus)
+    {
+        public CreatePetCommand ToCommand(Guid volunteerId)
+            => new CreatePetCommand(
+                volunteerId, 
+                NickName, 
+                Description, 
+                SpeciesId, 
+                BreedId, 
+                Color, 
+                IsSterilized, 
+                IsVaccinated, 
+                HealthInformation, 
+                Address, 
+                Weight, 
+                Height, 
+                Birthday, 
+                PetStatus);
+    }
 }
