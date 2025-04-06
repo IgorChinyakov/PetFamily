@@ -14,7 +14,7 @@ namespace PetFamily.Application.Volunteers.UpdateDetails
     {
         public UpdateDetailsCommandValidator()
         {
-            RuleFor(u => u.Id)
+            RuleFor(u => u.VolunteerId)
                 .NotEmpty()
                 .WithError(Errors.General.ValueIsRequired());
 
