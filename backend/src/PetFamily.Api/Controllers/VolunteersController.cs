@@ -1,17 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PetFamily.Api.Extensions;
+using PetFamily.Api.Processors;
 using PetFamily.Api.Requests.Pets;
 using PetFamily.Api.Requests.Volunteers;
 using PetFamily.Api.Response;
-using PetFamily.Application.FileProvider;
-using PetFamily.Application.Pets.Create;
-using PetFamily.Application.Pets.Move;
-using PetFamily.Application.Pets.UploadPhotos;
-using PetFamily.Application.Volunteers.Create;
-using PetFamily.Application.Volunteers.Delete;
-using PetFamily.Application.Volunteers.UpdateDetails;
-using PetFamily.Application.Volunteers.UpdateMainInfo;
-using PetFamily.Application.Volunteers.UpdateSocialMedia;
+using PetFamily.Application.Pets.UseCases.Create;
+using PetFamily.Application.Pets.UseCases.Move;
+using PetFamily.Application.Pets.UseCases.UploadPhotos;
+using PetFamily.Application.Volunteers.UseCases.Create;
+using PetFamily.Application.Volunteers.UseCases.Delete;
+using PetFamily.Application.Volunteers.UseCases.UpdateDetails;
+using PetFamily.Application.Volunteers.UseCases.UpdateMainInfo;
+using PetFamily.Application.Volunteers.UseCases.UpdateSocialMedia;
 
 namespace PetFamily.Api.Controllers
 {
@@ -127,28 +127,15 @@ namespace PetFamily.Api.Controllers
             [FromForm] IFormFileCollection files,
             CancellationToken token = default)
         {
-            List<FileDto> fileDtos = [];
-            try
-            {
-                foreach (var file in files)
-                {
-                    var stream = file.OpenReadStream();
-                    fileDtos.Add(new FileDto(stream, file.FileName));
-                }
+            await using var processor = new FormFileProcessor();
+            var fileDtos = processor.Process(files);
+            var command = new UploadPhotosCommand(fileDtos, volunteerId, petId, BUCKET_NAME);
 
-                var command = new UploadPhotosCommand(fileDtos, volunteerId, petId, BUCKET_NAME);
+            var result = await handler.Handle(command, token);
+            if (result.IsFailure)
+                return result.Error.ToResponse();
 
-                var result = await handler.Handle(command, token);
-                if (result.IsFailure)
-                    return result.Error.ToResponse();
-
-                return Ok();
-            }
-            finally
-            {
-                foreach (var fileDto in fileDtos)
-                    await fileDto.Stream.DisposeAsync();
-            }
+            return Ok(Envelope.Ok(result.Value));
         }
 
         [HttpPost("{volunteerId:guid}/pets/{petId:guid}/pet-movement")]
