@@ -1,7 +1,5 @@
-﻿using PetFamily.Application.Volunteers.DTOs;
-using PetFamily.Application.Volunteers.UpdateDetails;
-using PetFamily.Application.Volunteers.UpdateSocialMedia;
-using PetFamily.Domain.VolunteerContext.SharedVO;
+﻿using PetFamily.Application.Volunteers.UseCases.DTOs;
+using PetFamily.Application.Volunteers.UseCases.UpdateSocialMedia;
 
 namespace PetFamily.Api.Requests.Volunteers
 {

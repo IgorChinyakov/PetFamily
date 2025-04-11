@@ -76,20 +76,18 @@ namespace PetFamily.Infrastructure.Repositories
             return volunteer.Id;
         }
 
-        public async Task<Guid> SoftDelete(
+        public Guid SoftDelete(
             Volunteer volunteer, CancellationToken token = default)
         {
             volunteer.Delete();
-            await _context.SaveChangesAsync(token);
 
             return volunteer.Id;
         }
 
-        public async Task<Guid> HardDelete(
+        public Guid HardDelete(
             Volunteer volunteer, CancellationToken token = default)
         {
             _context.Remove(volunteer);
-            await _context.SaveChangesAsync(token);
 
             return volunteer.Id;
         }
