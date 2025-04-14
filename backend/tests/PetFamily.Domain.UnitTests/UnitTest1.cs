@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Xunit.Abstractions;
 
-namespace TestProject1
+namespace PetFamily.Domain.UnitTests
 {
     public class UnitTest1
     {

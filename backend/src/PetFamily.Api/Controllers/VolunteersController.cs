@@ -4,14 +4,18 @@ using PetFamily.Api.Processors;
 using PetFamily.Api.Requests.Pets;
 using PetFamily.Api.Requests.Volunteers;
 using PetFamily.Api.Response;
-using PetFamily.Application.Pets.UseCases.Create;
-using PetFamily.Application.Pets.UseCases.Move;
-using PetFamily.Application.Pets.UseCases.UploadPhotos;
-using PetFamily.Application.Volunteers.UseCases.Create;
-using PetFamily.Application.Volunteers.UseCases.Delete;
-using PetFamily.Application.Volunteers.UseCases.UpdateDetails;
-using PetFamily.Application.Volunteers.UseCases.UpdateMainInfo;
-using PetFamily.Application.Volunteers.UseCases.UpdateSocialMedia;
+using PetFamily.Application.Abstractions;
+using PetFamily.Application.Models;
+using PetFamily.Application.Pets.Commands.Create;
+using PetFamily.Application.Pets.Commands.Move;
+using PetFamily.Application.Pets.Commands.UploadPhotos;
+using PetFamily.Application.Volunteers.Commands.Create;
+using PetFamily.Application.Volunteers.Commands.Delete;
+using PetFamily.Application.Volunteers.Commands.UpdateDetails;
+using PetFamily.Application.Volunteers.Commands.UpdateMainInfo;
+using PetFamily.Application.Volunteers.Commands.UpdateSocialMedia;
+using PetFamily.Application.Volunteers.DTOs;
+using PetFamily.Application.Volunteers.Queries.GetVolunteersWithPagination;
 
 namespace PetFamily.Api.Controllers
 {
@@ -19,9 +23,22 @@ namespace PetFamily.Api.Controllers
     {
         public const string BUCKET_NAME = "photos";
 
+        [HttpGet]
+        public async Task<ActionResult<Guid>> Get(
+            [FromQuery] GetWithPaginationRequest request,
+            [FromServices] IQueryHandler<PagedList<VolunteerDto>, GetVolunteersWithPaginationQuery> handler,
+            CancellationToken token = default)
+        {
+            var query = request.ToQuery();
+
+            var response = await handler.Handle(query, token);
+
+            return Ok(Envelope.Ok(response));
+        }
+
         [HttpPost]
         public async Task<ActionResult<Guid>> Create(
-            [FromServices] CreateVolunteerHandler handler,
+            [FromServices] ICommandHandler<Guid, CreateVolunteerCommand> handler,
             [FromBody] CreateVolunteerRequest request,
             CancellationToken token = default)
         {
@@ -37,7 +54,7 @@ namespace PetFamily.Api.Controllers
 
         [HttpPut("{id:guid}/main-info")]
         public async Task<ActionResult<Guid>> UpdateMainInfo(
-            [FromServices] UpdateMainInfoHandler handler,
+            [FromServices] ICommandHandler<Guid, UpdateMainInfoCommand> handler,
             [FromBody] UpdateMainInfoRequest request,
             [FromRoute] Guid id,
             CancellationToken token = default)
@@ -54,7 +71,7 @@ namespace PetFamily.Api.Controllers
 
         [HttpPut("{id:guid}/social-media")]
         public async Task<ActionResult<Guid>> UpdateSocialMedia(
-            [FromServices] UpdateSocialMediaHandler handler,
+            [FromServices] ICommandHandler<Guid, UpdateSocialMediaCommand> handler,
             [FromBody] UpdateSocialMediaRequest request,
             [FromRoute] Guid id,
             CancellationToken token = default)
@@ -71,7 +88,7 @@ namespace PetFamily.Api.Controllers
 
         [HttpPut("{id:guid}/details")]
         public async Task<ActionResult<Guid>> UpdateDetails(
-            [FromServices] UpdateDetailsHandler handler,
+            [FromServices] ICommandHandler<Guid, UpdateDetailsCommand> handler,
             [FromBody] UpdateDetailsRequest request,
             [FromRoute] Guid id,
             CancellationToken token = default)
@@ -88,7 +105,7 @@ namespace PetFamily.Api.Controllers
 
         [HttpDelete("{id:guid}")]
         public async Task<ActionResult<Guid>> Delete(
-            [FromServices] DeleteVolunteerHandler handler,
+            [FromServices] ICommandHandler<Guid, DeleteVolunteerCommand> handler,
             [FromRoute] Guid id,
             [FromBody] DeletionOptions options,
             CancellationToken token = default)
@@ -104,7 +121,7 @@ namespace PetFamily.Api.Controllers
 
         [HttpPost("{volunteerId:guid}/pets")]
         public async Task<ActionResult<Guid>> CreatePet(
-            [FromServices] CreatePetHandler handler,
+            [FromServices] ICommandHandler<Guid, CreatePetCommand> handler,
             [FromRoute] Guid volunteerId,
             [FromBody] CreatePetRequest request,
             CancellationToken token = default)
@@ -121,7 +138,7 @@ namespace PetFamily.Api.Controllers
 
         [HttpPost("{volunteerId:guid}/pets/{petId:guid}/photos")]
         public async Task<ActionResult<Guid>> AddPetPhotos(
-            [FromServices] UploadPhotosHandler handler,
+            [FromServices] ICommandHandler<IReadOnlyList<string>, UploadPhotosCommand> handler,
             [FromRoute] Guid volunteerId,
             [FromRoute] Guid petId,
             [FromForm] IFormFileCollection files,
@@ -140,7 +157,7 @@ namespace PetFamily.Api.Controllers
 
         [HttpPost("{volunteerId:guid}/pets/{petId:guid}/pet-movement")]
         public async Task<ActionResult<Guid>> MovePet(
-            [FromServices] MovePetHandler handler,
+            [FromServices] ICommandHandler<MovePetCommand> handler,
             [FromBody] MovePetRequest request,
             [FromRoute] Guid volunteerId,
             [FromRoute] Guid petId,
@@ -149,9 +166,9 @@ namespace PetFamily.Api.Controllers
             var command = request.ToCommand(volunteerId, petId);
 
             var movementResult = await handler.Handle(command, token);
-            if(movementResult.IsFailure)
+            if (movementResult.IsFailure)
                 return movementResult.Error.ToResponse();
-           
+
             return Ok();
         }
     }

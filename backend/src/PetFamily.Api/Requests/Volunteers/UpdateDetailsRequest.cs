@@ -1,5 +1,5 @@
-﻿using PetFamily.Application.Volunteers.UseCases.DTOs;
-using PetFamily.Application.Volunteers.UseCases.UpdateDetails;
+﻿using PetFamily.Application.Volunteers.Commands.UpdateDetails;
+using PetFamily.Application.Volunteers.DTOs;
 
 namespace PetFamily.Api.Requests.Volunteers
 {

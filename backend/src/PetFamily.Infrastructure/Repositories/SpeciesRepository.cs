@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using PetFamily.Application.Specieses;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.SpeciesContext.Entities;
+using PetFamily.Infrastructure.DbContexts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,9 +14,9 @@ namespace PetFamily.Infrastructure.Repositories
 {
     public class SpeciesRepository : ISpeciesRepository
     {
-        private readonly ApplicationDbContext _context;
+        private readonly WriteDbContext _context;
 
-        public SpeciesRepository(ApplicationDbContext context)
+        public SpeciesRepository(WriteDbContext context)
         {
             _context = context;
         }
