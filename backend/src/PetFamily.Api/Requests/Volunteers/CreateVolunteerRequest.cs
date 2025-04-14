@@ -1,4 +1,5 @@
-﻿using PetFamily.Application.Volunteers.DTOs;
+﻿using PetFamily.Application.Volunteers.Commands.Create;
+using PetFamily.Application.Volunteers.DTOs;
 
 namespace PetFamily.Api.Requests.Volunteers
 {
@@ -9,5 +10,16 @@ namespace PetFamily.Api.Requests.Volunteers
         int Experience,
         string PhoneNumber,
         List<DetailsDto> DetailsList,
-        List<SocialMediaDto> SocialMediaList);
+        List<SocialMediaDto> SocialMediaList)
+    {
+        public CreateVolunteerCommand ToCommand()
+            => new CreateVolunteerCommand(
+                FullName, 
+                Email, 
+                Description, 
+                Experience, 
+                PhoneNumber, 
+                DetailsList, 
+                SocialMediaList);
+    }
 }

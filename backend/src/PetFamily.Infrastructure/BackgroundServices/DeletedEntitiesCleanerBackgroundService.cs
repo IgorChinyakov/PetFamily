@@ -3,8 +3,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using PetFamily.Domain.SpeciesContext.Entities;
-using PetFamily.Domain.SpeciesContext.ValueObjects;
+using PetFamily.Infrastructure.DbContexts;
+using PetFamily.Infrastructure.Options;
 
 namespace PetFamily.Infrastructure.BackgroundServices
 {
@@ -27,11 +27,13 @@ namespace PetFamily.Infrastructure.BackgroundServices
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            _logger.LogInformation("Deleted entities cleaner background service has started");
+
             while (!stoppingToken.IsCancellationRequested)
             {
                 await using var scope = _scopeFactory.CreateAsyncScope();
 
-                var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                var dbContext = scope.ServiceProvider.GetRequiredService<WriteDbContext>();
 
                 var expiredVolunteers = await dbContext
                     .Volunteers

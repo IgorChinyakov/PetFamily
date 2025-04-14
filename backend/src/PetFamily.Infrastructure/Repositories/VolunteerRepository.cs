@@ -4,6 +4,7 @@ using PetFamily.Application.Volunteers;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.VolunteerContext.Entities;
 using PetFamily.Domain.VolunteerContext.SharedVO;
+using PetFamily.Infrastructure.DbContexts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,9 +15,9 @@ namespace PetFamily.Infrastructure.Repositories
 {
     public class VolunteerRepository : IVolunteerRepository
     {
-        private ApplicationDbContext _context;
+        private readonly WriteDbContext _context;
 
-        public VolunteerRepository(ApplicationDbContext context)
+        public VolunteerRepository(WriteDbContext context)
         {
             _context = context;
         }
@@ -24,12 +25,12 @@ namespace PetFamily.Infrastructure.Repositories
         public async Task<Guid> Add(Volunteer volunteer, CancellationToken token = default)
         {
             await _context.Volunteers.AddAsync(volunteer, token);
-            await _context.SaveChangesAsync(token);
 
             return volunteer.Id;
         }
 
-        public async Task<Result<Volunteer, Error>> GetByPhoneNumber(PhoneNumber phoneNumber, CancellationToken token = default)
+        public async Task<Result<Volunteer, Error>> GetByPhoneNumber(
+            PhoneNumber phoneNumber, CancellationToken token = default)
         {
             var volunteer = await _context.Volunteers
                 .Include(v => v.Pets)
@@ -53,25 +54,40 @@ namespace PetFamily.Infrastructure.Repositories
             return volunteer;
         }
 
-        public async Task<Guid> Save(Volunteer volunteer, CancellationToken token = default)
+        public async Task<Result<Pet, Error>> GetPetById(
+            Guid volunteerId, Guid petId, CancellationToken token)
         {
-            await _context.SaveChangesAsync(token);
+            var volunteerResult = await GetById(volunteerId, token);
+            if (volunteerResult.IsFailure)
+                return Errors.General.NotFound(volunteerId);
+
+            var petResult = volunteerResult.Value.Pets.FirstOrDefault(p => p.Id == petId);
+            if (petResult == null)
+                return Errors.General.NotFound(petId);
+
+            return petResult;
+        }
+
+        public Guid Save(
+            Volunteer volunteer, CancellationToken token = default)
+        {
+            _context.Volunteers.Attach(volunteer);
 
             return volunteer.Id;
         }
 
-        public async Task<Guid> SoftDelete(Volunteer volunteer, CancellationToken token = default)
+        public Guid SoftDelete(
+            Volunteer volunteer, CancellationToken token = default)
         {
             volunteer.Delete();
-            await _context.SaveChangesAsync(token);
 
             return volunteer.Id;
         }
 
-        public async Task<Guid> HardDelete(Volunteer volunteer, CancellationToken token = default)
+        public Guid HardDelete(
+            Volunteer volunteer, CancellationToken token = default)
         {
             _context.Remove(volunteer);
-            await _context.SaveChangesAsync(token);
 
             return volunteer.Id;
         }

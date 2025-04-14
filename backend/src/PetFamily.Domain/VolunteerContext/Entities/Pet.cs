@@ -13,6 +13,7 @@ namespace PetFamily.Domain.VolunteerContext.Entities
     public class Pet : SoftDeletableEntity
     {
         private readonly IReadOnlyList<Details> _detailsList = [];
+        private IReadOnlyList<PetFile> _files = [];
 
         public NickName NickName { get; private set; }
         public Description Description { get; private set; }
@@ -29,14 +30,16 @@ namespace PetFamily.Domain.VolunteerContext.Entities
         public CreationDate CreationDate { get; private set; }
         public PhoneNumber OwnerPhoneNumber { get; private set; }
         public PetStatus PetStatus { get; private set; }
-        public SerialNumber SerialNumber { get; private set; }
+        public Position Position { get; private set; }
         public IReadOnlyList<Details> DetailsList => _detailsList;
+        public IReadOnlyList<PetFile> Files => _files;
 
         private Pet(Guid id) : base(id)
         {
         }
 
         public Pet(
+            Guid id,
             NickName nickName,
             Description description,
             SpeciesId speciesId,
@@ -52,7 +55,7 @@ namespace PetFamily.Domain.VolunteerContext.Entities
             CreationDate creationDate,
             PhoneNumber ownerPhoneNumber,
             PetStatus petStatus,
-            IEnumerable<Details> detailsList) 
+            IEnumerable<Details> detailsList) : base(id)
         {
             NickName = nickName;
             Description = description;
@@ -72,7 +75,36 @@ namespace PetFamily.Domain.VolunteerContext.Entities
             _detailsList = detailsList.ToList();
         }
 
-        public void SetSerialNumber(SerialNumber number) 
-            => SerialNumber = number;
+        public void SetPosition(Position number) 
+            => Position = number;
+
+        public void AddFiles(IEnumerable<PetFile> files)
+        {
+            var newFiles = _files.ToList();
+            newFiles.AddRange(files);
+            _files = newFiles;
+        }
+
+        public UnitResult<Error> MoveForward()
+        {
+            var newPosition = Position.Forward();
+            if (newPosition.IsFailure)
+                return newPosition.Error;
+
+            Position = newPosition.Value;
+
+            return Result.Success<Error>();
+        }
+
+        public UnitResult<Error> MoveBack()
+        {
+            var newPosition = Position.Back();
+            if (newPosition.IsFailure)
+                return newPosition.Error;
+
+            Position = newPosition.Value;
+
+            return Result.Success<Error>();
+        }
     }
 }

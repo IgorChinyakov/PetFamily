@@ -1,5 +1,4 @@
-﻿using CSharpFunctionalExtensions;
-using PetFamily.Domain.Shared;
+﻿using PetFamily.Domain.Shared;
 using PetFamily.Domain.SpeciesContext.ValueObjects;
 using System;
 using System.Collections.Generic;

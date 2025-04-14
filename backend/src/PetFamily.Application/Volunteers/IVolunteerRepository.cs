@@ -13,10 +13,12 @@ namespace PetFamily.Application.Volunteers
 
         Task<Result<Volunteer, Error>> GetById(Guid id, CancellationToken token = default);
 
-        Task<Guid> Save(Volunteer volunteer, CancellationToken token = default);
+        Task<Result<Pet, Error>> GetPetById(Guid volunteerId, Guid petId, CancellationToken token);
 
-        Task<Guid> SoftDelete(Volunteer volunteer, CancellationToken token = default);
+        Guid Save(Volunteer volunteer, CancellationToken token = default);
 
-        Task<Guid> HardDelete(Volunteer volunteer, CancellationToken token = default);
+        Guid SoftDelete(Volunteer volunteer, CancellationToken token = default);
+
+        Guid HardDelete(Volunteer volunteer, CancellationToken token = default);
     }
 }

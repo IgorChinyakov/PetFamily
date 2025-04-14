@@ -19,7 +19,7 @@ namespace PetFamily.Domain.VolunteerContext.PetsVO
 
         public static Result<Birthday, Error> Create(DateTime value)
         {
-            if (value > DateTime.UtcNow || value < new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc))
+            if (value > DateTime.UtcNow || value < new DateTime(2000, 1, 1, 0, 0, 0))
                 return Errors.General.ValueIsInvalid("Date");
 
             return new Birthday(value);
