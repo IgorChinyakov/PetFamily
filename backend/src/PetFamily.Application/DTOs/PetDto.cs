@@ -1,5 +1,4 @@
-﻿using PetFamily.Application.Pets.DTOs;
-using PetFamily.Domain.VolunteerContext.PetsVO;
+﻿using PetFamily.Domain.VolunteerContext.PetsVO;
 using PetFamily.Domain.VolunteerContext.SharedVO;
 using System;
 using System.Collections.Generic;
@@ -7,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PetFamily.Application.Volunteers.DTOs
+namespace PetFamily.Application.DTOs
 {
     public class PetDto
     {
@@ -47,8 +46,8 @@ namespace PetFamily.Application.Volunteers.DTOs
 
         public int Position { get; init; }
 
-        public IReadOnlyList<DetailsDto> Details { get; init; }
+        //public IReadOnlyList<DetailsDto> Details { get; init; }
 
-        public IReadOnlyList<PetFileDto> Files { get; init; }
+        //public IReadOnlyList<PetFileDto> Files { get; init; }
     }
 }

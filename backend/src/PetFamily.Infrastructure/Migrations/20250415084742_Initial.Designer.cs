@@ -13,7 +13,7 @@ using PetFamily.Infrastructure.DbContexts;
 namespace PetFamily.Infrastructure.Migrations
 {
     [DbContext(typeof(WriteDbContext))]
-    [Migration("20250414110900_Initial")]
+    [Migration("20250415084742_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -114,12 +114,12 @@ namespace PetFamily.Infrastructure.Migrations
 
                     b.Property<string>("DetailsList")
                         .IsRequired()
-                        .HasColumnType("text")
+                        .HasColumnType("jsonb")
                         .HasColumnName("details");
 
                     b.Property<string>("Files")
                         .IsRequired()
-                        .HasColumnType("text")
+                        .HasColumnType("jsonb")
                         .HasColumnName("file_paths");
 
                     b.Property<bool>("IsDeleted")
@@ -306,7 +306,7 @@ namespace PetFamily.Infrastructure.Migrations
 
                     b.Property<string>("DetailsList")
                         .IsRequired()
-                        .HasColumnType("text")
+                        .HasColumnType("jsonb")
                         .HasColumnName("details");
 
                     b.Property<bool>("IsDeleted")
@@ -315,7 +315,7 @@ namespace PetFamily.Infrastructure.Migrations
 
                     b.Property<string>("SocialMediaList")
                         .IsRequired()
-                        .HasColumnType("text")
+                        .HasColumnType("jsonb")
                         .HasColumnName("social_media");
 
                     b.ComplexProperty<Dictionary<string, object>>("Description", "PetFamily.Domain.VolunteerContext.Entities.Volunteer.Description#Description", b1 =>

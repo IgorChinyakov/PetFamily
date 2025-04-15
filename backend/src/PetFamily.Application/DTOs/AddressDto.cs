@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PetFamily.Application.Volunteers.DTOs
+namespace PetFamily.Application.DTOs
 {
     public record AddressDto(string City, string Street, string Apartment);
 }

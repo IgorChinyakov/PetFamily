@@ -5,6 +5,7 @@ using PetFamily.Domain.Shared;
 using PetFamily.Domain.VolunteerContext.Entities;
 using PetFamily.Domain.VolunteerContext.SharedVO;
 using PetFamily.Domain.VolunteerContext.VolunteerVO;
+using PetFamily.Infrastructure.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,23 +29,38 @@ namespace PetFamily.Infrastructure.Configurations.Write
                 .HasForeignKey("volunteer_id")
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Property(v => v.SocialMediaList).HasConversion(
-                 socialMedia => JsonSerializer.Serialize(socialMedia, JsonSerializerOptions.Default),
-                 json => JsonSerializer.Deserialize<IReadOnlyList<SocialMedia>>(json, JsonSerializerOptions.Default)!,
-                  new ValueComparer<IReadOnlyList<SocialMedia>>(
-                        (c1, c2) => c1!.SequenceEqual(c2!),
-                        c => c.Aggregate(0, (int a, SocialMedia v) => HashCode.Combine(a, v.GetHashCode())),
-                        c => c.ToList()))
+            builder.Property(v => v.SocialMediaList)
+                .ValueObjectCollectionJsonConversion(
+                    socialMedia => socialMedia,
+                    json => json)
                 .HasColumnName("social_media");
 
-            builder.Property(v => v.DetailsList).HasConversion(
-                 v => JsonSerializer.Serialize(v, JsonSerializerOptions.Default),
-                 v => JsonSerializer.Deserialize<IReadOnlyList<Details>>(v, JsonSerializerOptions.Default)!,
-                  new ValueComparer<IReadOnlyList<Details>>(
-                        (c1, c2) => c1!.SequenceEqual(c2!),
-                        c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
-                        c => c.ToList()))
+            builder.Property(v => v.DetailsList)
+                .ValueObjectCollectionJsonConversion(
+                    details => details,
+                    json => json)
                 .HasColumnName("details");
+
+            //builder.Property(v => v.SocialMediaList)
+            //    .HasConversion(
+            //     socialMedia => JsonSerializer.Serialize(socialMedia, JsonSerializerOptions.Default),
+            //     json => JsonSerializer.Deserialize<IReadOnlyList<SocialMedia>>(json, JsonSerializerOptions.Default)!,
+            //      new ValueComparer<IReadOnlyList<SocialMedia>>(
+            //            (c1, c2) => c1!.SequenceEqual(c2!),
+            //            c => c.Aggregate(0, (int a, SocialMedia v) => HashCode.Combine(a, v.GetHashCode())),
+            //            c => c.ToList()))
+            //    .HasColumnType("jsonb")
+            //    .HasColumnName("social_media");
+
+            //builder.Property(v => v.DetailsList).HasConversion(
+            //     details => JsonSerializer.Serialize(details, JsonSerializerOptions.Default),
+            //     json => JsonSerializer.Deserialize<IReadOnlyList<Details>>(json, JsonSerializerOptions.Default)!,
+            //      new ValueComparer<IReadOnlyList<Details>>(
+            //            (c1, c2) => c1!.SequenceEqual(c2!),
+            //            c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
+            //            c => c.ToList()))
+            //    .HasColumnType("jsonb")
+            //    .HasColumnName("details");
 
             builder.ComplexProperty(v => v.FullName, vb =>
             {

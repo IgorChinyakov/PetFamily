@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CSharpFunctionalExtensions;
+using Microsoft.AspNetCore.Mvc;
 using PetFamily.Api.Extensions;
 using PetFamily.Api.Processors;
 using PetFamily.Api.Requests.Pets;
 using PetFamily.Api.Requests.Volunteers;
 using PetFamily.Api.Response;
 using PetFamily.Application.Abstractions;
+using PetFamily.Application.DTOs;
 using PetFamily.Application.Models;
 using PetFamily.Application.Pets.Commands.Create;
 using PetFamily.Application.Pets.Commands.Move;
@@ -14,8 +16,9 @@ using PetFamily.Application.Volunteers.Commands.Delete;
 using PetFamily.Application.Volunteers.Commands.UpdateDetails;
 using PetFamily.Application.Volunteers.Commands.UpdateMainInfo;
 using PetFamily.Application.Volunteers.Commands.UpdateSocialMedia;
-using PetFamily.Application.Volunteers.DTOs;
+using PetFamily.Application.Volunteers.Queries.GetVolunteerById;
 using PetFamily.Application.Volunteers.Queries.GetVolunteersWithPagination;
+using PetFamily.Domain.Shared;
 
 namespace PetFamily.Api.Controllers
 {
@@ -30,6 +33,33 @@ namespace PetFamily.Api.Controllers
             CancellationToken token = default)
         {
             var query = request.ToQuery();
+
+            var response = await handler.Handle(query, token);
+
+            return Ok(Envelope.Ok(response));
+        }
+
+        [HttpGet("{id:guid}")]
+        public async Task<ActionResult<Guid>> GetById(
+            [FromRoute] Guid id,
+            [FromServices] IQueryHandler<Result<VolunteerDto, ErrorsList>, GetVolunteerByIdQuery> handler,
+            CancellationToken token = default)
+        {
+            var query = new GetVolunteerByIdQuery(id);
+            var response = await handler.Handle(query, token);
+            if (response.IsFailure)
+                return response.Error.ToResponse();
+
+            return Ok(Envelope.Ok(response));
+        }
+
+        [HttpGet("dapper")]
+        public async Task<ActionResult<Guid>> GetWithDapper(
+            [FromQuery] GetWithPaginationRequest request,
+            [FromServices] IQueryHandler<PagedList<VolunteerDto>, GetVolunteersWithPaginationQueryWithDapper> handler,
+            CancellationToken token = default)
+        {
+            var query = new GetVolunteersWithPaginationQueryWithDapper(request.Page, request.PageSize);
 
             var response = await handler.Handle(query, token);
 

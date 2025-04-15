@@ -30,8 +30,8 @@ namespace PetFamily.Infrastructure.Migrations
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
-                    social_media = table.Column<string>(type: "text", nullable: false),
-                    details = table.Column<string>(type: "text", nullable: false),
+                    social_media = table.Column<string>(type: "jsonb", nullable: false),
+                    details = table.Column<string>(type: "jsonb", nullable: false),
                     description = table.Column<string>(type: "character varying(1500)", maxLength: 1500, nullable: false),
                     email = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     experience = table.Column<int>(type: "integer", nullable: false),
@@ -75,8 +75,8 @@ namespace PetFamily.Infrastructure.Migrations
                     id = table.Column<Guid>(type: "uuid", nullable: false),
                     species_id = table.Column<Guid>(type: "uuid", nullable: false),
                     breed_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    details = table.Column<string>(type: "text", nullable: false),
-                    file_paths = table.Column<string>(type: "text", nullable: false),
+                    details = table.Column<string>(type: "jsonb", nullable: false),
+                    file_paths = table.Column<string>(type: "jsonb", nullable: false),
                     volunteer_id = table.Column<Guid>(type: "uuid", nullable: true),
                     apartment = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     city = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),

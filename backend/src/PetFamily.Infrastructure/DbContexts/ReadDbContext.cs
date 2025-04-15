@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using PetFamily.Application.Database;
-using PetFamily.Application.Volunteers.DTOs;
+using PetFamily.Application.DTOs;
 using PetFamily.Domain.SpeciesContext.Entities;
 using PetFamily.Domain.VolunteerContext.Entities;
 

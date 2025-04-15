@@ -1,4 +1,4 @@
-﻿namespace PetFamily.Application.Volunteers.DTOs
+﻿namespace PetFamily.Application.DTOs
 {
     public record DetailsDto(string Title, string Description);
 }

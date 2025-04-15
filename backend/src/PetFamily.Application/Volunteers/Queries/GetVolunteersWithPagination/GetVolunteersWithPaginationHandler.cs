@@ -1,8 +1,8 @@
 ﻿using PetFamily.Application.Abstractions;
 using PetFamily.Application.Database;
+using PetFamily.Application.DTOs;
 using PetFamily.Application.Extensions;
 using PetFamily.Application.Models;
-using PetFamily.Application.Volunteers.DTOs;
 
 namespace PetFamily.Application.Volunteers.Queries.GetVolunteersWithPagination
 {
@@ -16,7 +16,9 @@ namespace PetFamily.Application.Volunteers.Queries.GetVolunteersWithPagination
             _readDbContext = readDbContext;
         }
 
-        public async Task<PagedList<VolunteerDto>> Handle(GetVolunteersWithPaginationQuery query, CancellationToken cancellationToken = default)
+        public async Task<PagedList<VolunteerDto>> Handle(
+            GetVolunteersWithPaginationQuery query, 
+            CancellationToken cancellationToken = default)
         {
             var volunteersQuery = _readDbContext.Volunteers;
 

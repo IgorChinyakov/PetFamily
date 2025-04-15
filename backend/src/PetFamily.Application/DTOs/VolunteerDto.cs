@@ -6,17 +6,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PetFamily.Application.Volunteers.DTOs
+namespace PetFamily.Application.DTOs
 {
     public class VolunteerDto
     {
         public Guid Id { get; init; }
 
-        public string Name { get; init; } = string.Empty;
-
-        public string? SecondName { get; init; } = string.Empty;
-
-        public string FamilyName { get; init; } = string.Empty;
+        public FullNameDto FullName { get; set; } = null!;
 
         public string Email { get; init; } = string.Empty;
 
@@ -26,8 +22,8 @@ namespace PetFamily.Application.Volunteers.DTOs
 
         public string PhoneNumber { get; init; } = string.Empty;
 
-        public IReadOnlyList<DetailsDto> Details {  get; init; }
+        public DetailsDto[] Details { get; set; } = null!;
 
-        public IReadOnlyList<SocialMediaDto> SocialMedia { get; init; }
+        public SocialMediaDto[] SocialMedia { get; set; } = null!;
     }
 } 

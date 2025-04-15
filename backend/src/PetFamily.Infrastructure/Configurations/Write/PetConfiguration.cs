@@ -2,11 +2,12 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using PetFamily.Application.Pets.DTOs;
+using PetFamily.Application.DTOs;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.VolunteerContext.Entities;
 using PetFamily.Domain.VolunteerContext.PetsVO;
 using PetFamily.Domain.VolunteerContext.SharedVO;
+using PetFamily.Infrastructure.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -88,31 +89,45 @@ namespace PetFamily.Infrastructure.Configurations.Write
                 .HasMaxLength(Description.MAX_LENGTH);
             });
 
-            builder.Property(v => v.DetailsList).HasConversion(
-                  details => JsonSerializer.Serialize(details, JsonSerializerOptions.Default),
-                  json => JsonSerializer.Deserialize<IReadOnlyList<Details>>(json, JsonSerializerOptions.Default)!,
-                   new ValueComparer<IReadOnlyList<Details>>(
-                         (c1, c2) => c1!.SequenceEqual(c2!),
-                         c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
-                         c => c.ToList()))
+            builder.Property(v => v.DetailsList)
+                .ValueObjectCollectionJsonConversion(
+                    details => details,
+                    json => json)
                  .HasColumnName("details");
 
-            builder.Property(v => v.Files).HasConversion(
-                  files => JsonSerializer.Serialize(
-                      files.Select(f => new PetFileDto
-                      {
-                          PathToStorage = f.PathToStorage.Path
-                      }), 
-                      JsonSerializerOptions.Default),
-                  json => JsonSerializer.Deserialize<IReadOnlyList<PetFileDto>>(json, JsonSerializerOptions.Default)!
-                        .Select(dto => 
-                            new PetFile(FilePath.Create(dto.PathToStorage).Value))
-                        .ToList(),
-                   new ValueComparer<IReadOnlyList<PetFile>>(
-                         (c1, c2) => c1!.SequenceEqual(c2!),
-                         c => c.Aggregate(0, (int a, PetFile v) => HashCode.Combine(a, v.GetHashCode())),
-                         c => c.ToList()))
-                 .HasColumnName("file_paths");
+                //.HasConversion(
+                //  details => JsonSerializer.Serialize(details, JsonSerializerOptions.Default),
+                //  json => JsonSerializer.Deserialize<IReadOnlyList<Details>>(json, JsonSerializerOptions.Default)!,
+                //   new ValueComparer<IReadOnlyList<Details>>(
+                //         (c1, c2) => c1!.SequenceEqual(c2!),
+                //         c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
+                //         c => c.ToList()))
+                // .HasColumnType("jsonb")
+                // .HasColumnName("details");
+
+            builder.Property(v => v.Files)
+                .ValueObjectCollectionJsonConversion(
+                    file => new PetFileDto { PathToStorage = file.PathToStorage.Path },
+                    json => new PetFile(FilePath.Create(json.PathToStorage).Value))
+                .HasColumnName("file_paths");
+
+            //builder.Property(v => v.Files).HasConversion(
+            //      files => JsonSerializer.Serialize(
+            //          files.Select(f => new PetFileDto
+            //          {
+            //              PathToStorage = f.PathToStorage.Path
+            //          }), 
+            //          JsonSerializerOptions.Default),
+            //      json => JsonSerializer.Deserialize<IReadOnlyList<PetFileDto>>(json, JsonSerializerOptions.Default)!
+            //            .Select(dto => 
+            //                new PetFile(FilePath.Create(dto.PathToStorage).Value))
+            //            .ToList(),
+            //       new ValueComparer<IReadOnlyList<PetFile>>(
+            //             (c1, c2) => c1!.SequenceEqual(c2!),
+            //             c => c.Aggregate(0, (int a, PetFile v) => HashCode.Combine(a, v.GetHashCode())),
+            //             c => c.ToList()))
+            //     .HasColumnType("jsonb")
+            //     .HasColumnName("file_paths");
 
             builder.ComplexProperty(v => v.OwnerPhoneNumber, vb =>
             {

@@ -24,6 +24,9 @@ namespace PetFamily.Infrastructure
             services.AddScoped<WriteDbContext>();
             services.AddScoped<IReadDbContext, ReadDbContext>();
 
+            services.AddSingleton<ISqlDbConnectionFactory, SqlDbConnectionFactory>();
+            Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
+
             services.AddScoped<IVolunteerRepository, VolunteerRepository>();
 
             services.AddScoped<ISpeciesRepository, SpeciesRepository>();
