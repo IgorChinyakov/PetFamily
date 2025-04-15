@@ -11,24 +11,11 @@ namespace PetFamily.Domain.VolunteerContext.PetsVO
 {
     public record PetFile
     {
-        public string PathToStorage { get; }
-
-        public PetFile()
-        {
-        }
-
-        [JsonConstructor]
-        private PetFile(string pathToStorage)
+        public PetFile(FilePath pathToStorage)
         {
             PathToStorage = pathToStorage;
         }
 
-        public static Result<PetFile, Error> Create(string value)
-        {
-            if (string.IsNullOrWhiteSpace(value))
-                return Errors.General.ValueIsInvalid("PathToStorage");
-
-            return new PetFile(value);
-        }
+        public FilePath PathToStorage { get; }
     }
 }

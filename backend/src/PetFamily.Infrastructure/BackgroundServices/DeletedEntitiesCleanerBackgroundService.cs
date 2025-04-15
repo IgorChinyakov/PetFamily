@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using PetFamily.Infrastructure.DbContexts;
 using PetFamily.Infrastructure.Options;
 
 namespace PetFamily.Infrastructure.BackgroundServices
@@ -32,7 +33,7 @@ namespace PetFamily.Infrastructure.BackgroundServices
             {
                 await using var scope = _scopeFactory.CreateAsyncScope();
 
-                var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                var dbContext = scope.ServiceProvider.GetRequiredService<WriteDbContext>();
 
                 var expiredVolunteers = await dbContext
                     .Volunteers

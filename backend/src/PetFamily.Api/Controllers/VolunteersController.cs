@@ -1,17 +1,24 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CSharpFunctionalExtensions;
+using Microsoft.AspNetCore.Mvc;
 using PetFamily.Api.Extensions;
+using PetFamily.Api.Processors;
 using PetFamily.Api.Requests.Pets;
 using PetFamily.Api.Requests.Volunteers;
 using PetFamily.Api.Response;
-using PetFamily.Application.FileProvider;
-using PetFamily.Application.Pets.Create;
-using PetFamily.Application.Pets.Move;
-using PetFamily.Application.Pets.UploadPhotos;
-using PetFamily.Application.Volunteers.Create;
-using PetFamily.Application.Volunteers.Delete;
-using PetFamily.Application.Volunteers.UpdateDetails;
-using PetFamily.Application.Volunteers.UpdateMainInfo;
-using PetFamily.Application.Volunteers.UpdateSocialMedia;
+using PetFamily.Application.Abstractions;
+using PetFamily.Application.DTOs;
+using PetFamily.Application.Models;
+using PetFamily.Application.Pets.Commands.Create;
+using PetFamily.Application.Pets.Commands.Move;
+using PetFamily.Application.Pets.Commands.UploadPhotos;
+using PetFamily.Application.Volunteers.Commands.Create;
+using PetFamily.Application.Volunteers.Commands.Delete;
+using PetFamily.Application.Volunteers.Commands.UpdateDetails;
+using PetFamily.Application.Volunteers.Commands.UpdateMainInfo;
+using PetFamily.Application.Volunteers.Commands.UpdateSocialMedia;
+using PetFamily.Application.Volunteers.Queries.GetVolunteerById;
+using PetFamily.Application.Volunteers.Queries.GetVolunteersWithPagination;
+using PetFamily.Domain.Shared;
 
 namespace PetFamily.Api.Controllers
 {
@@ -19,9 +26,49 @@ namespace PetFamily.Api.Controllers
     {
         public const string BUCKET_NAME = "photos";
 
+        [HttpGet]
+        public async Task<ActionResult<Guid>> Get(
+            [FromQuery] GetWithPaginationRequest request,
+            [FromServices] IQueryHandler<PagedList<VolunteerDto>, GetVolunteersWithPaginationQuery> handler,
+            CancellationToken token = default)
+        {
+            var query = request.ToQuery();
+
+            var response = await handler.Handle(query, token);
+
+            return Ok(Envelope.Ok(response));
+        }
+
+        [HttpGet("{id:guid}")]
+        public async Task<ActionResult<Guid>> GetById(
+            [FromRoute] Guid id,
+            [FromServices] IQueryHandler<Result<VolunteerDto, ErrorsList>, GetVolunteerByIdQuery> handler,
+            CancellationToken token = default)
+        {
+            var query = new GetVolunteerByIdQuery(id);
+            var response = await handler.Handle(query, token);
+            if (response.IsFailure)
+                return response.Error.ToResponse();
+
+            return Ok(Envelope.Ok(response));
+        }
+
+        [HttpGet("dapper")]
+        public async Task<ActionResult<Guid>> GetWithDapper(
+            [FromQuery] GetWithPaginationRequest request,
+            [FromServices] IQueryHandler<PagedList<VolunteerDto>, GetVolunteersWithPaginationQueryWithDapper> handler,
+            CancellationToken token = default)
+        {
+            var query = new GetVolunteersWithPaginationQueryWithDapper(request.Page, request.PageSize);
+
+            var response = await handler.Handle(query, token);
+
+            return Ok(Envelope.Ok(response));
+        }
+
         [HttpPost]
         public async Task<ActionResult<Guid>> Create(
-            [FromServices] CreateVolunteerHandler handler,
+            [FromServices] ICommandHandler<Guid, CreateVolunteerCommand> handler,
             [FromBody] CreateVolunteerRequest request,
             CancellationToken token = default)
         {
@@ -37,7 +84,7 @@ namespace PetFamily.Api.Controllers
 
         [HttpPut("{id:guid}/main-info")]
         public async Task<ActionResult<Guid>> UpdateMainInfo(
-            [FromServices] UpdateMainInfoHandler handler,
+            [FromServices] ICommandHandler<Guid, UpdateMainInfoCommand> handler,
             [FromBody] UpdateMainInfoRequest request,
             [FromRoute] Guid id,
             CancellationToken token = default)
@@ -54,7 +101,7 @@ namespace PetFamily.Api.Controllers
 
         [HttpPut("{id:guid}/social-media")]
         public async Task<ActionResult<Guid>> UpdateSocialMedia(
-            [FromServices] UpdateSocialMediaHandler handler,
+            [FromServices] ICommandHandler<Guid, UpdateSocialMediaCommand> handler,
             [FromBody] UpdateSocialMediaRequest request,
             [FromRoute] Guid id,
             CancellationToken token = default)
@@ -71,7 +118,7 @@ namespace PetFamily.Api.Controllers
 
         [HttpPut("{id:guid}/details")]
         public async Task<ActionResult<Guid>> UpdateDetails(
-            [FromServices] UpdateDetailsHandler handler,
+            [FromServices] ICommandHandler<Guid, UpdateDetailsCommand> handler,
             [FromBody] UpdateDetailsRequest request,
             [FromRoute] Guid id,
             CancellationToken token = default)
@@ -88,7 +135,7 @@ namespace PetFamily.Api.Controllers
 
         [HttpDelete("{id:guid}")]
         public async Task<ActionResult<Guid>> Delete(
-            [FromServices] DeleteVolunteerHandler handler,
+            [FromServices] ICommandHandler<Guid, DeleteVolunteerCommand> handler,
             [FromRoute] Guid id,
             [FromBody] DeletionOptions options,
             CancellationToken token = default)
@@ -104,7 +151,7 @@ namespace PetFamily.Api.Controllers
 
         [HttpPost("{volunteerId:guid}/pets")]
         public async Task<ActionResult<Guid>> CreatePet(
-            [FromServices] CreatePetHandler handler,
+            [FromServices] ICommandHandler<Guid, CreatePetCommand> handler,
             [FromRoute] Guid volunteerId,
             [FromBody] CreatePetRequest request,
             CancellationToken token = default)
@@ -121,39 +168,26 @@ namespace PetFamily.Api.Controllers
 
         [HttpPost("{volunteerId:guid}/pets/{petId:guid}/photos")]
         public async Task<ActionResult<Guid>> AddPetPhotos(
-            [FromServices] UploadPhotosHandler handler,
+            [FromServices] ICommandHandler<IReadOnlyList<string>, UploadPhotosCommand> handler,
             [FromRoute] Guid volunteerId,
             [FromRoute] Guid petId,
             [FromForm] IFormFileCollection files,
             CancellationToken token = default)
         {
-            List<FileDto> fileDtos = [];
-            try
-            {
-                foreach (var file in files)
-                {
-                    var stream = file.OpenReadStream();
-                    fileDtos.Add(new FileDto(stream, file.FileName));
-                }
+            await using var processor = new FormFileProcessor();
+            var fileDtos = processor.Process(files);
+            var command = new UploadPhotosCommand(fileDtos, volunteerId, petId, BUCKET_NAME);
 
-                var command = new UploadPhotosCommand(fileDtos, volunteerId, petId, BUCKET_NAME);
+            var result = await handler.Handle(command, token);
+            if (result.IsFailure)
+                return result.Error.ToResponse();
 
-                var result = await handler.Handle(command, token);
-                if (result.IsFailure)
-                    return result.Error.ToResponse();
-
-                return Ok();
-            }
-            finally
-            {
-                foreach (var fileDto in fileDtos)
-                    await fileDto.Stream.DisposeAsync();
-            }
+            return Ok(Envelope.Ok(result.Value));
         }
 
         [HttpPost("{volunteerId:guid}/pets/{petId:guid}/pet-movement")]
         public async Task<ActionResult<Guid>> MovePet(
-            [FromServices] MovePetHandler handler,
+            [FromServices] ICommandHandler<MovePetCommand> handler,
             [FromBody] MovePetRequest request,
             [FromRoute] Guid volunteerId,
             [FromRoute] Guid petId,
@@ -162,9 +196,9 @@ namespace PetFamily.Api.Controllers
             var command = request.ToCommand(volunteerId, petId);
 
             var movementResult = await handler.Handle(command, token);
-            if(movementResult.IsFailure)
+            if (movementResult.IsFailure)
                 return movementResult.Error.ToResponse();
-           
+
             return Ok();
         }
     }

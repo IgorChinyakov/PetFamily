@@ -7,11 +7,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PetFamily.Application.Interfaces
+namespace PetFamily.Application.Providers
 {
     public interface IFilesProvider
     {
-        Task<UnitResult<Error>> UploadFiles(FilesData fileData, CancellationToken cancellationToken = default);
+        Task<Result<IReadOnlyList<string>, Error>> UploadFiles(IEnumerable<FileData> filesData, CancellationToken cancellationToken = default);
 
         Task<Result<string, Error>> RemoveFile(FileMeta fileMeta, CancellationToken cancellationToken = default);
 
