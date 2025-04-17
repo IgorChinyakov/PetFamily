@@ -1,5 +1,5 @@
 ﻿using PetFamily.Application.DTOs;
-using PetFamily.Application.Volunteers.Commands.UpdateSocialMedia;
+using PetFamily.Application.EntitiesHandling.Volunteers.Commands.UpdateSocialMedia;
 
 namespace PetFamily.Api.Requests.Volunteers
 {
