@@ -84,12 +84,12 @@ namespace PetFamily.Api.Controllers
 
         [HttpPut("{id:guid}/main-info")]
         public async Task<ActionResult<Guid>> UpdateMainInfo(
-            [FromServices] ICommandHandler<Guid, UpdateMainInfoCommand> handler,
-            [FromBody] UpdateMainInfoRequest request,
-            [FromRoute] Guid id,
+            [FromServices] ICommandHandler<Guid, UpdateVolunteerMainInfoCommand> handler,
+            [FromBody] UpdateVolunteerMainInfoRequest request,
+            [FromRoute] Guid volunteerId,
             CancellationToken token = default)
         {
-            var command = request.ToCommand(id);
+            var command = request.ToCommand(volunteerId);
 
             var result = await handler.Handle(command, token);
 
@@ -101,8 +101,8 @@ namespace PetFamily.Api.Controllers
 
         [HttpPut("{id:guid}/social-media")]
         public async Task<ActionResult<Guid>> UpdateSocialMedia(
-            [FromServices] ICommandHandler<Guid, UpdateSocialMediaCommand> handler,
-            [FromBody] UpdateSocialMediaRequest request,
+            [FromServices] ICommandHandler<Guid, UpdateVolunteerSocialMediaCommand> handler,
+            [FromBody] UpdateVolunteerSocialMediaRequest request,
             [FromRoute] Guid id,
             CancellationToken token = default)
         {
@@ -118,8 +118,8 @@ namespace PetFamily.Api.Controllers
 
         [HttpPut("{id:guid}/details")]
         public async Task<ActionResult<Guid>> UpdateDetails(
-            [FromServices] ICommandHandler<Guid, UpdateDetailsCommand> handler,
-            [FromBody] UpdateDetailsRequest request,
+            [FromServices] ICommandHandler<Guid, UpdateVolunteerDetailsCommand> handler,
+            [FromBody] UpdateVolunteerDetailsRequest request,
             [FromRoute] Guid id,
             CancellationToken token = default)
         {
@@ -200,6 +200,23 @@ namespace PetFamily.Api.Controllers
                 return movementResult.Error.ToResponse();
 
             return Ok();
+        }
+
+        [HttpPut("{volunteerId:guid}/pets/{petId:guid}/main-info")]
+        public async Task<ActionResult<Guid>> UpdateMainInfo(
+            [FromServices] ICommandHandler<Guid, UpdateVolunteerMainInfoCommand> handler,
+            [FromBody] UpdateVolunteerMainInfoRequest request,
+            [FromRoute] Guid volunteerId,
+            CancellationToken token = default)
+        {
+            var command = request.ToCommand(volunteerId);
+
+            var result = await handler.Handle(command, token);
+
+            if (result.IsFailure)
+                return result.Error.ToResponse();
+
+            return Ok(Envelope.Ok(result.Value));
         }
     }
 }

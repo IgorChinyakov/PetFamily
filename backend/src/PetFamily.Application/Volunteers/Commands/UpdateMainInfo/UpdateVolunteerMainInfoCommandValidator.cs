@@ -11,9 +11,9 @@ using System.Threading.Tasks;
 
 namespace PetFamily.Application.Volunteers.Commands.UpdateMainInfo
 {
-    public class UpdateMainInfoCommandValidator : AbstractValidator<UpdateMainInfoCommand>
+    public class UpdateVolunteerMainInfoCommandValidator : AbstractValidator<UpdateVolunteerMainInfoCommand>
     {
-        public UpdateMainInfoCommandValidator()
+        public UpdateVolunteerMainInfoCommandValidator()
         {
             RuleFor(u => u.VolunteerId)
                 .NotEmpty()

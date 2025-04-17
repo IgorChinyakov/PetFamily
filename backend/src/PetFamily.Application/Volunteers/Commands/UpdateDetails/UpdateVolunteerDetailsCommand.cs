@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PetFamily.Application.Volunteers.Commands.UpdateDetails
 {
-    public record UpdateDetailsCommand(
+    public record UpdateVolunteerDetailsCommand(
         Guid VolunteerId, 
         IEnumerable<DetailsDto> Details) : ICommand;
 }

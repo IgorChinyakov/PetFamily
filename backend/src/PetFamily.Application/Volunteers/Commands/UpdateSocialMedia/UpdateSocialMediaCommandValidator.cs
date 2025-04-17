@@ -5,7 +5,7 @@ using PetFamily.Domain.VolunteerContext.VolunteerVO;
 
 namespace PetFamily.Application.Volunteers.Commands.UpdateSocialMedia
 {
-    public class UpdateSocialMediaCommandValidator : AbstractValidator<UpdateSocialMediaCommand>
+    public class UpdateSocialMediaCommandValidator : AbstractValidator<UpdateVolunteerSocialMediaCommand>
     {
         public UpdateSocialMediaCommandValidator()
         {

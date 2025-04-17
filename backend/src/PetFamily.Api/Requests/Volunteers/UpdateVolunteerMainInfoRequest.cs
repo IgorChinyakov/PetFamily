@@ -3,15 +3,15 @@ using PetFamily.Application.Volunteers.Commands.UpdateMainInfo;
 
 namespace PetFamily.Api.Requests.Volunteers
 {
-    public record UpdateMainInfoRequest(
+    public record UpdateVolunteerMainInfoRequest(
         FullNameDto FullName,
         string Email,
         string Description,
         int Experience,
         string PhoneNumber)
     {
-        public UpdateMainInfoCommand ToCommand(Guid volunteerId)
-            => new UpdateMainInfoCommand(
+        public UpdateVolunteerMainInfoCommand ToCommand(Guid volunteerId)
+            => new UpdateVolunteerMainInfoCommand(
                 volunteerId, 
                 FullName, 
                 Email, 

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PetFamily.Application.Volunteers.Commands.UpdateSocialMedia
 {
-    public record UpdateSocialMediaCommand(
+    public record UpdateVolunteerSocialMediaCommand(
         Guid Id, 
         IEnumerable<SocialMediaDto> SocialMedia) : ICommand;
 }

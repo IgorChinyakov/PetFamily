@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace PetFamily.Application.Volunteers.Commands.UpdateDetails
 {
-    public class UpdateDetailsCommandValidator : AbstractValidator<UpdateDetailsCommand>
+    public class UpdateVolunteerDetailsCommandValidator : AbstractValidator<UpdateVolunteerDetailsCommand>
     {
-        public UpdateDetailsCommandValidator()
+        public UpdateVolunteerDetailsCommandValidator()
         {
             RuleFor(u => u.VolunteerId)
                 .NotEmpty()

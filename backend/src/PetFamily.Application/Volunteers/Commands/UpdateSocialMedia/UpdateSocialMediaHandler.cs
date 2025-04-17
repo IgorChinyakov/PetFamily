@@ -15,16 +15,16 @@ using System.Threading.Tasks;
 
 namespace PetFamily.Application.Volunteers.Commands.UpdateSocialMedia
 {
-    public class UpdateSocialMediaHandler : ICommandHandler<Guid, UpdateSocialMediaCommand>
+    public class UpdateSocialMediaHandler : ICommandHandler<Guid, UpdateVolunteerSocialMediaCommand>
     {
         private readonly IVolunteerRepository _repository;
-        private readonly IValidator<UpdateSocialMediaCommand> _validator;
+        private readonly IValidator<UpdateVolunteerSocialMediaCommand> _validator;
         private readonly ILogger<UpdateSocialMediaHandler> _logger;
         private readonly IUnitOfWork _unitOfWork;
 
         public UpdateSocialMediaHandler(
             IVolunteerRepository repository,
-            IValidator<UpdateSocialMediaCommand> validator,
+            IValidator<UpdateVolunteerSocialMediaCommand> validator,
             ILogger<UpdateSocialMediaHandler> logger,
             IUnitOfWork unitOfWork)
         {
@@ -35,7 +35,7 @@ namespace PetFamily.Application.Volunteers.Commands.UpdateSocialMedia
         }
 
         public async Task<Result<Guid, ErrorsList>> Handle(
-            UpdateSocialMediaCommand command, 
+            UpdateVolunteerSocialMediaCommand command, 
             CancellationToken token = default)
         {
             var validationResult = await _validator.ValidateAsync(command, token);
