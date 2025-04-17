@@ -10,44 +10,44 @@ namespace PetFamily.Application.DTOs
 {
     public class PetDto
     {
-        public Guid Id { get; init; }
+        public Guid Id { get; set; }
 
-        public string NickName { get; init; } = string.Empty;
+        public string NickName { get; set; } = string.Empty;
 
-        public string Description { get; init; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
 
-        public Guid SpeciesId { get; init; }
+        public Guid SpeciesId { get; set; }
 
-        public Guid BreedId { get; init; }
+        public Guid BreedId { get; set; }  
+            
+        public Guid VolunteerId { get; set; }
 
-        public Guid VolunteerId { get; init; }
+        public string Color { get; set; } = string.Empty;
 
-        public string Color { get; init; } = string.Empty;
+        public bool IsSterilized { get; set; }
 
-        public bool IsSterilized { get; init; }
+        public bool IsVaccinated { get; set; }
 
-        public bool IsVaccinated { get; init; }
+        public string HealthInformation { get; set; } = string.Empty;
 
-        public string HealthInformation { get; init; } = string.Empty;
+        public AddressDto Address { get; set; } = null!;
 
-        public string Address { get; init; } = string.Empty;
+        public float Weight { get; set; }
 
-        public float Weight { get; init; }
+        public float Height { get; set; }
 
-        public float Height { get; init; }
+        public DateTime Birthday { get; set; }
 
-        public DateTime Birthday { get; init; }
+        public DateTime CreationDate { get; set; }
 
-        public DateTime CreationDate { get; init; }
+        public string PhoneNumber { get; set; } = string.Empty;
 
-        public string OwnerPhoneNumber { get; init; } = string.Empty;
+        public Status Status { get; set; }
 
-        public Status PetStatus { get; init; }
+        public int Position { get; set; }
 
-        public int Position { get; init; }
+        public DetailsDto[] Details { get; set; } = [];
 
-        //public IReadOnlyList<DetailsDto> Details { get; init; }
-
-        //public IReadOnlyList<PetFileDto> Files { get; init; }
+        public PetFileDto[] Files { get; set; } = [];
     }
 }

@@ -27,7 +27,8 @@ namespace PetFamily.Infrastructure.Configurations.Write
             builder.HasMany(v => v.Pets)
                 .WithOne()
                 .HasForeignKey("volunteer_id")
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Cascade)
+                .IsRequired();
 
             builder.Property(v => v.SocialMediaList)
                 .ValueObjectCollectionJsonConversion(
@@ -40,27 +41,6 @@ namespace PetFamily.Infrastructure.Configurations.Write
                     details => details,
                     json => json)
                 .HasColumnName("details");
-
-            //builder.Property(v => v.SocialMediaList)
-            //    .HasConversion(
-            //     socialMedia => JsonSerializer.Serialize(socialMedia, JsonSerializerOptions.Default),
-            //     json => JsonSerializer.Deserialize<IReadOnlyList<SocialMedia>>(json, JsonSerializerOptions.Default)!,
-            //      new ValueComparer<IReadOnlyList<SocialMedia>>(
-            //            (c1, c2) => c1!.SequenceEqual(c2!),
-            //            c => c.Aggregate(0, (int a, SocialMedia v) => HashCode.Combine(a, v.GetHashCode())),
-            //            c => c.ToList()))
-            //    .HasColumnType("jsonb")
-            //    .HasColumnName("social_media");
-
-            //builder.Property(v => v.DetailsList).HasConversion(
-            //     details => JsonSerializer.Serialize(details, JsonSerializerOptions.Default),
-            //     json => JsonSerializer.Deserialize<IReadOnlyList<Details>>(json, JsonSerializerOptions.Default)!,
-            //      new ValueComparer<IReadOnlyList<Details>>(
-            //            (c1, c2) => c1!.SequenceEqual(c2!),
-            //            c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
-            //            c => c.ToList()))
-            //    .HasColumnType("jsonb")
-            //    .HasColumnName("details");
 
             builder.ComplexProperty(v => v.FullName, vb =>
             {

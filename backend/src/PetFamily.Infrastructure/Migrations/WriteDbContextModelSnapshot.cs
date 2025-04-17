@@ -38,7 +38,7 @@ namespace PetFamily.Infrastructure.Migrations
                         .HasColumnType("boolean")
                         .HasColumnName("is_deleted");
 
-                    b.Property<Guid?>("species_id")
+                    b.Property<Guid>("species_id")
                         .HasColumnType("uuid")
                         .HasColumnName("species_id");
 
@@ -111,12 +111,12 @@ namespace PetFamily.Infrastructure.Migrations
 
                     b.Property<string>("DetailsList")
                         .IsRequired()
-                        .HasColumnType("jsonb")
+                        .HasColumnType("Jsonb")
                         .HasColumnName("details");
 
                     b.Property<string>("Files")
                         .IsRequired()
-                        .HasColumnType("jsonb")
+                        .HasColumnType("Jsonb")
                         .HasColumnName("file_paths");
 
                     b.Property<bool>("IsDeleted")
@@ -303,7 +303,7 @@ namespace PetFamily.Infrastructure.Migrations
 
                     b.Property<string>("DetailsList")
                         .IsRequired()
-                        .HasColumnType("jsonb")
+                        .HasColumnType("Jsonb")
                         .HasColumnName("details");
 
                     b.Property<bool>("IsDeleted")
@@ -312,7 +312,7 @@ namespace PetFamily.Infrastructure.Migrations
 
                     b.Property<string>("SocialMediaList")
                         .IsRequired()
-                        .HasColumnType("jsonb")
+                        .HasColumnType("Jsonb")
                         .HasColumnName("social_media");
 
                     b.ComplexProperty<Dictionary<string, object>>("Description", "PetFamily.Domain.VolunteerContext.Entities.Volunteer.Description#Description", b1 =>
@@ -391,6 +391,7 @@ namespace PetFamily.Infrastructure.Migrations
                         .WithMany("Breeds")
                         .HasForeignKey("species_id")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
                         .HasConstraintName("fk_breeds_species_species_id");
                 });
 

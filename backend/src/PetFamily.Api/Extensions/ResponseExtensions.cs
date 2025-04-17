@@ -1,9 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
-using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using PetFamily.Api.Response;
 using PetFamily.Domain.Shared;
-using System.Runtime.CompilerServices;
 
 namespace PetFamily.Api.Extensions
 {

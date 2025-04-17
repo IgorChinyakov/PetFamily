@@ -95,39 +95,11 @@ namespace PetFamily.Infrastructure.Configurations.Write
                     json => json)
                  .HasColumnName("details");
 
-                //.HasConversion(
-                //  details => JsonSerializer.Serialize(details, JsonSerializerOptions.Default),
-                //  json => JsonSerializer.Deserialize<IReadOnlyList<Details>>(json, JsonSerializerOptions.Default)!,
-                //   new ValueComparer<IReadOnlyList<Details>>(
-                //         (c1, c2) => c1!.SequenceEqual(c2!),
-                //         c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
-                //         c => c.ToList()))
-                // .HasColumnType("jsonb")
-                // .HasColumnName("details");
-
             builder.Property(v => v.Files)
                 .ValueObjectCollectionJsonConversion(
                     file => new PetFileDto { PathToStorage = file.PathToStorage.Path },
                     json => new PetFile(FilePath.Create(json.PathToStorage).Value))
                 .HasColumnName("file_paths");
-
-            //builder.Property(v => v.Files).HasConversion(
-            //      files => JsonSerializer.Serialize(
-            //          files.Select(f => new PetFileDto
-            //          {
-            //              PathToStorage = f.PathToStorage.Path
-            //          }), 
-            //          JsonSerializerOptions.Default),
-            //      json => JsonSerializer.Deserialize<IReadOnlyList<PetFileDto>>(json, JsonSerializerOptions.Default)!
-            //            .Select(dto => 
-            //                new PetFile(FilePath.Create(dto.PathToStorage).Value))
-            //            .ToList(),
-            //       new ValueComparer<IReadOnlyList<PetFile>>(
-            //             (c1, c2) => c1!.SequenceEqual(c2!),
-            //             c => c.Aggregate(0, (int a, PetFile v) => HashCode.Combine(a, v.GetHashCode())),
-            //             c => c.ToList()))
-            //     .HasColumnType("jsonb")
-            //     .HasColumnName("file_paths");
 
             builder.ComplexProperty(v => v.OwnerPhoneNumber, vb =>
             {
@@ -187,12 +159,12 @@ namespace PetFamily.Infrastructure.Configurations.Write
 
             builder.ComplexProperty(p => p.Position, b =>
             {
-                b.Property(a => a.Value)
+                b.Property(p => p.Value)
                 .IsRequired(true)
                 .HasColumnName("position");
             });
 
-            builder.Property(v => v.IsDeleted)
+            builder.Property(p => p.IsDeleted)
                 .HasColumnName("is_deleted");
         }
     }
