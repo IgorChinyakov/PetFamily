@@ -10,17 +10,17 @@ namespace PetFamily.Application.DTOs
 {
     public class VolunteerDto
     {
-        public Guid Id { get; init; }
+        public Guid Id { get; set; }
 
         public FullNameDto FullName { get; set; } = null!;
 
-        public string Email { get; init; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
 
-        public string Description { get; init; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
 
-        public int Experience { get; init; }
+        public int Experience { get; set; }
 
-        public string PhoneNumber { get; init; } = string.Empty;
+        public string PhoneNumber { get; set; } = string.Empty;
 
         public DetailsDto[] Details { get; set; } = null!;
 

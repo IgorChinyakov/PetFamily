@@ -7,17 +7,17 @@ using PetFamily.Api.Requests.Volunteers;
 using PetFamily.Api.Response;
 using PetFamily.Application.Abstractions;
 using PetFamily.Application.DTOs;
+using PetFamily.Application.EntitiesHandling.Pets.Commands.Create;
+using PetFamily.Application.EntitiesHandling.Pets.Commands.Move;
+using PetFamily.Application.EntitiesHandling.Pets.Commands.UploadPhotos;
+using PetFamily.Application.EntitiesHandling.Volunteers.Commands.Create;
+using PetFamily.Application.EntitiesHandling.Volunteers.Commands.Delete;
+using PetFamily.Application.EntitiesHandling.Volunteers.Commands.UpdateDetails;
+using PetFamily.Application.EntitiesHandling.Volunteers.Commands.UpdateMainInfo;
+using PetFamily.Application.EntitiesHandling.Volunteers.Commands.UpdateSocialMedia;
+using PetFamily.Application.EntitiesHandling.Volunteers.Queries.GetVolunteerById;
+using PetFamily.Application.EntitiesHandling.Volunteers.Queries.GetVolunteersWithPagination;
 using PetFamily.Application.Models;
-using PetFamily.Application.Pets.Commands.Create;
-using PetFamily.Application.Pets.Commands.Move;
-using PetFamily.Application.Pets.Commands.UploadPhotos;
-using PetFamily.Application.Volunteers.Commands.Create;
-using PetFamily.Application.Volunteers.Commands.Delete;
-using PetFamily.Application.Volunteers.Commands.UpdateDetails;
-using PetFamily.Application.Volunteers.Commands.UpdateMainInfo;
-using PetFamily.Application.Volunteers.Commands.UpdateSocialMedia;
-using PetFamily.Application.Volunteers.Queries.GetVolunteerById;
-using PetFamily.Application.Volunteers.Queries.GetVolunteersWithPagination;
 using PetFamily.Domain.Shared;
 
 namespace PetFamily.Api.Controllers
@@ -28,7 +28,7 @@ namespace PetFamily.Api.Controllers
 
         [HttpGet]
         public async Task<ActionResult<Guid>> Get(
-            [FromQuery] GetWithPaginationRequest request,
+            [FromQuery] GetVolunteersWithPaginationRequest request,
             [FromServices] IQueryHandler<PagedList<VolunteerDto>, GetVolunteersWithPaginationQuery> handler,
             CancellationToken token = default)
         {
@@ -55,7 +55,7 @@ namespace PetFamily.Api.Controllers
 
         [HttpGet("dapper")]
         public async Task<ActionResult<Guid>> GetWithDapper(
-            [FromQuery] GetWithPaginationRequest request,
+            [FromQuery] GetVolunteersWithPaginationRequest request,
             [FromServices] IQueryHandler<PagedList<VolunteerDto>, GetVolunteersWithPaginationQueryWithDapper> handler,
             CancellationToken token = default)
         {
@@ -203,7 +203,7 @@ namespace PetFamily.Api.Controllers
         }
 
         [HttpPut("{volunteerId:guid}/pets/{petId:guid}/main-info")]
-        public async Task<ActionResult<Guid>> UpdateMainInfo(
+        public async Task<ActionResult<Guid>> UpdatePetMainInfo(
             [FromServices] ICommandHandler<Guid, UpdateVolunteerMainInfoCommand> handler,
             [FromBody] UpdateVolunteerMainInfoRequest request,
             [FromRoute] Guid volunteerId,

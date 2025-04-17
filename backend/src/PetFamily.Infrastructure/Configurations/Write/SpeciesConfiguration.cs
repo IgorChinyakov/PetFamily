@@ -25,7 +25,8 @@ namespace PetFamily.Infrastructure.Configurations.Write
             builder.HasMany(s => s.Breeds)
                 .WithOne()
                 .HasForeignKey("species_id")
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Cascade)
+                .IsRequired();
 
             builder.ComplexProperty(s => s.Name, b =>
             {

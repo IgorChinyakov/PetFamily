@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Pets\Queries\" />
+    <Folder Include="EntitiesHandling\Pets\Queries\" />
   </ItemGroup>
 
 </Project>

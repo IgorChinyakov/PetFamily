@@ -11,13 +11,13 @@ namespace PetFamily.Domain.SpeciesContext.Entities
 {
     public class Breed : SoftDeletableEntity
     {
-        public Name Name { get; set; }
+        public Name Name { get; private set; }
 
         private Breed(Guid id) : base(id)
         {
         }
 
-        public Breed(Name name) : base()
+        public Breed(Guid id, Name name) : base(id)
         {
             Name = name;
         }

@@ -1,15 +1,6 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using PetFamily.Application.Abstractions;
-using PetFamily.Application.Pets.Commands.Create;
-using PetFamily.Application.Pets.Commands.Move;
-using PetFamily.Application.Pets.Commands.UploadPhotos;
-using PetFamily.Application.Volunteers;
-using PetFamily.Application.Volunteers.Commands.Create;
-using PetFamily.Application.Volunteers.Commands.Delete;
-using PetFamily.Application.Volunteers.Commands.UpdateDetails;
-using PetFamily.Application.Volunteers.Commands.UpdateMainInfo;
-using PetFamily.Application.Volunteers.Commands.UpdateSocialMedia;
 
 namespace PetFamily.Application
 {
