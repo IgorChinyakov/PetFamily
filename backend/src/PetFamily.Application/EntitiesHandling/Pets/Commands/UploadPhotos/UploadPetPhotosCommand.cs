@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PetFamily.Application.EntitiesHandling.Pets.Commands.UploadPhotos
 {
-    public record UploadPhotosCommand(
+    public record UploadPetPhotosCommand(
         IEnumerable<CreateFileDto> FileDtos, 
         Guid VolunteerId, 
         Guid PetId, 

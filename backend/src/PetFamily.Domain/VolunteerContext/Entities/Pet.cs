@@ -2,11 +2,6 @@
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.VolunteerContext.PetsVO;
 using PetFamily.Domain.VolunteerContext.SharedVO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PetFamily.Domain.VolunteerContext.Entities
 {
@@ -31,6 +26,7 @@ namespace PetFamily.Domain.VolunteerContext.Entities
         public PhoneNumber OwnerPhoneNumber { get; private set; }
         public PetStatus PetStatus { get; private set; }
         public Position Position { get; private set; }
+        public MainPhoto MainPhoto { get; private set; }
         public IReadOnlyList<Details> DetailsList => _detailsList;
         public IReadOnlyList<PetFile> Files => _files;
 
@@ -73,6 +69,7 @@ namespace PetFamily.Domain.VolunteerContext.Entities
             OwnerPhoneNumber = ownerPhoneNumber;
             PetStatus = petStatus;
             _detailsList = detailsList.ToList();
+            MainPhoto = new MainPhoto(string.Empty);
         }
 
         public void SetPosition(Position number) 
@@ -105,6 +102,50 @@ namespace PetFamily.Domain.VolunteerContext.Entities
             Position = newPosition.Value;
 
             return Result.Success<Error>();
+        }
+
+        public void UpdateMainInfo(
+            NickName nickName,
+            Description description,
+            SpeciesId speciesId,
+            BreedId breedId,
+            Color color,
+            IsSterilized isSterilized,
+            IsVaccinated isVaccinated,
+            HealthInformation healthInformation,
+            Address address,
+            Weight wieght,
+            Height height,
+            Birthday birthday,
+            CreationDate creationDate,
+            PhoneNumber phoneNumber)
+        {
+            NickName = nickName;
+            Description = description;
+            SpeciesId = speciesId;
+            BreedId = breedId;
+            Color = color;
+            IsSterilized = isSterilized;
+            IsVaccinated = isVaccinated;
+            HealthInformation = healthInformation;
+            Address = address;
+            Weight = wieght;
+            Height = height;
+            Birthday = birthday;
+            CreationDate = creationDate;
+            OwnerPhoneNumber = phoneNumber;
+        }
+
+        public void UpdatePetStatus(
+            PetStatus petStatus)
+        {
+            PetStatus = petStatus;
+        }
+
+        public void UpdateMainPhoto(
+            MainPhoto mainPhoto)
+        {
+            MainPhoto = mainPhoto;
         }
     }
 }

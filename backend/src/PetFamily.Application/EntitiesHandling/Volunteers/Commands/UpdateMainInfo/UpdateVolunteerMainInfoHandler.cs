@@ -10,17 +10,18 @@ using PetFamily.Domain.VolunteerContext.VolunteerVO;
 
 namespace PetFamily.Application.EntitiesHandling.Volunteers.Commands.UpdateMainInfo
 {
-    public class UpdateMainInfoHandler : ICommandHandler<Guid, UpdateMainInfoCommand>
+    public class UpdateVolunteerMainInfoHandler : 
+        ICommandHandler<Guid, UpdateVolunteerMainInfoCommand>
     {
         private readonly IVolunteerRepository _repository;
-        private readonly IValidator<UpdateMainInfoCommand> _validator;
-        private readonly ILogger<UpdateMainInfoHandler> _logger;
+        private readonly IValidator<UpdateVolunteerMainInfoCommand> _validator;
+        private readonly ILogger<UpdateVolunteerMainInfoHandler> _logger;
         private readonly IUnitOfWork _unitOfWork;
 
-        public UpdateMainInfoHandler(
+        public UpdateVolunteerMainInfoHandler(
             IVolunteerRepository volunteerRepository,
-            IValidator<UpdateMainInfoCommand> validator,
-            ILogger<UpdateMainInfoHandler> logger,
+            IValidator<UpdateVolunteerMainInfoCommand> validator,
+            ILogger<UpdateVolunteerMainInfoHandler> logger,
             IUnitOfWork unitOfWork)
         {
             _repository = volunteerRepository;
@@ -30,7 +31,7 @@ namespace PetFamily.Application.EntitiesHandling.Volunteers.Commands.UpdateMainI
         }
 
         public async Task<Result<Guid, ErrorsList>> Handle(
-            UpdateMainInfoCommand command,
+            UpdateVolunteerMainInfoCommand command,
             CancellationToken token = default)
         {
             var validationResult = await _validator.ValidateAsync(command);

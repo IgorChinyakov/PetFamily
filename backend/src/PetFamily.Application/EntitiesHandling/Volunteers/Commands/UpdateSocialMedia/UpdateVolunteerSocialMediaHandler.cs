@@ -9,17 +9,17 @@ using PetFamily.Domain.VolunteerContext.VolunteerVO;
 
 namespace PetFamily.Application.EntitiesHandling.Volunteers.Commands.UpdateSocialMedia
 {
-    public class UpdateSocialMediaHandler : ICommandHandler<Guid, UpdateSocialMediaCommand>
+    public class UpdateVolunteerSocialMediaHandler : ICommandHandler<Guid, UpdateVolunteerSocialMediaCommand>
     {
         private readonly IVolunteerRepository _repository;
-        private readonly IValidator<UpdateSocialMediaCommand> _validator;
-        private readonly ILogger<UpdateSocialMediaHandler> _logger;
+        private readonly IValidator<UpdateVolunteerSocialMediaCommand> _validator;
+        private readonly ILogger<UpdateVolunteerSocialMediaHandler> _logger;
         private readonly IUnitOfWork _unitOfWork;
 
-        public UpdateSocialMediaHandler(
+        public UpdateVolunteerSocialMediaHandler(
             IVolunteerRepository repository,
-            IValidator<UpdateSocialMediaCommand> validator,
-            ILogger<UpdateSocialMediaHandler> logger,
+            IValidator<UpdateVolunteerSocialMediaCommand> validator,
+            ILogger<UpdateVolunteerSocialMediaHandler> logger,
             IUnitOfWork unitOfWork)
         {
             _repository = repository;
@@ -29,7 +29,7 @@ namespace PetFamily.Application.EntitiesHandling.Volunteers.Commands.UpdateSocia
         }
 
         public async Task<Result<Guid, ErrorsList>> Handle(
-            UpdateSocialMediaCommand command, 
+            UpdateVolunteerSocialMediaCommand command, 
             CancellationToken token = default)
         {
             var validationResult = await _validator.ValidateAsync(command, token);

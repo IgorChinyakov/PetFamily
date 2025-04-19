@@ -87,6 +87,24 @@ namespace PetFamily.Domain.VolunteerContext.Entities
             }
         }
 
+        public void SoftDeletePet(Guid id)
+        {
+            var petResult = GetPetById(id);
+            if (petResult.IsFailure)
+                return;
+
+            petResult.Value.Delete();
+        }
+
+        public void HardDeletePet(Guid id)
+        {
+            var petResult = GetPetById(id);
+            if (petResult.IsFailure)
+                return;
+
+            _pets.Remove(petResult.Value);
+        }
+
         public override void Restore()
         {
             base.Restore();
@@ -137,6 +155,7 @@ namespace PetFamily.Domain.VolunteerContext.Entities
 
             return petResult;
         }
+
         private UnitResult<Error> MovePetsBetweenPositions(Position positionToMove, Position currentPosition)
         {
             if (currentPosition < positionToMove)
@@ -177,6 +196,85 @@ namespace PetFamily.Domain.VolunteerContext.Entities
                 return lastPosition.Error;
 
             return lastPosition.Value;
+        }
+
+        public Result<Guid, Error> UpdatePetMainInfo(
+            Guid petId,
+            NickName nickName,
+            Description description,
+            SpeciesId speciesId,
+            BreedId breedId,
+            Color color,
+            IsSterilized isSterilized,
+            IsVaccinated isVaccinated,
+            HealthInformation healthInformation,
+            Address address,
+            Weight wieght,
+            Height height,
+            Birthday birthday,
+            CreationDate creationDate,
+            PhoneNumber phoneNumber)
+        {
+            var petResult = GetPetById(petId);
+            if (petResult.IsFailure)
+                return petResult.Error;
+
+            petResult.Value.UpdateMainInfo(
+                nickName,
+                description,
+                speciesId,
+                breedId,
+                color,
+                isSterilized,
+                isVaccinated,
+                healthInformation,
+                address,
+                wieght,
+                height,
+                birthday,
+                creationDate,
+                phoneNumber);
+
+            return petResult.Value.Id;
+        }
+
+        public Result<Guid, Error> UpdatePetStatus(
+            Guid petId,
+            PetStatus petStatus)
+        {
+            var petResult = GetPetById(petId);
+            if (petResult.IsFailure)
+                return petResult.Error;
+
+            if(petResult.Value.PetStatus == petStatus)
+                return petResult.Value.Id;
+
+            petResult.Value.UpdatePetStatus(petStatus);
+
+            return petResult.Value.Id;
+        }
+
+        public Result<string, Error> ChoosePetMainPhoto(
+            Guid petId,
+            string path)
+        {
+            var petResult = GetPetById(petId);
+            if (petResult.IsFailure)
+                return petResult.Error;
+
+            var files = petResult.Value.Files.Select(f => f.PathToStorage.Path);
+
+            foreach ( var file in files)
+            {
+                if (path == file)
+                {
+                    var mainPhoto = new MainPhoto(file);
+                    petResult.Value.UpdateMainPhoto(mainPhoto);
+                    return path;
+                }
+            }
+
+            return Errors.General.NotFound();
         }
     }
 }

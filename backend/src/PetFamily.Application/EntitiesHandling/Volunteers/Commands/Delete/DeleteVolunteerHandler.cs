@@ -32,14 +32,12 @@ namespace PetFamily.Application.EntitiesHandling.Volunteers.Commands.Delete
             CancellationToken token = default)
         {
             var result = await _validator.ValidateAsync(command, token);
-
             if (!result.IsValid)
                 return result.ToErrorsList();
 
             var volunteerResult = await _repository.GetById(command.Id, token);
-
             if (volunteerResult.IsFailure)
-                return Errors.General.ValueIsInvalid("VolunteerId").ToErrorsList();
+                return volunteerResult.Error.ToErrorsList();
 
             var volunteerId = command.Options switch
             {
@@ -54,11 +52,5 @@ namespace PetFamily.Application.EntitiesHandling.Volunteers.Commands.Delete
 
             return volunteerId;
         }
-    }
-
-    public enum DeletionOptions
-    {
-        Soft,
-        Hard
     }
 }

@@ -16,14 +16,14 @@ namespace PetFamily.Application.EntitiesHandling.Pets.Commands.Move
         {
             RuleFor(c => c.VolunteerId)
                .NotEmpty()
-               .WithError(Errors.General.ValueIsRequired());
+               .WithError(Errors.General.ValueIsInvalid("VolunteerId"));
 
             RuleFor(c => c.PetId)
                .NotEmpty()
-               .WithError(Errors.General.ValueIsRequired());
+               .WithError(Errors.General.ValueIsInvalid("VolunteerId"));
 
             RuleFor(c => c.PositionToMove)
-                .MustBeValueObject(p => Position.Create(p));
+                .MustBeValueObject(Position.Create);
         }
     }
 }

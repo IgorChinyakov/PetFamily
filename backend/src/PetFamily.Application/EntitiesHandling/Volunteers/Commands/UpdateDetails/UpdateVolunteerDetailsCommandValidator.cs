@@ -10,13 +10,13 @@ using System.Threading.Tasks;
 
 namespace PetFamily.Application.EntitiesHandling.Volunteers.Commands.UpdateDetails
 {
-    public class UpdateDetailsCommandValidator : AbstractValidator<UpdateDetailsCommand>
+    public class UpdateVolunteerDetailsCommandValidator : AbstractValidator<UpdateVolunteerDetailsCommand>
     {
-        public UpdateDetailsCommandValidator()
+        public UpdateVolunteerDetailsCommandValidator()
         {
             RuleFor(u => u.VolunteerId)
                 .NotEmpty()
-                .WithError(Errors.General.ValueIsRequired());
+                .WithError(Errors.General.ValueIsInvalid("VolunteerId"));
 
             RuleForEach(u => u.Details)
                 .MustBeValueObject(d => Details.Create(d.Title, d.Description));

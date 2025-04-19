@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PetFamily.Application.EntitiesHandling.Volunteers.Commands.UpdateMainInfo
 {
-    public record UpdateMainInfoCommand(
+    public record UpdateVolunteerMainInfoCommand(
         Guid VolunteerId, 
         FullNameDto FullName,
         string Email,
