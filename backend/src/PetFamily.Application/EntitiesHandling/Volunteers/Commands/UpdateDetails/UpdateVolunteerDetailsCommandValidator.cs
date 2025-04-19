@@ -16,7 +16,7 @@ namespace PetFamily.Application.EntitiesHandling.Volunteers.Commands.UpdateDetai
         {
             RuleFor(u => u.VolunteerId)
                 .NotEmpty()
-                .WithError(Errors.General.ValueIsRequired());
+                .WithError(Errors.General.ValueIsInvalid("VolunteerId"));
 
             RuleForEach(u => u.Details)
                 .MustBeValueObject(d => Details.Create(d.Title, d.Description));

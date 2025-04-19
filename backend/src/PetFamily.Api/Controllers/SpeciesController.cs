@@ -1,9 +1,7 @@
-﻿using CSharpFunctionalExtensions;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using PetFamily.Api.Extensions;
 using PetFamily.Api.Requests.Breeds;
 using PetFamily.Api.Requests.Species;
-using PetFamily.Api.Requests.Volunteers;
 using PetFamily.Api.Response;
 using PetFamily.Application.Abstractions;
 using PetFamily.Application.DTOs;
@@ -13,10 +11,7 @@ using PetFamily.Application.EntitiesHandling.Breeds.Queries.GetBreedsWithPaginat
 using PetFamily.Application.EntitiesHandling.Specieses.Commands.Create;
 using PetFamily.Application.EntitiesHandling.Specieses.Commands.Delete;
 using PetFamily.Application.EntitiesHandling.Specieses.Queries.GetSpeciesWithPagination;
-using PetFamily.Application.EntitiesHandling.Volunteers.Queries.GetVolunteerById;
-using PetFamily.Application.EntitiesHandling.Volunteers.Queries.GetVolunteersWithPagination;
 using PetFamily.Application.Models;
-using PetFamily.Domain.Shared;
 
 namespace PetFamily.Api.Controllers
 {
@@ -94,7 +89,7 @@ namespace PetFamily.Api.Controllers
         }
 
         [HttpGet("{id:guid}/breeds")]
-        public async Task<ActionResult<Guid>> GetBreedsBySpeciesId(
+        public async Task<ActionResult> GetBreedsBySpeciesId(
             [FromRoute] Guid id,
             [FromQuery] GetBreedsWithPaginationRequest request,
             [FromServices] IQueryHandler<PagedList<BreedDto>, GetBreedsWithPaginationQuery> handler,

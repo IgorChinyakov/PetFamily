@@ -1,9 +1,9 @@
 ﻿using PetFamily.Application.DTOs;
+using PetFamily.Application.EntitiesHandling.Pets.Commands.UpdateMainInfo;
 
 namespace PetFamily.Api.Requests.Pets
 {
     public record UpdatePetMainInfoRequest(
-        Guid Id,
         Guid SpeciesId,
         Guid BreedId,
         string NickName,
@@ -15,11 +15,14 @@ namespace PetFamily.Api.Requests.Pets
         int Height,
         int Weight,
         bool IsSterilized,
-        bool IsVaccinated)
+        bool IsVaccinated,
+        DateTime Birthday,
+        DateTime CreationDate)
     {
-        public UpdatePetMainInfoCommand ToCommand()
+        public UpdatePetMainInfoCommand ToCommand(Guid petId, Guid volunteerId)
             => new UpdatePetMainInfoCommand(
-                Id,
+                petId,
+                volunteerId,
                 SpeciesId,
                 BreedId,
                 NickName,
@@ -31,6 +34,8 @@ namespace PetFamily.Api.Requests.Pets
                 Height,
                 Weight,
                 IsSterilized,
-                IsVaccinated);
+                IsVaccinated,
+                Birthday,
+                CreationDate);
     }
 }

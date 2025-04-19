@@ -48,9 +48,11 @@ namespace PetFamily.Application.EntitiesHandling.Pets.Commands.Create
 
             RuleFor(c => c.VolunteerId)
                 .NotEmpty()
-                .WithError(Errors.General.ValueIsRequired());
+                .WithError(Errors.General.ValueIsInvalid("VolunteerId"));
 
-            RuleFor(c => c.PetStatus).Must(p => Enum.IsDefined(typeof(Status), p));
+            RuleFor(c => c.PetStatus)
+                .Must(p => Enum.IsDefined(typeof(Status), p))
+                .WithError(Errors.General.ValueIsInvalid("PetStatus"));
         }
     }
 }

@@ -10,7 +10,8 @@ using PetFamily.Domain.VolunteerContext.VolunteerVO;
 
 namespace PetFamily.Application.EntitiesHandling.Volunteers.Commands.UpdateMainInfo
 {
-    public class UpdateVolunteerMainInfoHandler : ICommandHandler<Guid, UpdateVolunteerMainInfoCommand>
+    public class UpdateVolunteerMainInfoHandler : 
+        ICommandHandler<Guid, UpdateVolunteerMainInfoCommand>
     {
         private readonly IVolunteerRepository _repository;
         private readonly IValidator<UpdateVolunteerMainInfoCommand> _validator;

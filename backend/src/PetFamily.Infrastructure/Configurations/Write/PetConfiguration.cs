@@ -30,7 +30,7 @@ namespace PetFamily.Infrastructure.Configurations.Write
                 b.Property(ps => ps.Value)
                 .IsRequired(true)
                 .HasColumnName("status");
-            }); 
+            });
 
             builder.Property(p => p.BreedId).HasConversion(
                 id => id.Value,
@@ -72,6 +72,25 @@ namespace PetFamily.Infrastructure.Configurations.Write
                 .IsRequired(true)
                 .HasColumnName("birthday");
             });
+
+            builder.ComplexProperty(m => m.MainPhoto, mb =>
+            {
+                mb.Property(p => p.Path)
+                    .IsRequired(false)
+                    .HasDefaultValue(string.Empty)
+                    .HasColumnName("main_photo");
+            });
+
+            //builder.ComplexProperty(p => p.MainPhoto, b =>
+            //{
+            //    b.ComplexProperty(m => m.PathToStorage, mb =>
+            //    {
+            //        mb.Property(p => p.Path)
+            //            .IsRequired(false)
+            //            .HasDefaultValue(null)
+            //            .HasColumnName("main_photo");
+            //    });
+            //});
 
             builder.ComplexProperty(p => p.Color, b =>
             {

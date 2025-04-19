@@ -4,18 +4,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace PetFamily.Domain.VolunteerContext.PetsVO
 {
-    public record PetFile
+    public class MainPhoto
     {
-        public FilePath PathToStorage { get; }
+        public string Path { get; }
 
-        public PetFile(FilePath pathToStorage)
+        public MainPhoto(string path)
         {
-            PathToStorage = pathToStorage;
+            Path = path;
         }
     }
 }

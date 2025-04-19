@@ -9,17 +9,17 @@ using PetFamily.Domain.VolunteerContext.VolunteerVO;
 
 namespace PetFamily.Application.EntitiesHandling.Volunteers.Commands.UpdateSocialMedia
 {
-    public class UpdateSocialMediaHandler : ICommandHandler<Guid, UpdateVolunteerSocialMediaCommand>
+    public class UpdateVolunteerSocialMediaHandler : ICommandHandler<Guid, UpdateVolunteerSocialMediaCommand>
     {
         private readonly IVolunteerRepository _repository;
         private readonly IValidator<UpdateVolunteerSocialMediaCommand> _validator;
-        private readonly ILogger<UpdateSocialMediaHandler> _logger;
+        private readonly ILogger<UpdateVolunteerSocialMediaHandler> _logger;
         private readonly IUnitOfWork _unitOfWork;
 
-        public UpdateSocialMediaHandler(
+        public UpdateVolunteerSocialMediaHandler(
             IVolunteerRepository repository,
             IValidator<UpdateVolunteerSocialMediaCommand> validator,
-            ILogger<UpdateSocialMediaHandler> logger,
+            ILogger<UpdateVolunteerSocialMediaHandler> logger,
             IUnitOfWork unitOfWork)
         {
             _repository = repository;
