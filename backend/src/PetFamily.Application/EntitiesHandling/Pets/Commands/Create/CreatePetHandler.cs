@@ -52,13 +52,13 @@ namespace PetFamily.Application.EntitiesHandling.Pets.Commands.Create
                 return volunteerResult.Error.ToErrorsList();
 
             var species = await _readDbContext.Species
-                .FirstOrDefaultAsync(s => s.Id == command.SpeciesId);
+                .FirstOrDefaultAsync(s => s.Id == command.SpeciesId, token);
             if (species == null)
                 return Errors.General.NotFound(command.SpeciesId).ToErrorsList();
 
             var breed = await _readDbContext.Breeds
                 .FirstOrDefaultAsync(b => 
-                    b.Id == command.BreedId && b.SpeciesId == command.SpeciesId);
+                    b.Id == command.BreedId && b.SpeciesId == command.SpeciesId, token);
             if (breed == null)
                 return Errors.General.NotFound(command.BreedId).ToErrorsList();
 

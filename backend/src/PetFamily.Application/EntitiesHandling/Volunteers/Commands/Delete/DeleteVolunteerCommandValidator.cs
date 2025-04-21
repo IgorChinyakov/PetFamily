@@ -10,10 +10,10 @@ namespace PetFamily.Application.EntitiesHandling.Volunteers.Commands.Delete
         {
             RuleFor(d => d.Id)
                 .NotEmpty()
-                .WithError(Errors.General.ValueIsRequired());
+                .WithError(Errors.General.ValueIsInvalid("VolunteerId"));
 
             RuleFor(d => d.Options)
-                .IsInEnum()
+                .Must(p => Enum.IsDefined(typeof(DeletionOptions), p))
                 .WithError(Errors.General.ValueIsInvalid("Deletion options"));
         }
     }

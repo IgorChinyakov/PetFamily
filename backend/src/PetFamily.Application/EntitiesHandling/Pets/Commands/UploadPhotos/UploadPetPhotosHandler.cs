@@ -14,7 +14,7 @@ using PetFamily.Domain.VolunteerContext.PetsVO;
 
 namespace PetFamily.Application.EntitiesHandling.Pets.Commands.UploadPhotos
 {
-    public class UploadPhotosHandler : ICommandHandler<IReadOnlyList<string>, UploadPhotosCommand>
+    public class UploadPetPhotosHandler : ICommandHandler<IReadOnlyList<string>, UploadPetPhotosCommand>
     {
         private readonly IVolunteerRepository _volunteerRepository;
         private readonly IFilesProvider _filesProvider;
@@ -22,7 +22,7 @@ namespace PetFamily.Application.EntitiesHandling.Pets.Commands.UploadPhotos
         private readonly IMessageQueue<IEnumerable<FileMeta>> _messageQueue;
         private readonly IUnitOfWork _unitOfWork;
 
-        public UploadPhotosHandler(
+        public UploadPetPhotosHandler(
             IVolunteerRepository volunteerRepository,
             IFilesProvider filesProvider,
             ILogger<MovePetHandler> logger,
@@ -37,7 +37,7 @@ namespace PetFamily.Application.EntitiesHandling.Pets.Commands.UploadPhotos
         }
 
         public async Task<Result<IReadOnlyList<string>, ErrorsList>> Handle(
-            UploadPhotosCommand command, CancellationToken token = default)
+            UploadPetPhotosCommand command, CancellationToken token = default)
         {
             var transaction = await _unitOfWork.BeginTransaction(token);
 
@@ -78,7 +78,6 @@ namespace PetFamily.Application.EntitiesHandling.Pets.Commands.UploadPhotos
                     return uploadResult.Error.ToErrorsList();
                 }
 
-                
                 petResult.Value.AddFiles(petFiles);
 
                 await _unitOfWork.SaveChanges(token);
