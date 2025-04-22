@@ -21,8 +21,11 @@ namespace PetFamily.Infrastructure
         public static IServiceCollection AddInfrastructure(
             this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddScoped<WriteDbContext>();
-            services.AddScoped<IReadDbContext, ReadDbContext>();
+            services.AddScoped(_ =>
+                new WriteDbContext(configuration.GetConnectionString(Constants.DATABASE)!));
+
+            services.AddScoped<IReadDbContext, ReadDbContext>(_ =>
+                new ReadDbContext(configuration.GetConnectionString(Constants.DATABASE)!));
 
             services.AddSingleton<ISqlDbConnectionFactory, SqlDbConnectionFactory>();
             Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
