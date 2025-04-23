@@ -6,15 +6,16 @@ using PetFamily.Application.Database;
 using PetFamily.Infrastructure.DbContexts;
 using Testcontainers.PostgreSql;
 
-namespace PetFamily.IntegrationTests.Volunteers
+namespace PetFamily.IntegrationTests
 {
-    public class IntegrationTestsWebFactory : WebApplicationFactory<Program>, IAsyncLifetime
+    public class IntegrationTestsWebFactory : 
+        WebApplicationFactory<Program>, IAsyncLifetime
     {
         private readonly PostgreSqlContainer _dbContainer = new PostgreSqlBuilder()
             .WithImage("postgres")
-            .WithDatabase("tests")
+            .WithDatabase("pet_family_tests")
             .WithUsername("postgres")
-            .WithPassword("postgres")
+            .WithPassword("1234")
             .Build();
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -36,11 +37,17 @@ namespace PetFamily.IntegrationTests.Volunteers
             if (readContext is not null)
                 services.Remove(readContext);
 
-            services.AddScoped<WriteDbContext>(_ =>
+            services.AddScoped(_ =>
                 new WriteDbContext(_dbContainer.GetConnectionString()));
 
             services.AddScoped<IReadDbContext>(_ =>
                 new ReadDbContext(_dbContainer.GetConnectionString()));
+        }
+
+        public new async Task DisposeAsync()
+        {
+            await _dbContainer.StopAsync();
+            await _dbContainer.DisposeAsync();
         }
 
         public async Task InitializeAsync()
@@ -50,12 +57,6 @@ namespace PetFamily.IntegrationTests.Volunteers
             using var scope = Services.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<WriteDbContext>();
             await dbContext.Database.EnsureCreatedAsync();
-        }
-
-        public new async Task DisposeAsync()
-        {
-            await _dbContainer.StopAsync();
-            await _dbContainer.DisposeAsync();
         }
     }
 }

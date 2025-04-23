@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -12,7 +12,7 @@
   <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="6.0.0" />
     <PackageReference Include="FluentAssertions" Version="8.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.15" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.11" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
     <PackageReference Include="Testcontainers.PostgreSql" Version="4.4.0" />
     <PackageReference Include="xunit" Version="2.5.3" />
@@ -20,9 +20,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\PetFamily.Api\PetFamily.Api.csproj" />
-    <ProjectReference Include="..\src\PetFamily.Application\PetFamily.Application.csproj" />
-    <ProjectReference Include="..\src\PetFamily.Infrastructure\PetFamily.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\PetFamily.Api\PetFamily.Api.csproj" />
+    <ProjectReference Include="..\..\src\PetFamily.Application\PetFamily.Application.csproj" />
+    <ProjectReference Include="..\..\src\PetFamily.Infrastructure\PetFamily.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>
