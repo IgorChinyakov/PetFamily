@@ -8,7 +8,8 @@ using PetFamily.Domain.Shared;
 
 namespace PetFamily.Application.EntitiesHandling.Volunteers.Commands.Delete
 {
-    public class DeleteVolunteerHandler : ICommandHandler<Guid, DeleteVolunteerCommand>
+    public class DeleteVolunteerHandler : 
+        ICommandHandler<Guid, DeleteVolunteerCommand>
     {
         private readonly IVolunteerRepository _repository;
         private readonly IValidator<DeleteVolunteerCommand> _validator;

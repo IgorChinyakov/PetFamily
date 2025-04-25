@@ -12,4 +12,9 @@ namespace PetFamily.Application.Abstractions
     {
         public Task<TResponse> Handle(TQuery query, CancellationToken cancellationToken = default);
     }
+
+    public interface IQueryHandlerWithResult<TResponse, in TQuery> where TQuery : IQuery
+    {
+        public Task<Result<TResponse, ErrorsList>> Handle(TQuery query, CancellationToken cancellationToken = default);
+    }
 }

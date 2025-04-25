@@ -29,7 +29,7 @@ namespace PetFamily.Application
         {
             return services.Scan(scan => scan.FromAssemblies(typeof(Inject).Assembly)
                 .AddClasses(classes => classes
-                    .AssignableToAny(typeof(IQueryHandler<,>)))
+                    .AssignableToAny(typeof(IQueryHandler<,>), typeof(IQueryHandlerWithResult<,>)))
                 .AsSelfWithInterfaces()
                 .WithScopedLifetime());
         }
