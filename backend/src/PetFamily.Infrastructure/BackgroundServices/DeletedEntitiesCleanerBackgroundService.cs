@@ -3,6 +3,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using PetFamily.Application.Database;
+using PetFamily.Application.EntitiesHandling.Volunteers.Queries.GetVolunteerById;
 using PetFamily.Infrastructure.DbContexts;
 using PetFamily.Infrastructure.Options;
 
@@ -34,27 +36,39 @@ namespace PetFamily.Infrastructure.BackgroundServices
                 await using var scope = _scopeFactory.CreateAsyncScope();
 
                 var dbContext = scope.ServiceProvider.GetRequiredService<WriteDbContext>();
+                var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
 
-                var expiredVolunteers = await dbContext
+                var volunteers = dbContext
                     .Volunteers
+                    .Include(v => v.Pets);
+
+                var species = dbContext
+                    .Species
+                    .Include(s => s.Breeds);
+
+                var expiredVolunteers = await volunteers
                     .Where(v =>
                         v.IsDeleted &&
                         v.DeletionDate != null
                         && v.DeletionDate.Value.AddDays(_daysBeforeDeletion) < DateTime.UtcNow)
                     .ToListAsync(stoppingToken);
 
-                var expiredSpecies = await dbContext
-                    .Species
+                var expiredSpecies = await species
                     .Where(s =>
                         s.IsDeleted &&
                         s.DeletionDate != null
                         && s.DeletionDate.Value.AddDays(_daysBeforeDeletion) < DateTime.UtcNow)
                     .ToListAsync(stoppingToken);
 
+                var expiredPets = volunteers.Select(v => v.Pets.Where(p =>
+                    p.IsDeleted &&
+                    p.DeletionDate != null &&
+                    p.DeletionDate.Value.AddDays(_daysBeforeDeletion) < DateTime.UtcNow));
+
                 dbContext.Volunteers.RemoveRange(expiredVolunteers);
                 dbContext.Species.RemoveRange(expiredSpecies);
 
-                await dbContext.SaveChangesAsync();
+                await unitOfWork.SaveChanges();
 
                 _logger.LogInformation("Deleted entities cleaner background service has worked");
                 await Task.Delay(_timeSpan, stoppingToken);

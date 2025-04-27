@@ -38,7 +38,7 @@ namespace PetFamily.Infrastructure.Migrations
                         .HasColumnType("boolean")
                         .HasColumnName("is_deleted");
 
-                    b.Property<Guid?>("species_id")
+                    b.Property<Guid>("species_id")
                         .HasColumnType("uuid")
                         .HasColumnName("species_id");
 
@@ -111,12 +111,12 @@ namespace PetFamily.Infrastructure.Migrations
 
                     b.Property<string>("DetailsList")
                         .IsRequired()
-                        .HasColumnType("text")
+                        .HasColumnType("Jsonb")
                         .HasColumnName("details");
 
                     b.Property<string>("Files")
                         .IsRequired()
-                        .HasColumnType("text")
+                        .HasColumnType("Jsonb")
                         .HasColumnName("file_paths");
 
                     b.Property<bool>("IsDeleted")
@@ -127,7 +127,7 @@ namespace PetFamily.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("species_id");
 
-                    b.Property<Guid?>("volunteer_id")
+                    b.Property<Guid>("volunteer_id")
                         .HasColumnType("uuid")
                         .HasColumnName("volunteer_id");
 
@@ -232,6 +232,17 @@ namespace PetFamily.Infrastructure.Migrations
                                 .HasColumnName("is_vaccinated");
                         });
 
+                    b.ComplexProperty<Dictionary<string, object>>("MainPhoto", "PetFamily.Domain.VolunteerContext.Entities.Pet.MainPhoto#FilePath", b1 =>
+                        {
+                            b1.IsRequired();
+
+                            b1.Property<string>("Path")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("text")
+                                .HasDefaultValue("")
+                                .HasColumnName("main_photo");
+                        });
+
                     b.ComplexProperty<Dictionary<string, object>>("NickName", "PetFamily.Domain.VolunteerContext.Entities.Pet.NickName#NickName", b1 =>
                         {
                             b1.IsRequired();
@@ -303,7 +314,7 @@ namespace PetFamily.Infrastructure.Migrations
 
                     b.Property<string>("DetailsList")
                         .IsRequired()
-                        .HasColumnType("text")
+                        .HasColumnType("Jsonb")
                         .HasColumnName("details");
 
                     b.Property<bool>("IsDeleted")
@@ -312,7 +323,7 @@ namespace PetFamily.Infrastructure.Migrations
 
                     b.Property<string>("SocialMediaList")
                         .IsRequired()
-                        .HasColumnType("text")
+                        .HasColumnType("Jsonb")
                         .HasColumnName("social_media");
 
                     b.ComplexProperty<Dictionary<string, object>>("Description", "PetFamily.Domain.VolunteerContext.Entities.Volunteer.Description#Description", b1 =>
@@ -391,6 +402,7 @@ namespace PetFamily.Infrastructure.Migrations
                         .WithMany("Breeds")
                         .HasForeignKey("species_id")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
                         .HasConstraintName("fk_breeds_species_species_id");
                 });
 
@@ -400,6 +412,7 @@ namespace PetFamily.Infrastructure.Migrations
                         .WithMany("Pets")
                         .HasForeignKey("volunteer_id")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
                         .HasConstraintName("fk_pets_volunteers_volunteer_id");
                 });
 

@@ -2,11 +2,11 @@
 using Microsoft.Extensions.DependencyInjection;
 using Minio;
 using PetFamily.Application.Database;
+using PetFamily.Application.EntitiesHandling.Specieses;
+using PetFamily.Application.EntitiesHandling.Volunteers;
 using PetFamily.Application.FileProvider;
 using PetFamily.Application.Messaging;
 using PetFamily.Application.Providers;
-using PetFamily.Application.Specieses;
-using PetFamily.Application.Volunteers;
 using PetFamily.Infrastructure.BackgroundServices;
 using PetFamily.Infrastructure.DbContexts;
 using PetFamily.Infrastructure.MessageQueues;
@@ -21,8 +21,14 @@ namespace PetFamily.Infrastructure
         public static IServiceCollection AddInfrastructure(
             this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddScoped<WriteDbContext>();
-            services.AddScoped<IReadDbContext, ReadDbContext>();
+            services.AddScoped(_ =>
+                new WriteDbContext(configuration.GetConnectionString(Constants.DATABASE)!));
+
+            services.AddScoped<IReadDbContext, ReadDbContext>(_ =>
+                new ReadDbContext(configuration.GetConnectionString(Constants.DATABASE)!));
+
+            services.AddSingleton<ISqlDbConnectionFactory, SqlDbConnectionFactory>();
+            Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
 
             services.AddScoped<IVolunteerRepository, VolunteerRepository>();
 

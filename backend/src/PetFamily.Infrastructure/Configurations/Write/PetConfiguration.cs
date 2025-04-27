@@ -2,11 +2,12 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using PetFamily.Application.Pets.DTOs;
+using PetFamily.Application.DTOs;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.VolunteerContext.Entities;
 using PetFamily.Domain.VolunteerContext.PetsVO;
 using PetFamily.Domain.VolunteerContext.SharedVO;
+using PetFamily.Infrastructure.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,7 +30,7 @@ namespace PetFamily.Infrastructure.Configurations.Write
                 b.Property(ps => ps.Value)
                 .IsRequired(true)
                 .HasColumnName("status");
-            }); 
+            });
 
             builder.Property(p => p.BreedId).HasConversion(
                 id => id.Value,
@@ -72,6 +73,25 @@ namespace PetFamily.Infrastructure.Configurations.Write
                 .HasColumnName("birthday");
             });
 
+            builder.ComplexProperty(m => m.MainPhoto, mb =>
+            {
+                mb.Property(p => p.Path)
+                    .IsRequired(false)
+                    .HasDefaultValue(string.Empty)
+                    .HasColumnName("main_photo");
+            });
+
+            //builder.ComplexProperty(p => p.MainPhoto, b =>
+            //{
+            //    b.ComplexProperty(m => m.PathToStorage, mb =>
+            //    {
+            //        mb.Property(p => p.Path)
+            //            .IsRequired(false)
+            //            .HasDefaultValue(null)
+            //            .HasColumnName("main_photo");
+            //    });
+            //});
+
             builder.ComplexProperty(p => p.Color, b =>
             {
                 b.Property(a => a.Value)
@@ -88,31 +108,17 @@ namespace PetFamily.Infrastructure.Configurations.Write
                 .HasMaxLength(Description.MAX_LENGTH);
             });
 
-            builder.Property(v => v.DetailsList).HasConversion(
-                  details => JsonSerializer.Serialize(details, JsonSerializerOptions.Default),
-                  json => JsonSerializer.Deserialize<IReadOnlyList<Details>>(json, JsonSerializerOptions.Default)!,
-                   new ValueComparer<IReadOnlyList<Details>>(
-                         (c1, c2) => c1!.SequenceEqual(c2!),
-                         c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
-                         c => c.ToList()))
+            builder.Property(v => v.DetailsList)
+                .ValueObjectCollectionJsonConversion(
+                    details => details,
+                    json => json)
                  .HasColumnName("details");
 
-            builder.Property(v => v.Files).HasConversion(
-                  files => JsonSerializer.Serialize(
-                      files.Select(f => new PetFileDto
-                      {
-                          PathToStorage = f.PathToStorage.Path
-                      }), 
-                      JsonSerializerOptions.Default),
-                  json => JsonSerializer.Deserialize<IReadOnlyList<PetFileDto>>(json, JsonSerializerOptions.Default)!
-                        .Select(dto => 
-                            new PetFile(FilePath.Create(dto.PathToStorage).Value))
-                        .ToList(),
-                   new ValueComparer<IReadOnlyList<PetFile>>(
-                         (c1, c2) => c1!.SequenceEqual(c2!),
-                         c => c.Aggregate(0, (int a, PetFile v) => HashCode.Combine(a, v.GetHashCode())),
-                         c => c.ToList()))
-                 .HasColumnName("file_paths");
+            builder.Property(v => v.Files)
+                .ValueObjectCollectionJsonConversion(
+                    file => new PetFileDto { PathToStorage = file.PathToStorage.Path },
+                    json => new PetFile(FilePath.Create(json.PathToStorage).Value))
+                .HasColumnName("file_paths");
 
             builder.ComplexProperty(v => v.OwnerPhoneNumber, vb =>
             {
@@ -172,12 +178,12 @@ namespace PetFamily.Infrastructure.Configurations.Write
 
             builder.ComplexProperty(p => p.Position, b =>
             {
-                b.Property(a => a.Value)
+                b.Property(p => p.Value)
                 .IsRequired(true)
                 .HasColumnName("position");
             });
 
-            builder.Property(v => v.IsDeleted)
+            builder.Property(p => p.IsDeleted)
                 .HasColumnName("is_deleted");
         }
     }

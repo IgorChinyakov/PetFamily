@@ -11,11 +11,11 @@ namespace PetFamily.Domain.VolunteerContext.PetsVO
 {
     public record PetFile
     {
+        public FilePath PathToStorage { get; }
+
         public PetFile(FilePath pathToStorage)
         {
             PathToStorage = pathToStorage;
         }
-
-        public FilePath PathToStorage { get; }
     }
 }

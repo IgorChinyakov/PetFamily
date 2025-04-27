@@ -1,4 +1,4 @@
-﻿using PetFamily.Application.Pets.Commands.Move;
+﻿using PetFamily.Application.EntitiesHandling.Pets.Commands.Move;
 
 namespace PetFamily.Api.Requests.Pets
 {

@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PetFamily.Application.Volunteers.DTOs;
+using PetFamily.Application.DTOs;
 
 namespace PetFamily.Application.Database
 {
@@ -7,5 +7,7 @@ namespace PetFamily.Application.Database
     {
         IQueryable<VolunteerDto> Volunteers { get; }
         IQueryable<PetDto> Pets { get; }
+        IQueryable<SpeciesDto> Species { get; }
+        IQueryable<BreedDto> Breeds { get; }
     }
 }

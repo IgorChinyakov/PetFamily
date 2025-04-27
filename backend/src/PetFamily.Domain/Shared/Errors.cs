@@ -33,6 +33,11 @@ namespace PetFamily.Domain.Shared
                 var label = name == null ? "" : name + " ";
                 return Error.Conflict("already.exists", $"{label}already exists", null);
             }
+
+            public static Error Conflict()
+            {
+                return Error.Conflict("connected.entities.exist", $"Entity can't be removed due to connected entities existence", null);
+            }
         }
     }
 }
