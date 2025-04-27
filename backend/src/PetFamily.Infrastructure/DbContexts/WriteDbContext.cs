@@ -6,14 +6,21 @@ using PetFamily.Domain.VolunteerContext.Entities;
 
 namespace PetFamily.Infrastructure.DbContexts
 {
-    public class WriteDbContext(IConfiguration configuration) : DbContext
+    public class WriteDbContext : DbContext
     {
+        private readonly string _connectionString;
+
+        public WriteDbContext(string connectionString)
+        {
+            _connectionString = connectionString;
+        }
+
         public DbSet<Volunteer> Volunteers => Set<Volunteer>();
         public DbSet<Species> Species => Set<Species>();
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseNpgsql(configuration.GetConnectionString(Constants.DATABASE));
+            optionsBuilder.UseNpgsql(_connectionString);
             optionsBuilder.UseSnakeCaseNamingConvention();
             optionsBuilder.UseLoggerFactory(CreateLoggerFactory());
         }

@@ -25,5 +25,7 @@ namespace PetFamily.Application.DTOs
         public DetailsDto[] Details { get; set; } = null!;
 
         public SocialMediaDto[] SocialMedia { get; set; } = null!;
+
+        public bool IsDeleted { get; set; }
     }
 } 

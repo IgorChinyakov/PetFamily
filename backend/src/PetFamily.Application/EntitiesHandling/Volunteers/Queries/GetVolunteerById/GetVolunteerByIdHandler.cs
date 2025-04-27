@@ -13,7 +13,8 @@ using System.Threading.Tasks;
 
 namespace PetFamily.Application.EntitiesHandling.Volunteers.Queries.GetVolunteerById
 {
-    public class GetVolunteerByIdHandler : IQueryHandler<Result<VolunteerDto, ErrorsList>, GetVolunteerByIdQuery>
+    public class GetVolunteerByIdHandler : 
+        IQueryHandlerWithResult<VolunteerDto, GetVolunteerByIdQuery>
     {
         private readonly IReadDbContext _readDbContext;
 

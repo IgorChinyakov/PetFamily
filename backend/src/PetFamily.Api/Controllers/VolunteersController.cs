@@ -47,9 +47,7 @@ namespace PetFamily.Api.Controllers
         [HttpGet("{id:guid}")]
         public async Task<ActionResult> GetById(
             [FromRoute] Guid id,
-            [FromServices] IQueryHandler<
-                Result<VolunteerDto, ErrorsList>, 
-                GetVolunteerByIdQuery> handler,
+            [FromServices] IQueryHandler<Result<VolunteerDto, ErrorsList>, GetVolunteerByIdQuery> handler,
             CancellationToken token = default)
         {
             var query = new GetVolunteerByIdQuery(id);
@@ -63,9 +61,7 @@ namespace PetFamily.Api.Controllers
         [HttpGet("dapper")]
         public async Task<ActionResult> GetWithDapper(
             [FromQuery] GetVolunteersWithPaginationRequest request,
-            [FromServices] IQueryHandler<
-                PagedList<VolunteerDto>, 
-                GetVolunteersWithPaginationQueryWithDapper> handler,
+            [FromServices] IQueryHandler<PagedList<VolunteerDto>, GetVolunteersWithPaginationQueryWithDapper> handler,
             CancellationToken token = default)
         {
             var query = new GetVolunteersWithPaginationQueryWithDapper(request.Page, request.PageSize);
