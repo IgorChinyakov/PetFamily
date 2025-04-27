@@ -85,7 +85,7 @@ namespace PetFamily.Application.EntitiesHandling.Pets.Commands.UploadPhotos
                 transaction.Commit();
 
                 _logger.LogInformation("Photos for pet with id {petResult} have been uploaded", petResult.Value.Id);
-                
+
                 return uploadResult.Value.ToList();
             }
             catch (Exception ex)

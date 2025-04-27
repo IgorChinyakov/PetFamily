@@ -1,31 +1,35 @@
-using AutoFixture;
+﻿using AutoFixture;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using PetFamily.Application.Abstractions;
-using PetFamily.Application.Database;
+using PetFamily.Application.EntitiesHandling.Specieses.Commands.Create;
 using PetFamily.Application.EntitiesHandling.Volunteers.Commands.Create;
 using PetFamily.Infrastructure.DbContexts;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace PetFamily.IntegrationTests.Volunteers
+namespace PetFamily.IntegrationTests.Specieses
 {
-    public class CreateVolunteerTest :
-        TestsBase
+    public class CreateSpeciesTests : TestsBase
     {
-        private readonly ICommandHandler<Guid, CreateVolunteerCommand> _sut;
+        private readonly ICommandHandler<Guid, CreateSpeciesCommand> _sut;
 
-        public CreateVolunteerTest(IntegrationTestsWebFactory factory) : base(factory)
+        public CreateSpeciesTests(IntegrationTestsWebFactory factory) : base(factory)
         {
             _sut = Scope.ServiceProvider
-                .GetRequiredService<ICommandHandler<Guid, CreateVolunteerCommand>>();
+                .GetRequiredService<ICommandHandler<Guid, CreateSpeciesCommand>>();
         }
 
         [Fact]
-        public async Task CreateVolunteer_should_be_success()
+        public async Task CreateSpecies_should_be_success()
         {
             //Arrange
             var cancellationToken = new CancellationTokenSource().Token;
-            var command = Fixture.CreateCreateVolunteerCommand();
+            var command = Fixture.CreateCreateSpeciesCommand();
 
             //Act
             var result = await _sut.Handle(command, cancellationToken);
@@ -34,7 +38,7 @@ namespace PetFamily.IntegrationTests.Volunteers
             result.IsSuccess.Should().BeTrue();
             result.Value.Should().NotBeEmpty();
 
-            var volunteers = await ReadDbContext.Volunteers.ToListAsync();
+            var volunteers = await ReadDbContext.Species.ToListAsync();
 
             volunteers.Should().NotBeNull();
             volunteers.Should().HaveCount(1);

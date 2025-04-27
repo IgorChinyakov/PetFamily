@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace PetFamily.IntegrationTests.Volunteers
 {
-    public class GetVolunteerByIdTests : VolunteersTestsBase
+    public class GetVolunteerByIdTests : TestsBase
     {
         private readonly IQueryHandlerWithResult<VolunteerDto, GetVolunteerByIdQuery> _sut;
 

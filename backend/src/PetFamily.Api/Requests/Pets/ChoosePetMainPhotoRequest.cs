@@ -3,9 +3,9 @@ using PetFamily.Domain.VolunteerContext.PetsVO;
 
 namespace PetFamily.Api.Requests.Pets
 {
-    public record ChoosePetMainPhotoRequest(string path)
+    public record ChoosePetMainPhotoRequest(string Path)
     {
         public ChoosePetMainPhotoCommand ToCommand(Guid volunteerId, Guid petId)
-            => new ChoosePetMainPhotoCommand(volunteerId, petId, path);
+            => new ChoosePetMainPhotoCommand(volunteerId, petId, Path);
     }
 }

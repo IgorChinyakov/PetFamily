@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace PetFamily.IntegrationTests.Volunteers
 {
     public class DeleteVolunteerTests
-        : VolunteersTestsBase
+        : TestsBase
     {
         private readonly ICommandHandler<Guid, DeleteVolunteerCommand> _sut;
 
@@ -62,7 +62,7 @@ namespace PetFamily.IntegrationTests.Volunteers
             result.IsSuccess.Should().BeTrue();
             result.Value.Should().NotBeEmpty();
 
-            var volunteer = await WriteDbContext
+            var volunteer = await ReadDbContext
                 .Volunteers.FirstOrDefaultAsync();
 
             volunteer!.IsDeleted.Should().BeTrue();

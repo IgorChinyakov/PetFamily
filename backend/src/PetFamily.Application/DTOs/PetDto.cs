@@ -49,5 +49,9 @@ namespace PetFamily.Application.DTOs
         public DetailsDto[] Details { get; set; } = [];
 
         public PetFileDto[] Files { get; set; } = [];
+
+        public string MainPhoto { get; set; } = string.Empty;
+
+        public bool IsDeleted { get; set; }
     }
 }

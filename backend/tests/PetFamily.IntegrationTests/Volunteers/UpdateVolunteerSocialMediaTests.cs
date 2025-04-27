@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace PetFamily.IntegrationTests.Volunteers
 {
-    public class UpdateVolunteerSocialMediaTests : VolunteersTestsBase
+    public class UpdateVolunteerSocialMediaTests : TestsBase
     {
         private readonly ICommandHandler<Guid, UpdateVolunteerSocialMediaCommand> _sut;
 

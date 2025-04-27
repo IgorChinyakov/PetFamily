@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace PetFamily.IntegrationTests.Volunteers
 {
-    public class UpdateVolunteerDetailsTests : VolunteersTestsBase
+    public class UpdateVolunteerDetailsTests : TestsBase
     {
         private readonly ICommandHandler<Guid, UpdateVolunteerDetailsCommand> _sut;
 

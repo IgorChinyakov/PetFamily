@@ -15,7 +15,8 @@ using PetFamily.Domain.VolunteerContext.Entities;
 
 namespace PetFamily.Api.Controllers
 {
-    public class CreateSpeciesHandler : ICommandHandler<Guid, CreateSpeciesCommand>
+    public class CreateSpeciesHandler : 
+        ICommandHandler<Guid, CreateSpeciesCommand>
     {
         private readonly ISpeciesRepository _repository;
         private readonly IValidator<CreateSpeciesCommand> _validator;
