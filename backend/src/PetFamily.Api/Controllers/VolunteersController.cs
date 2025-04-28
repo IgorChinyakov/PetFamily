@@ -13,6 +13,7 @@ using PetFamily.Application.EntitiesHandling.Pets.Commands.Move;
 using PetFamily.Application.EntitiesHandling.Pets.Commands.UpdateMainInfo;
 using PetFamily.Application.EntitiesHandling.Pets.Commands.UpdateStatus;
 using PetFamily.Application.EntitiesHandling.Pets.Commands.UploadPhotos;
+using PetFamily.Application.EntitiesHandling.Pets.Queries.GetById;
 using PetFamily.Application.EntitiesHandling.Volunteers.Commands.Create;
 using PetFamily.Application.EntitiesHandling.Volunteers.Commands.Delete;
 using PetFamily.Application.EntitiesHandling.Volunteers.Commands.UpdateDetails;
@@ -47,7 +48,7 @@ namespace PetFamily.Api.Controllers
         [HttpGet("{id:guid}")]
         public async Task<ActionResult> GetById(
             [FromRoute] Guid id,
-            [FromServices] IQueryHandler<Result<VolunteerDto, ErrorsList>, GetVolunteerByIdQuery> handler,
+            [FromServices] IQueryHandlerWithResult<VolunteerDto, GetVolunteerByIdQuery> handler,
             CancellationToken token = default)
         {
             var query = new GetVolunteerByIdQuery(id);

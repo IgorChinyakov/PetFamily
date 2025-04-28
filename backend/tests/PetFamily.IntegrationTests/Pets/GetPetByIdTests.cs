@@ -1,10 +1,8 @@
-﻿using CSharpFunctionalExtensions;
-using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
+﻿using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using PetFamily.Application.Abstractions;
 using PetFamily.Application.DTOs;
-using PetFamily.Application.EntitiesHandling.Volunteers.Commands.Delete;
+using PetFamily.Application.EntitiesHandling.Pets.Queries.GetById;
 using PetFamily.Application.EntitiesHandling.Volunteers.Queries.GetVolunteerById;
 using PetFamily.Domain.Shared;
 using System;
@@ -13,26 +11,30 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PetFamily.IntegrationTests.Volunteers
+namespace PetFamily.IntegrationTests.Pets
 {
-    public class GetVolunteerByIdTests : TestsBase
+    public class GetPetByIdTests : TestsBase
     {
-        private readonly IQueryHandlerWithResult<VolunteerDto, GetVolunteerByIdQuery> _sut;
+        private readonly IQueryHandlerWithResult<PetDto, GetPetByIdQuery> _sut;
 
-        public GetVolunteerByIdTests(IntegrationTestsWebFactory factory) : base(factory)
+        public GetPetByIdTests(IntegrationTestsWebFactory factory) : base(factory)
         {
             _sut = Scope.ServiceProvider
-                .GetRequiredService<IQueryHandlerWithResult<VolunteerDto, GetVolunteerByIdQuery>>();
+                .GetRequiredService<IQueryHandlerWithResult<PetDto, GetPetByIdQuery>>();
         }
 
         [Fact]
-        public async Task GetVolunteerById_should_return_volunteer_with_given_id()
+        public async Task GetPetById_should_return_pet_with_given_id()
         {
             //Arrange
             var cancellationToken = new CancellationTokenSource().Token;
 
             var volunteerId = await SeedVolunteer();
-            var query = new GetVolunteerByIdQuery(volunteerId);
+            var speciesId = await SeedSpecies();
+            var breedId = await SeedBreed(speciesId);
+            var petId = await SeedPet(speciesId, breedId, volunteerId);
+
+            var query = new GetPetByIdQuery(petId);
 
             //Act
             var result = await _sut.Handle(query, cancellationToken);
@@ -40,17 +42,21 @@ namespace PetFamily.IntegrationTests.Volunteers
             //Assert
             result.IsSuccess.Should().BeTrue();
             result.Value.Should().NotBeNull();
-            result.Value.Id.Should().Be(volunteerId);
+            result.Value.Id.Should().Be(petId);
         }
 
         [Fact]
-        public async Task Get_not_existing_volunteer_should_return_not_found()
+        public async Task Get_not_existing_pet_should_return_not_found()
         {
             //Arrange
             var cancellationToken = new CancellationTokenSource().Token;
 
             var volunteerId = await SeedVolunteer();
-            var query = new GetVolunteerByIdQuery(Guid.NewGuid());
+            var speciesId = await SeedSpecies();
+            var breedId = await SeedBreed(speciesId);
+            var petId = await SeedPet(speciesId, breedId, volunteerId);
+
+            var query = new GetPetByIdQuery(Guid.NewGuid());
 
             //Act
             var result = await _sut.Handle(query, cancellationToken);
