@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using PetFamily.Application.Abstractions;
-using PetFamily.Application.Database;
 using PetFamily.Application.EntitiesHandling.Volunteers.Commands.Create;
+using PetFamily.Core.Abstractions.Database;
 using PetFamily.Infrastructure.DbContexts;
 using System;
 using System.Collections.Generic;
@@ -18,7 +18,7 @@ namespace PetFamily.IntegrationTests
         IClassFixture<IntegrationTestsWebFactory>, IAsyncLifetime
     {
         protected readonly WriteDbContext WriteDbContext;
-        protected readonly IReadDbContext ReadDbContext;
+        protected readonly ISpeciesReadDbContext ReadDbContext;
         protected readonly IServiceScope Scope;
         protected readonly IFixture Fixture;
         protected readonly IntegrationTestsWebFactory Factory;
@@ -29,7 +29,7 @@ namespace PetFamily.IntegrationTests
             Factory = factory;
             Fixture = new Fixture();
             Scope = factory.Services.CreateScope();
-            ReadDbContext = Scope.ServiceProvider.GetRequiredService<IReadDbContext>();
+            ReadDbContext = Scope.ServiceProvider.GetRequiredService<ISpeciesReadDbContext>();
             WriteDbContext = Scope.ServiceProvider.GetRequiredService<WriteDbContext>();
         }
 

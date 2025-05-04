@@ -1,10 +1,10 @@
 ﻿using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using PetFamily.Application.Abstractions;
 using PetFamily.Application.EntitiesHandling.Pets.Commands.Create;
-using PetFamily.Application.EntitiesHandling.Pets.Commands.UploadPhotos;
 using PetFamily.Application.FileProvider;
+using PetFamily.Core.Abstractions;
+using PetFamily.Volunteers.Application.Pets.Commands.UploadPhotos;
 using System;
 using System.Collections.Generic;
 using System.Linq;

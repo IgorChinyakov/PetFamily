@@ -1,10 +1,10 @@
 ﻿using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using PetFamily.Application.Abstractions;
 using PetFamily.Application.EntitiesHandling;
 using PetFamily.Application.EntitiesHandling.Volunteers.Commands.Delete;
 using PetFamily.Application.EntitiesHandling.Volunteers.Commands.UpdateDetails;
+using PetFamily.Core.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Linq;

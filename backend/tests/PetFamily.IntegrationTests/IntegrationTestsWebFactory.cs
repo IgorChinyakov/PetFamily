@@ -6,13 +6,15 @@ using Microsoft.Extensions.DependencyInjection;
 using Minio;
 using Npgsql;
 using NSubstitute;
-using PetFamily.Application.Database;
 using PetFamily.Application.FileProvider;
 using PetFamily.Application.Providers;
+using PetFamily.Core.Abstractions.Database;
+using PetFamily.Core.FileProvider;
 using PetFamily.Domain.Shared;
 using PetFamily.Infrastructure;
 using PetFamily.Infrastructure.BackgroundServices;
 using PetFamily.Infrastructure.DbContexts;
+using PetFamily.SharedKernel;
 using Respawn;
 using System.Data.Common;
 using Testcontainers.PostgreSql;
@@ -45,7 +47,7 @@ namespace PetFamily.IntegrationTests
                 s.ServiceType == typeof(WriteDbContext));
 
             var readContext = services.SingleOrDefault(s =>
-                s.ServiceType == typeof(IReadDbContext));
+                s.ServiceType == typeof(ISpeciesReadDbContext));
 
             var cleanerService = services.SingleOrDefault(s =>
                 s.ImplementationType == typeof(DeletedEntitiesCleanerBackgroundService));
@@ -70,7 +72,7 @@ namespace PetFamily.IntegrationTests
             services.AddScoped(_ =>
                 new WriteDbContext(_dbContainer.GetConnectionString()));
 
-            services.AddScoped<IReadDbContext>(_ =>
+            services.AddScoped<ISpeciesReadDbContext>(_ =>
                 new ReadDbContext(_dbContainer.GetConnectionString()));
         }
 

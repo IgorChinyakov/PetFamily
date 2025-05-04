@@ -2,9 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using PetFamily.Api.Controllers;
-using PetFamily.Application.Abstractions;
 using PetFamily.Application.EntitiesHandling;
 using PetFamily.Application.EntitiesHandling.Breeds.Commands.Delete;
+using PetFamily.Core.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Linq;

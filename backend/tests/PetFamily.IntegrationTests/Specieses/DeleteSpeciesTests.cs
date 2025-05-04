@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using PetFamily.Application.Abstractions;
 using PetFamily.Application.EntitiesHandling.Volunteers.Commands.Delete;
 using PetFamily.Application.EntitiesHandling;
 using System;
@@ -10,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using PetFamily.Application.EntitiesHandling.Specieses.Commands.Delete;
 using FluentAssertions;
+using PetFamily.Core.Abstractions;
 
 namespace PetFamily.IntegrationTests.Specieses
 {

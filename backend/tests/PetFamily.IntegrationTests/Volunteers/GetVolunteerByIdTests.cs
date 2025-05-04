@@ -2,11 +2,12 @@
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using PetFamily.Application.Abstractions;
-using PetFamily.Application.DTOs;
 using PetFamily.Application.EntitiesHandling.Volunteers.Commands.Delete;
-using PetFamily.Application.EntitiesHandling.Volunteers.Queries.GetVolunteerById;
+using PetFamily.Core.Abstractions;
+using PetFamily.Core.DTOs;
 using PetFamily.Domain.Shared;
+using PetFamily.SharedKernel;
+using PetFamily.Volunteers.Application.Volunteers.Queries.GetVolunteerById;
 using System;
 using System.Collections.Generic;
 using System.Linq;

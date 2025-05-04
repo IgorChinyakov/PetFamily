@@ -2,9 +2,9 @@ using AutoFixture;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using PetFamily.Application.Abstractions;
 using PetFamily.Application.Database;
 using PetFamily.Application.EntitiesHandling.Volunteers.Commands.Create;
+using PetFamily.Core.Abstractions;
 using PetFamily.Infrastructure.DbContexts;
 
 namespace PetFamily.IntegrationTests.Volunteers

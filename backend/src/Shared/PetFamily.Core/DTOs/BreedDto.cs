@@ -1,0 +1,19 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace PetFamily.Core.DTOs
+{
+    public class BreedDto
+    {
+        public Guid Id { get; set; }
+
+        public Guid SpeciesId { get; set; }
+
+        public string Name { get; init; } = string.Empty;
+
+        public bool IsDeleted { get; set; }
+    }
+}

@@ -1,9 +1,9 @@
 ﻿using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using PetFamily.Application.Abstractions;
-using PetFamily.Application.EntitiesHandling.Pets.Commands.UpdateMainInfo;
 using PetFamily.Application.EntitiesHandling.Volunteers.Commands.UpdateDetails;
+using PetFamily.Core.Abstractions;
+using PetFamily.Volunteers.Application.Pets.Commands.UpdateMainInfo;
 using System;
 using System.Collections.Generic;
 using System.Linq;

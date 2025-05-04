@@ -3,9 +3,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using PetFamily.Application.Database;
-using PetFamily.Application.EntitiesHandling.Volunteers.Queries.GetVolunteerById;
-using PetFamily.Infrastructure.DbContexts;
 using PetFamily.Infrastructure.Options;
 
 namespace PetFamily.Infrastructure.BackgroundServices
@@ -59,11 +56,6 @@ namespace PetFamily.Infrastructure.BackgroundServices
                         s.DeletionDate != null
                         && s.DeletionDate.Value.AddDays(_daysBeforeDeletion) < DateTime.UtcNow)
                     .ToListAsync(stoppingToken);
-
-                var expiredPets = volunteers.Select(v => v.Pets.Where(p =>
-                    p.IsDeleted &&
-                    p.DeletionDate != null &&
-                    p.DeletionDate.Value.AddDays(_daysBeforeDeletion) < DateTime.UtcNow));
 
                 dbContext.Volunteers.RemoveRange(expiredVolunteers);
                 dbContext.Species.RemoveRange(expiredSpecies);

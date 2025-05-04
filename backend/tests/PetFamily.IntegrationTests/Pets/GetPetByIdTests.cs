@@ -1,10 +1,11 @@
 ﻿using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
-using PetFamily.Application.Abstractions;
-using PetFamily.Application.DTOs;
-using PetFamily.Application.EntitiesHandling.Pets.Queries.GetById;
 using PetFamily.Application.EntitiesHandling.Volunteers.Queries.GetVolunteerById;
+using PetFamily.Core.Abstractions;
+using PetFamily.Core.DTOs;
 using PetFamily.Domain.Shared;
+using PetFamily.SharedKernel;
+using PetFamily.Volunteers.Application.Pets.Queries.GetById;
 using System;
 using System.Collections.Generic;
 using System.Linq;
