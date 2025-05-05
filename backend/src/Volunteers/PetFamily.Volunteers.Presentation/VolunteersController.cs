@@ -38,7 +38,7 @@ namespace PetFamily.Api.Controllers
                 GetVolunteersWithPaginationQuery> handler,
             CancellationToken token = default)
         {
-            var query = request.ToQuery();
+            var query = new GetVolunteersWithPaginationQuery(request.Page, request.PageSize);
 
             var response = await handler.Handle(query, token);
 
@@ -78,7 +78,14 @@ namespace PetFamily.Api.Controllers
             [FromBody] CreateVolunteerRequest request,
             CancellationToken token = default)
         {
-            var command = request.ToCommand();
+            var command = new CreateVolunteerCommand(
+                request.FullName,
+                request.Email,
+                request.Description,
+                request.Experience,
+                request.PhoneNumber,
+                request.DetailsList,
+                request.SocialMediaList);
 
             var result = await handler.Handle(command, token);
             if (result.IsFailure)
@@ -94,7 +101,13 @@ namespace PetFamily.Api.Controllers
             [FromRoute] Guid volunteerId,
             CancellationToken token = default)
         {
-            var command = request.ToCommand(volunteerId);
+            var command = new UpdateVolunteerMainInfoCommand(
+                volunteerId, 
+                request.FullName, 
+                request.Email, 
+                request.Description, 
+                request.Experience, 
+                request.PhoneNumber);
 
             var result = await handler.Handle(command, token);
             if (result.IsFailure)
@@ -110,7 +123,9 @@ namespace PetFamily.Api.Controllers
             [FromRoute] Guid id,
             CancellationToken token = default)
         {
-            var command = request.ToCommand(id);
+            var command = new UpdateVolunteerSocialMediaCommand(
+                id,
+                 request.SocialMedia);
 
             var result = await handler.Handle(command, token);
             if (result.IsFailure)
@@ -126,7 +141,7 @@ namespace PetFamily.Api.Controllers
             [FromRoute] Guid id,
             CancellationToken token = default)
         {
-            var command = request.ToCommand(id);
+            var command = new UpdateVolunteerDetailsCommand(id, request.Details);
 
             var result = await handler.Handle(command, token);
             if (result.IsFailure)
@@ -158,7 +173,21 @@ namespace PetFamily.Api.Controllers
             [FromBody] CreatePetRequest request,
             CancellationToken token = default)
         {
-            var command = request.ToCommand(volunteerId);
+            var command = new CreatePetCommand(
+                volunteerId, 
+                request.NickName, 
+                request.Description, 
+                request.SpeciesId, 
+                request.BreedId, 
+                request.Color, 
+                request.IsSterilized, 
+                request.IsVaccinated, 
+                request.HealthInformation, 
+                request.Address, 
+                request.Weight, 
+                request.Height, 
+                request.Birthday, 
+                request.PetStatus);
 
             var result = await handler.Handle(command, token);
 
@@ -199,7 +228,7 @@ namespace PetFamily.Api.Controllers
             [FromRoute] Guid petId,
             CancellationToken token = default)
         {
-            var command = request.ToCommand(volunteerId, petId);
+            var command = new MovePetCommand(volunteerId, petId, request.Position);
 
             var movementResult = await handler.Handle(command, token);
             if (movementResult.IsFailure)
@@ -216,7 +245,23 @@ namespace PetFamily.Api.Controllers
             [FromRoute] Guid petId,
             CancellationToken token = default)
         {
-            var command = request.ToCommand(petId, volunteerId);
+            var command = new UpdatePetMainInfoCommand(
+                petId,
+                volunteerId,
+                request.SpeciesId,
+                request.BreedId,
+                request.NickName,
+                request.Address,
+                request.Color,
+                request.HealthInformation,
+                request.Description,
+                request.PhoneNumber,
+                request.Height,
+                request.Weight,
+                request.IsSterilized,
+                request.IsVaccinated,
+                request.Birthday,
+                request.CreationDate);
 
             var result = await handler.Handle(command, token);
             if (result.IsFailure)
@@ -233,7 +278,7 @@ namespace PetFamily.Api.Controllers
             [FromRoute] Guid petId,
             CancellationToken token = default)
         {
-            var command = request.ToCommand(petId, volunteerId);
+            var command = new UpdatePetStatusCommand(volunteerId, petId, request.Status);
 
             var result = await handler.Handle(command, token);
             if (result.IsFailure)
@@ -271,7 +316,7 @@ namespace PetFamily.Api.Controllers
             [FromBody] ChoosePetMainPhotoRequest request,
             CancellationToken token = default)
         {
-            var command = request.ToCommand(volunteerId, petId);
+            var command = new ChoosePetMainPhotoCommand(volunteerId, petId, request.Path);
 
             var result = await handler.Handle(command, token);
 

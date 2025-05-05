@@ -1,11 +1,8 @@
-using AutoFixture;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using PetFamily.Application.Database;
-using PetFamily.Application.EntitiesHandling.Volunteers.Commands.Create;
 using PetFamily.Core.Abstractions;
-using PetFamily.Infrastructure.DbContexts;
+using PetFamily.Volunteers.Application.Volunteers.Commands.Create;
 
 namespace PetFamily.IntegrationTests.Volunteers
 {
@@ -34,7 +31,7 @@ namespace PetFamily.IntegrationTests.Volunteers
             result.IsSuccess.Should().BeTrue();
             result.Value.Should().NotBeEmpty();
 
-            var volunteers = await ReadDbContext.Volunteers.ToListAsync();
+            var volunteers = await VolunteersReadDbContext.Volunteers.ToListAsync();
 
             volunteers.Should().NotBeNull();
             volunteers.Should().HaveCount(1);

@@ -4,10 +4,11 @@ using Microsoft.Extensions.Logging;
 using PetFamily.Core.Abstractions.Database;
 using PetFamily.Core.Extensions;
 using PetFamily.Core.Abstractions;
-using PetFamily.Volunteers.Application;
 using PetFamily.SharedKernel;
 using PetFamily.Core.Options;
-using PetFamily.Core.FileProvider;
+using Microsoft.Extensions.DependencyInjection;
+using PetFamily.Core.FileDtos;
+using PetFamily.Files.Application;
 
 namespace PetFamily.Volunteers.Application.Pets.Commands.Delete
 {
@@ -24,7 +25,7 @@ namespace PetFamily.Volunteers.Application.Pets.Commands.Delete
             IVolunteersRepository repository,
             IValidator<DeletePetCommand> validator,
             ILogger<DeletePetHandler> logger,
-            IUnitOfWork unitOfWork,
+            [FromKeyedServices(UnitOfWorkKeys.Volunteers)] IUnitOfWork unitOfWork,
             IFilesProvider fileProvider)
         {
             _repository = repository;

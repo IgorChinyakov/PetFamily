@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
-using PetFamily.Core.FileProvider;
+using PetFamily.Core.FileDtos;
 
 namespace PetFamily.Core.Processors
 {

@@ -1,18 +1,9 @@
-﻿using CSharpFunctionalExtensions;
-using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
+﻿using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
-using PetFamily.Application.EntitiesHandling.Volunteers.Commands.Delete;
 using PetFamily.Core.Abstractions;
 using PetFamily.Core.DTOs;
-using PetFamily.Domain.Shared;
 using PetFamily.SharedKernel;
 using PetFamily.Volunteers.Application.Volunteers.Queries.GetVolunteerById;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PetFamily.IntegrationTests.Volunteers
 {

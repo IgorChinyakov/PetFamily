@@ -1,14 +1,8 @@
 ﻿using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using PetFamily.Application.EntitiesHandling.Volunteers.Commands.UpdateDetails;
-using PetFamily.Application.EntitiesHandling.Volunteers.Commands.UpdateMainInfo;
 using PetFamily.Core.Abstractions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using PetFamily.Volunteers.Application.Volunteers.Commands.UpdateMainInfo;
 
 namespace PetFamily.IntegrationTests.Volunteers
 {
@@ -38,7 +32,7 @@ namespace PetFamily.IntegrationTests.Volunteers
             result.IsSuccess.Should().BeTrue();
             result.Value.Should().NotBeEmpty();
 
-            var volunteer = await ReadDbContext
+            var volunteer = await VolunteersReadDbContext
                 .Volunteers.FirstOrDefaultAsync(v => v.Id == command.VolunteerId, cancellationToken);
 
             volunteer!.PhoneNumber.Should().Be(command.PhoneNumber);

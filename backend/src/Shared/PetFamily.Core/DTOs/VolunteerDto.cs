@@ -1,12 +1,4 @@
-﻿using PetFamily.Domain.VolunteerContext.SharedVO;
-using PetFamily.Domain.VolunteerContext.VolunteerVO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace PetFamily.Core.DTOs
+﻿namespace PetFamily.Core.DTOs
 {
     public class VolunteerDto
     {

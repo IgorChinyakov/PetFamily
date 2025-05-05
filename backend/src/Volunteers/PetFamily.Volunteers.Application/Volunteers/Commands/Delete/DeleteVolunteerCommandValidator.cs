@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
-using PetFamily.Application.Validation;
+using PetFamily.Core.Extensions;
+using PetFamily.Core.Options;
 using PetFamily.SharedKernel;
 
 namespace PetFamily.Volunteers.Application.Volunteers.Commands.Delete

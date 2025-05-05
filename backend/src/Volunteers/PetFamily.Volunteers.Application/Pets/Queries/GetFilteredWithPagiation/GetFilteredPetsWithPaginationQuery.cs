@@ -1,10 +1,12 @@
 ﻿using PetFamily.Core.Abstractions;
+using PetFamily.Core.DTOs;
 using PetFamily.Volunteers.Domain.PetsVO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static PetFamily.Volunteers.Domain.PetsVO.PetStatus;
 
 namespace PetFamily.Volunteers.Application.Pets.Queries.GetFilteredWithPagiation
 {
@@ -23,7 +25,7 @@ namespace PetFamily.Volunteers.Application.Pets.Queries.GetFilteredWithPagiation
         int? Age = null,
         float? Height = null,
         float? Weight = null,
-        Status? Status = null,
+        PetStatusDto? Status = null,
         string? PhoneNumber = null,
         string? City = null,
         string? Street = null,

@@ -17,12 +17,12 @@ namespace PetFamily.Volunteers.Domain.PetsVO
         }
 
         public static Result<PetStatus> Create(Status value) => new PetStatus(value);
-    }
 
-    public enum Status
-    {
-        NeedHelp,
-        LookingForHome,
-        FoundHome
+        public enum Status
+        {
+            NeedHelp,
+            LookingForHome,
+            FoundHome
+        }
     }
 }

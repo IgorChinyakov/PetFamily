@@ -34,7 +34,28 @@ namespace PetFamily.Api.Controllers
             [FromQuery] GetFilteredPetsWithPaginationRequest request,
             CancellationToken token = default)
         {
-            var query = request.ToQuery();
+            var query = new GetFilteredPetsWithPaginationQuery(
+                request.Page,
+                request.PageSize,
+                request.Nickname,
+                request.Description,
+                request.SpeciesId,
+                request.BreedId,
+                request.VolunteerId,
+                request.Color,
+                request.IsSterilized,
+                request.IsVaccinated,
+                request.HealthInformation,
+                request.Age,
+                request.Height,
+                request.Weight,
+                request.Status,
+                request.PhoneNumber,
+                request.City,
+                request.Street,
+                request.Apartment,
+                request.SortBy,
+                request.SortDirection);
 
             var result = await handler.Handle(query, token);
 

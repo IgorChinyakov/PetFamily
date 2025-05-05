@@ -1,22 +1,27 @@
 ﻿using CSharpFunctionalExtensions;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using PetFamily.Core.Abstractions;
 using PetFamily.Core.Abstractions.Database;
 using PetFamily.Core.Extensions;
+using PetFamily.Core.Options;
 using PetFamily.SharedKernel;
+using PetFamily.Specieses.Contracts;
+using PetFamily.Specieses.Contracts.Requests.Species;
 using PetFamily.Volunteers.Application;
 using PetFamily.Volunteers.Domain.Entities;
 using PetFamily.Volunteers.Domain.PetsVO;
 using PetFamily.Volunteers.Domain.SharedVO;
+using static PetFamily.Volunteers.Domain.PetsVO.PetStatus;
 
 namespace PetFamily.Volunteers.Application.Pets.Commands.Create
 {
     public class CreatePetHandler : ICommandHandler<Guid, CreatePetCommand>
     {
         private readonly IVolunteersRepository _volunteerRepository;
-        private readonly ISpeciesReadDbContext _readDbContext;
+        private readonly ISpeciesContract _speciesContract;
         private readonly IValidator<CreatePetCommand> _validator;
         private readonly ILogger<CreatePetHandler> _logger;
         private readonly IUnitOfWork _unitOfWork;
@@ -25,14 +30,14 @@ namespace PetFamily.Volunteers.Application.Pets.Commands.Create
             IVolunteersRepository volunteerRepository,
             IValidator<CreatePetCommand> validator,
             ILogger<CreatePetHandler> logger,
-            IUnitOfWork unitOfWork,
-            ISpeciesReadDbContext readDbContext)
+            [FromKeyedServices(UnitOfWorkKeys.Volunteers)] IUnitOfWork unitOfWork,
+            ISpeciesContract speciesContract)
         {
             _volunteerRepository = volunteerRepository;
             _validator = validator;
             _logger = logger;
             _unitOfWork = unitOfWork;
-            _readDbContext = readDbContext;
+            _speciesContract = speciesContract;
         }
 
         public async Task<Result<Guid, ErrorsList>> Handle(
@@ -47,15 +52,14 @@ namespace PetFamily.Volunteers.Application.Pets.Commands.Create
             if (volunteerResult.IsFailure)
                 return volunteerResult.Error.ToErrorsList();
 
-            var species = await _readDbContext.Species
-                .FirstOrDefaultAsync(s => s.Id == command.SpeciesId, token);
-            if (species == null)
+            var speciesResult = await _speciesContract
+                .GetSpeciesById(command.SpeciesId, token);
+            if (speciesResult.IsFailure)
                 return Errors.General.NotFound(command.SpeciesId).ToErrorsList();
 
-            var breed = await _readDbContext.Breeds
-                .FirstOrDefaultAsync(b =>
-                    b.Id == command.BreedId && b.SpeciesId == command.SpeciesId, token);
-            if (breed == null)
+            var breedResult = await _speciesContract
+                .GetBreedById(command.SpeciesId, command.BreedId);
+            if (speciesResult.IsFailure)
                 return Errors.General.NotFound(command.BreedId).ToErrorsList();
 
             var nickName = NickName.Create(command.NickName).Value;
@@ -74,7 +78,7 @@ namespace PetFamily.Volunteers.Application.Pets.Commands.Create
             var weight = Weight.Create(command.Weight).Value;
             var height = Height.Create(command.Height).Value;
             var birthday = Birthday.Create(command.Birthday).Value;
-            var petStatus = PetStatus.Create(command.PetStatus).Value;
+            var petStatus = PetStatus.Create((Status)command.PetStatus).Value;
 
             var creationDate = CreationDate.Create(DateTime.UtcNow).Value;
             var phoneNumber = volunteerResult.Value.PhoneNumber;

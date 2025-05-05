@@ -1,12 +1,15 @@
 ﻿using CSharpFunctionalExtensions;
 using FluentValidation;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using PetFamily.Core.Abstractions;
 using PetFamily.Core.Abstractions.Database;
 using PetFamily.Core.Extensions;
+using PetFamily.Core.Options;
 using PetFamily.SharedKernel;
 using PetFamily.Volunteers.Application;
 using PetFamily.Volunteers.Domain.PetsVO;
+using static PetFamily.Volunteers.Domain.PetsVO.PetStatus;
 
 namespace PetFamily.Volunteers.Application.Pets.Commands.UpdateStatus
 {
@@ -23,7 +26,7 @@ namespace PetFamily.Volunteers.Application.Pets.Commands.UpdateStatus
             IVolunteersRepository volunteerRepository,
             IValidator<UpdatePetStatusCommand> validator,
             ILogger<UpdatePetStatusHandler> logger,
-            IUnitOfWork unitOfWork,
+            [FromKeyedServices(UnitOfWorkKeys.Volunteers)] IUnitOfWork unitOfWork,
             ISpeciesReadDbContext readDbContext)
         {
             _repository = volunteerRepository;
@@ -46,7 +49,7 @@ namespace PetFamily.Volunteers.Application.Pets.Commands.UpdateStatus
             if (volunteerResult.IsFailure)
                 return volunteerResult.Error.ToErrorsList();
 
-            var petStatus = PetStatus.Create(command.Status).Value;
+            var petStatus = PetStatus.Create((Status)command.Status).Value;
 
             var updateResult = volunteerResult.Value
                 .UpdatePetStatus(command.PetId, petStatus);

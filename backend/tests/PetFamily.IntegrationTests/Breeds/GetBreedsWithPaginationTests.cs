@@ -1,16 +1,9 @@
 ﻿using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
-using PetFamily.Application.EntitiesHandling.Breeds.Queries.GetBreedsWithPagination;
-using PetFamily.Application.EntitiesHandling.Volunteers.Queries.GetVolunteersWithPagination;
-using PetFamily.Application.Models;
 using PetFamily.Core.Abstractions;
 using PetFamily.Core.DTOs;
 using PetFamily.Core.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using PetFamily.Specieses.Application.Breeds.Queries.GetBreedsWithPagination;
 
 namespace PetFamily.IntegrationTests.Breeds
 {

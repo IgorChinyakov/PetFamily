@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
-using PetFamily.Application.Validation;
-using PetFamily.Domain.Shared;
+using PetFamily.Core.Extensions;
+using PetFamily.SharedKernel;
 using PetFamily.Volunteers.Domain.PetsVO;
 using PetFamily.Volunteers.Domain.SharedVO;
 using System;
@@ -16,7 +16,7 @@ namespace PetFamily.Volunteers.Application.Pets.Commands.UpdateMainInfo
         public UpdatePetMainInfoCommandValidator()
         {
             RuleFor(c => c.Address)
-    .MustBeValueObject(a => Address.Create(a.City, a.Street, a.Apartment));
+                .MustBeValueObject(a => Address.Create(a.City, a.Street, a.Apartment));
 
             RuleFor(c => c.Birthday)
                 .MustBeValueObject(Birthday.Create);

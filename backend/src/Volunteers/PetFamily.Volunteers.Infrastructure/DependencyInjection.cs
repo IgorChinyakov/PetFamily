@@ -1,20 +1,22 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using PetFamily.Core.Abstractions.Database;
 using PetFamily.Core.Options;
 using PetFamily.Infrastructure.BackgroundServices;
 using PetFamily.Volunteers.Application;
 using PetFamily.Volunteers.Infrastructure.DbContexts;
+using PetFamily.Volunteers.Infrastructure.Repositories;
 
 namespace PetFamily.Volunteers.Infrastructure
 {
     public static class DependencyInjection
     {
         public static IServiceCollection AddVolunteersInfrastructure(
-            this IServiceCollection services)
+            this IServiceCollection services, IConfiguration configuration)
         {
             services
                 .AddRepositories()
-                .AddDbContexts()
+                .AddDbContexts(configuration)
                 .AddUnitOfWork()
                 .AddBackgroundServices();
 
@@ -28,10 +30,14 @@ namespace PetFamily.Volunteers.Infrastructure
             return services;
         }
 
-        private static IServiceCollection AddDbContexts(this IServiceCollection services)
+        private static IServiceCollection AddDbContexts(
+            this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddScoped<VolunteersWriteDbContext>();
-            services.AddScoped<IVolunteersReadDbContext, VolunteersReadDbContext>();
+            services.AddScoped<VolunteersWriteDbContext>(_ => 
+                new VolunteersWriteDbContext(configuration.GetConnectionString("Database")!));
+
+            services.AddScoped<IVolunteersReadDbContext, VolunteersReadDbContext>(_ =>
+                new VolunteersReadDbContext(configuration.GetConnectionString("Database")!));
 
             return services;
         }

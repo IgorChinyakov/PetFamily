@@ -7,6 +7,8 @@ using PetFamily.Core.Abstractions;
 using PetFamily.Volunteers.Application;
 using PetFamily.Volunteers.Domain.PetsVO;
 using PetFamily.SharedKernel;
+using Microsoft.Extensions.DependencyInjection;
+using PetFamily.Core.Options;
 
 namespace PetFamily.Volunteers.Application.Pets.Commands.Move
 {
@@ -21,7 +23,7 @@ namespace PetFamily.Volunteers.Application.Pets.Commands.Move
             IVolunteersRepository volunteerRepository,
             IValidator<MovePetCommand> validator,
             ILogger<MovePetHandler> logger,
-            IUnitOfWork unitOfWork)
+            [FromKeyedServices(UnitOfWorkKeys.Volunteers)] IUnitOfWork unitOfWork)
         {
             _volunteerRepository = volunteerRepository;
             _validator = validator;

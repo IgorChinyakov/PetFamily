@@ -1,7 +1,8 @@
 ﻿using FluentValidation;
-using PetFamily.Application.Validation;
-using PetFamily.Domain.Shared;
+using PetFamily.Core.Extensions;
+using PetFamily.SharedKernel;
 using PetFamily.Volunteers.Domain.PetsVO;
+using static PetFamily.Volunteers.Domain.PetsVO.PetStatus;
 
 namespace PetFamily.Volunteers.Application.Pets.Commands.UpdateStatus
 {

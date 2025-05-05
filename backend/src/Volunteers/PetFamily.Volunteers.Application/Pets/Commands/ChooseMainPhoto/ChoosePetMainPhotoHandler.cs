@@ -1,9 +1,11 @@
 ﻿using CSharpFunctionalExtensions;
 using FluentValidation;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using PetFamily.Core.Abstractions;
 using PetFamily.Core.Abstractions.Database;
 using PetFamily.Core.Extensions;
+using PetFamily.Core.Options;
 using PetFamily.SharedKernel;
 using PetFamily.Volunteers.Application;
 
@@ -21,7 +23,7 @@ namespace PetFamily.Volunteers.Application.Pets.Commands.ChooseMainPhoto
             IVolunteersRepository volunteerRepository,
             IValidator<ChoosePetMainPhotoCommand> validator,
             ILogger<ChoosePetMainPhotoHandler> logger,
-            IUnitOfWork unitOfWork)
+            [FromKeyedServices(UnitOfWorkKeys.Volunteers)] IUnitOfWork unitOfWork)
         {
             _repository = volunteerRepository;
             _validator = validator;

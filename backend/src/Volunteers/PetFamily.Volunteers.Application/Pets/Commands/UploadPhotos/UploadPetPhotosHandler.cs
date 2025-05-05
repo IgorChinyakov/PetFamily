@@ -1,11 +1,13 @@
 ﻿using CSharpFunctionalExtensions;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using PetFamily.Core.Abstractions;
 using PetFamily.Core.Abstractions.Database;
-using PetFamily.Core.FileProvider;
-using PetFamily.Core.Messaging;
+using PetFamily.Core.FileDtos;
+using PetFamily.Core.Options;
+using PetFamily.Files.Application;
+using PetFamily.Files.Infrastructure.Messaging;
 using PetFamily.SharedKernel;
-using PetFamily.Volunteers.Application;
 using PetFamily.Volunteers.Application.Pets.Commands.Move;
 using PetFamily.Volunteers.Domain.PetsVO;
 
@@ -25,7 +27,7 @@ namespace PetFamily.Volunteers.Application.Pets.Commands.UploadPhotos
             IFilesProvider filesProvider,
             ILogger<MovePetHandler> logger,
             IMessageQueue<IEnumerable<FileMeta>> messageQueue,
-            IUnitOfWork unitOfWork)
+            [FromKeyedServices(UnitOfWorkKeys.Volunteers)] IUnitOfWork unitOfWork)
         {
             _volunteerRepository = volunteerRepository;
             _filesProvider = filesProvider;

@@ -9,6 +9,8 @@ using PetFamily.Volunteers.Application;
 using PetFamily.Volunteers.Domain.SharedVO;
 using PetFamily.Volunteers.Domain.PetsVO;
 using PetFamily.SharedKernel;
+using Microsoft.Extensions.DependencyInjection;
+using PetFamily.Core.Options;
 
 namespace PetFamily.Volunteers.Application.Pets.Commands.UpdateMainInfo
 {
@@ -25,7 +27,7 @@ namespace PetFamily.Volunteers.Application.Pets.Commands.UpdateMainInfo
             IVolunteersRepository volunteerRepository,
             IValidator<UpdatePetMainInfoCommand> validator,
             ILogger<UpdatePetMainInfoHandler> logger,
-            IUnitOfWork unitOfWork,
+            [FromKeyedServices(UnitOfWorkKeys.Volunteers)] IUnitOfWork unitOfWork,
             ISpeciesReadDbContext readDbContext)
         {
             _repository = volunteerRepository;

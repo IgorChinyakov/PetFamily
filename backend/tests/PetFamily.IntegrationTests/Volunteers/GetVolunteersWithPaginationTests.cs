@@ -1,16 +1,9 @@
 ﻿using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
-using PetFamily.Application.EntitiesHandling.Volunteers.Queries.GetVolunteerById;
-using PetFamily.Application.Models;
 using PetFamily.Core.Abstractions;
 using PetFamily.Core.DTOs;
 using PetFamily.Core.Models;
 using PetFamily.Volunteers.Application.Volunteers.Queries.GetVolunteersWithPagination;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PetFamily.IntegrationTests.Volunteers
 {

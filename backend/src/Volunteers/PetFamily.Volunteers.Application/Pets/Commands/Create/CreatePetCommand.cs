@@ -18,5 +18,5 @@ namespace PetFamily.Volunteers.Application.Pets.Commands.Create
         float Weight,
         float Height,
         DateTime Birthday,
-        Status PetStatus) : ICommand;
+        PetStatusDto PetStatus) : ICommand;
 }

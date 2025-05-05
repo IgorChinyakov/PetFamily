@@ -1,15 +1,8 @@
 ﻿using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using PetFamily.Application.EntitiesHandling;
-using PetFamily.Application.EntitiesHandling.Pets.Commands.Create;
 using PetFamily.Core.Abstractions;
 using PetFamily.Volunteers.Application.Pets.Commands.Move;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PetFamily.IntegrationTests.Pets
 {
@@ -34,7 +27,7 @@ namespace PetFamily.IntegrationTests.Pets
             var breedId = await SeedBreed(speciesId);
             await SeedPets(speciesId, breedId, volunteerId, 10);
 
-            var volunteer = await WriteDbContext.Volunteers.FirstOrDefaultAsync(v => v.Id == volunteerId);
+            var volunteer = await VolunteersWriteDbContext.Volunteers.FirstOrDefaultAsync(v => v.Id == volunteerId);
             var pets = volunteer!.Pets;
 
             var command = Fixture.CreateMovePetCommand(volunteerId, pets[2].Id, 9);
@@ -61,7 +54,7 @@ namespace PetFamily.IntegrationTests.Pets
             var breedId = await SeedBreed(speciesId);
             await SeedPets(speciesId, breedId, volunteerId, 10);
 
-            var volunteer = await WriteDbContext.Volunteers.FirstOrDefaultAsync(v => v.Id == volunteerId);
+            var volunteer = await VolunteersWriteDbContext.Volunteers.FirstOrDefaultAsync(v => v.Id == volunteerId);
             var pets = volunteer!.Pets;
 
             var command = Fixture.CreateMovePetCommand(volunteerId, pets[8].Id, 3);
@@ -88,7 +81,7 @@ namespace PetFamily.IntegrationTests.Pets
             var breedId = await SeedBreed(speciesId);
             await SeedPets(speciesId, breedId, volunteerId, 10);
 
-            var volunteer = await WriteDbContext.Volunteers.FirstOrDefaultAsync(v => v.Id == volunteerId);
+            var volunteer = await VolunteersWriteDbContext.Volunteers.FirstOrDefaultAsync(v => v.Id == volunteerId);
             var pets = volunteer!.Pets;
 
             var command = Fixture.CreateMovePetCommand(volunteerId, pets[8].Id, 9);
@@ -113,7 +106,7 @@ namespace PetFamily.IntegrationTests.Pets
             var breedId = await SeedBreed(speciesId);
             await SeedPets(speciesId, breedId, volunteerId, 10);
 
-            var volunteer = await WriteDbContext.Volunteers.FirstOrDefaultAsync(v => v.Id == volunteerId);
+            var volunteer = await VolunteersWriteDbContext.Volunteers.FirstOrDefaultAsync(v => v.Id == volunteerId);
             var pets = volunteer!.Pets;
 
             var command = Fixture.CreateMovePetCommand(volunteerId, pets[2].Id, 78);
@@ -138,7 +131,7 @@ namespace PetFamily.IntegrationTests.Pets
             var breedId = await SeedBreed(speciesId);
             await SeedPets(speciesId, breedId, volunteerId, 10);
 
-            var volunteer = await WriteDbContext.Volunteers.FirstOrDefaultAsync(v => v.Id == volunteerId);
+            var volunteer = await VolunteersWriteDbContext.Volunteers.FirstOrDefaultAsync(v => v.Id == volunteerId);
             var pets = volunteer!.Pets;
 
             var command = Fixture.CreateMovePetCommand(volunteerId, pets[6].Id, 1);

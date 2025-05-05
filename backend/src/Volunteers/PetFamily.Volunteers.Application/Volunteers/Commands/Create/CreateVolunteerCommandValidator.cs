@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using PetFamily.Application.Validation;
+using PetFamily.Core.Extensions;
 using PetFamily.Volunteers.Domain.SharedVO;
 using PetFamily.Volunteers.Domain.VolunteersVO;
 using System;

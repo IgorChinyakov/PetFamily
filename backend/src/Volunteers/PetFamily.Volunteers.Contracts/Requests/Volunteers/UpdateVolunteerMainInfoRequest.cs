@@ -1,5 +1,4 @@
 ﻿using PetFamily.Core.DTOs;
-using PetFamily.Volunteers.Application.Volunteers.Commands.UpdateMainInfo;
 
 namespace PetFamily.Volunteers.Contracts.Requests.Volunteers
 {
@@ -8,15 +7,5 @@ namespace PetFamily.Volunteers.Contracts.Requests.Volunteers
         string Email,
         string Description,
         int Experience,
-        string PhoneNumber)
-    {
-        public UpdateVolunteerMainInfoCommand ToCommand(Guid volunteerId)
-            => new UpdateVolunteerMainInfoCommand(
-                volunteerId,
-                FullName,
-                Email,
-                Description,
-                Experience,
-                PhoneNumber);
-    }
+        string PhoneNumber);
 }

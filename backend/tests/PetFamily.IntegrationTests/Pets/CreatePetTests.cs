@@ -1,14 +1,8 @@
 ﻿using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using PetFamily.Application.EntitiesHandling.Volunteers.Commands.Create;
 using PetFamily.Core.Abstractions;
 using PetFamily.Volunteers.Application.Pets.Commands.Create;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PetFamily.IntegrationTests.Pets
 {
@@ -41,7 +35,7 @@ namespace PetFamily.IntegrationTests.Pets
             result.IsSuccess.Should().BeTrue();
             result.Value.Should().NotBeEmpty();
 
-            var pet = await ReadDbContext.Pets.FirstOrDefaultAsync(p => p.VolunteerId == command.VolunteerId);
+            var pet = await VolunteersReadDbContext.Pets.FirstOrDefaultAsync(p => p.VolunteerId == command.VolunteerId);
 
             pet.Should().NotBeNull();
         }
@@ -64,7 +58,7 @@ namespace PetFamily.IntegrationTests.Pets
             //Assert
             result.IsSuccess.Should().BeFalse();
 
-            var pet = await ReadDbContext.Pets.FirstOrDefaultAsync(p => p.VolunteerId == command.VolunteerId);
+            var pet = await VolunteersReadDbContext.Pets.FirstOrDefaultAsync(p => p.VolunteerId == command.VolunteerId);
 
             pet.Should().BeNull();
         }

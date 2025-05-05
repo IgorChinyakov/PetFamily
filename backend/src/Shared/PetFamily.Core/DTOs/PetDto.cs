@@ -1,12 +1,4 @@
-﻿using PetFamily.Domain.VolunteerContext.PetsVO;
-using PetFamily.Domain.VolunteerContext.SharedVO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace PetFamily.Core.DTOs
+﻿namespace PetFamily.Core.DTOs
 {
     public class PetDto
     {
@@ -42,7 +34,7 @@ namespace PetFamily.Core.DTOs
 
         public string PhoneNumber { get; set; } = string.Empty;
 
-        public Status Status { get; set; }
+        public PetStatusDto Status { get; set; }
 
         public int Position { get; set; }
 

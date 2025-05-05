@@ -1,12 +1,7 @@
 ﻿using FluentValidation;
-using PetFamily.Application.Validation;
-using PetFamily.Domain.Shared;
+using PetFamily.SharedKernel;
 using PetFamily.Volunteers.Domain.PetsVO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using PetFamily.Core.Extensions;
 
 namespace PetFamily.Volunteers.Application.Pets.Commands.ChooseMainPhoto
 {

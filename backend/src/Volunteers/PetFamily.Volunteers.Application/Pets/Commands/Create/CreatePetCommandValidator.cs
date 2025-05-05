@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
-using PetFamily.Application.Validation;
-using PetFamily.Domain.Shared;
+using PetFamily.Core.Extensions;
+using PetFamily.SharedKernel;
 using PetFamily.Volunteers.Domain.PetsVO;
 using PetFamily.Volunteers.Domain.SharedVO;
 using System;
@@ -9,6 +9,7 @@ using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static PetFamily.Volunteers.Domain.PetsVO.PetStatus;
 
 namespace PetFamily.Volunteers.Application.Pets.Commands.Create
 {

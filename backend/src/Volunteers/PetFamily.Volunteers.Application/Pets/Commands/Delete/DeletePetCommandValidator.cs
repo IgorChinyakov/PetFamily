@@ -1,11 +1,7 @@
 ﻿using FluentValidation;
-using PetFamily.Application.Validation;
-using PetFamily.Domain.Shared;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using PetFamily.Core.Extensions;
+using PetFamily.Core.Options;
+using PetFamily.SharedKernel;
 
 namespace PetFamily.Volunteers.Application.Pets.Commands.Delete
 {

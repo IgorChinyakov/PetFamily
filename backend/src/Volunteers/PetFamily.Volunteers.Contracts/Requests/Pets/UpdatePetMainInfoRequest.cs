@@ -1,5 +1,4 @@
 ﻿using PetFamily.Core.DTOs;
-using PetFamily.Volunteers.Application.Pets.Commands.UpdateMainInfo;
 
 namespace PetFamily.Volunteers.Contracts.Requests.Pets
 {
@@ -17,25 +16,5 @@ namespace PetFamily.Volunteers.Contracts.Requests.Pets
         bool IsSterilized,
         bool IsVaccinated,
         DateTime Birthday,
-        DateTime CreationDate)
-    {
-        public UpdatePetMainInfoCommand ToCommand(Guid petId, Guid volunteerId)
-            => new UpdatePetMainInfoCommand(
-                petId,
-                volunteerId,
-                SpeciesId,
-                BreedId,
-                NickName,
-                Address,
-                Color,
-                HealthInformation,
-                Description,
-                PhoneNumber,
-                Height,
-                Weight,
-                IsSterilized,
-                IsVaccinated,
-                Birthday,
-                CreationDate);
-    }
+        DateTime CreationDate);
 }

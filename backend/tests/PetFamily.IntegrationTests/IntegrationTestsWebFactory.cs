@@ -3,18 +3,15 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
-using Minio;
+using Microsoft.VisualStudio.TestPlatform.TestHost;
 using Npgsql;
 using NSubstitute;
-using PetFamily.Application.FileProvider;
-using PetFamily.Application.Providers;
 using PetFamily.Core.Abstractions.Database;
-using PetFamily.Core.FileProvider;
-using PetFamily.Domain.Shared;
-using PetFamily.Infrastructure;
+using PetFamily.Core.FileDtos;
+using PetFamily.Files.Application;
 using PetFamily.Infrastructure.BackgroundServices;
-using PetFamily.Infrastructure.DbContexts;
 using PetFamily.SharedKernel;
+using PetFamily.Volunteers.Infrastructure.DbContexts;
 using Respawn;
 using System.Data.Common;
 using Testcontainers.PostgreSql;
@@ -43,37 +40,58 @@ namespace PetFamily.IntegrationTests
 
         protected virtual void ConfigureDefaultServices(IServiceCollection services)
         {
-            var writeContext = services.SingleOrDefault(s =>
-                s.ServiceType == typeof(WriteDbContext));
+            var volunteersWriteContext = services.SingleOrDefault(s =>
+                s.ServiceType == typeof(VolunteersWriteDbContext));
 
-            var readContext = services.SingleOrDefault(s =>
+            var speciesWriteContext = services.SingleOrDefault(s =>
+                s.ServiceType == typeof(SpeciesWriteDbContext));
+
+            var volunteersReadContext = services.SingleOrDefault(s =>
                 s.ServiceType == typeof(ISpeciesReadDbContext));
 
-            var cleanerService = services.SingleOrDefault(s =>
-                s.ImplementationType == typeof(DeletedEntitiesCleanerBackgroundService));
+            var speciesReadContext = services.SingleOrDefault(s =>
+               s.ServiceType == typeof(IVolunteersReadDbContext));
+
+            var volunteersCleanerService = services.SingleOrDefault(s =>
+                s.ImplementationType == typeof(DeletedVolunteersCleanerBackgroundService));
+
+            var speciesCleanerService = services.SingleOrDefault(s =>
+                s.ImplementationType == typeof(DeletedSpeciesCleanerBackgroundService));
 
             var fileService = services.SingleOrDefault(s =>
                 s.ServiceType == typeof(IFilesProvider));
 
-            if (cleanerService is not null)
-                services.Remove(cleanerService);
+            if (volunteersCleanerService is not null)
+                services.Remove(volunteersCleanerService);
 
             if (fileService is not null)
                 services.Remove(fileService);
 
-            if (writeContext is not null)
-                services.Remove(writeContext);
+            if (volunteersWriteContext is not null)
+                services.Remove(volunteersWriteContext);
 
-            if (readContext is not null)
-                services.Remove(readContext);
+            if (speciesWriteContext is not null)
+                services.Remove(speciesWriteContext);
+
+            if (volunteersReadContext is not null)
+                services.Remove(volunteersReadContext);
+
+            if (speciesReadContext is not null)
+                services.Remove(speciesReadContext);
 
             services.AddSingleton(_ => _filesProviderMock);
 
             services.AddScoped(_ =>
-                new WriteDbContext(_dbContainer.GetConnectionString()));
+                new VolunteersWriteDbContext(_dbContainer.GetConnectionString()));
+
+            services.AddScoped(_ =>
+                new SpeciesWriteDbContext(_dbContainer.GetConnectionString()));
+
+            services.AddScoped<IVolunteersReadDbContext>(_ =>
+                new VolunteersReadDbContext(_dbContainer.GetConnectionString()));
 
             services.AddScoped<ISpeciesReadDbContext>(_ =>
-                new ReadDbContext(_dbContainer.GetConnectionString()));
+                new SpeciesReadDbContext(_dbContainer.GetConnectionString()));
         }
 
         public void SetupSuccessFilesProviderMock()
@@ -106,8 +124,12 @@ namespace PetFamily.IntegrationTests
             await _dbContainer.StartAsync();
 
             using var scope = Services.CreateScope();
-            var dbContext = scope.ServiceProvider.GetRequiredService<WriteDbContext>();
-            await dbContext.Database.EnsureCreatedAsync();
+
+            var volunteersWriteDbContext = scope.ServiceProvider.GetRequiredService<VolunteersWriteDbContext>();
+            await volunteersWriteDbContext.Database.EnsureCreatedAsync();
+
+            var speciesWriteDbContext = scope.ServiceProvider.GetRequiredService<SpeciesWriteDbContext>();
+            await speciesWriteDbContext.Database.EnsureCreatedAsync();
 
             _dbConnection = new NpgsqlConnection(_dbContainer.GetConnectionString());
             await InitializeRespawner();

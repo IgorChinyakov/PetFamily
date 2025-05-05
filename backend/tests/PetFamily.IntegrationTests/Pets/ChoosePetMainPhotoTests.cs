@@ -1,18 +1,9 @@
-﻿using Docker.DotNet.Models;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using PetFamily.Application.EntitiesHandling.Pets.Commands.UploadPhotos;
-using PetFamily.Application.FileProvider;
 using PetFamily.Core.Abstractions;
-using PetFamily.Domain.VolunteerContext.PetsVO;
 using PetFamily.Volunteers.Application.Pets.Commands.ChooseMainPhoto;
 using PetFamily.Volunteers.Domain.PetsVO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PetFamily.IntegrationTests.Pets
 {
@@ -37,7 +28,7 @@ namespace PetFamily.IntegrationTests.Pets
             var breedId = await SeedBreed(speciesId);
             var petId = await SeedPet(speciesId, breedId, volunteerId);
 
-            var volunteer = await WriteDbContext.Volunteers
+            var volunteer = await VolunteersWriteDbContext.Volunteers
                 .Include(v => v.Pets).FirstOrDefaultAsync(p => p.Id == volunteerId);
 
             var pet = volunteer!.Pets.FirstOrDefault(p => p.Id == petId);

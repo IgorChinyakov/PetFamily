@@ -1,14 +1,8 @@
 ﻿using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using PetFamily.Application.EntitiesHandling.Volunteers.Commands.UpdateDetails;
 using PetFamily.Core.Abstractions;
 using PetFamily.Volunteers.Application.Pets.Commands.UpdateMainInfo;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PetFamily.IntegrationTests.Pets
 {
@@ -40,7 +34,7 @@ namespace PetFamily.IntegrationTests.Pets
             //Assert
             result.IsSuccess.Should().BeTrue();
 
-            var pet = await ReadDbContext
+            var pet = await VolunteersReadDbContext
                 .Pets.FirstOrDefaultAsync(v => v.Id == command.PetId, cancellationToken);
 
             pet!.Address.Should().Be(command.Address);

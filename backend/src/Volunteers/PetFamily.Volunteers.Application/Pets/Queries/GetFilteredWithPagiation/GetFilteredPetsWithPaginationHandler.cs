@@ -3,17 +3,19 @@ using PetFamily.Core.Abstractions.Database;
 using PetFamily.Core.DTOs;
 using PetFamily.Core.Extensions;
 using PetFamily.Core.Models;
+using PetFamily.Volunteers.Domain.PetsVO;
 using System.Linq.Expressions;
+using static PetFamily.Volunteers.Domain.PetsVO.PetStatus;
 
 namespace PetFamily.Volunteers.Application.Pets.Queries.GetFilteredWithPagiation
 {
     public class GetFilteredPetsWithPaginationHandler :
         IQueryHandler<PagedList<PetDto>, GetFilteredPetsWithPaginationQuery>
     {
-        private readonly ISpeciesReadDbContext _readDbContext;
+        private readonly IVolunteersReadDbContext _readDbContext;
 
         public GetFilteredPetsWithPaginationHandler(
-            ISpeciesReadDbContext readDbContext)
+            IVolunteersReadDbContext readDbContext)
         {
             _readDbContext = readDbContext;
         }
