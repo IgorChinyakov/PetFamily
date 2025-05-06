@@ -11,7 +11,8 @@ using System.Threading.Tasks;
 
 namespace PetFamily.Volunteers.Application.Volunteers.Commands.UpdateMainInfo
 {
-    public class UpdateVolunteerMainInfoCommandValidator : AbstractValidator<UpdateVolunteerMainInfoCommand>
+    public class UpdateVolunteerMainInfoCommandValidator : 
+        AbstractValidator<UpdateVolunteerMainInfoCommand>
     {
         public UpdateVolunteerMainInfoCommandValidator()
         {

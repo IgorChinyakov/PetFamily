@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using FluentValidation;
+using Microsoft.Extensions.DependencyInjection;
 using PetFamily.Core.Abstractions;
 using System;
 using System.Collections.Generic;
@@ -26,6 +27,8 @@ namespace PetFamily.Volunteers.Application
                     .AssignableToAny(typeof(IQueryHandler<,>), typeof(IQueryHandlerWithResult<,>)))
                 .AsSelfWithInterfaces()
                 .WithScopedLifetime());
+
+            services.AddValidatorsFromAssembly(assembly);
 
             return services;
         }

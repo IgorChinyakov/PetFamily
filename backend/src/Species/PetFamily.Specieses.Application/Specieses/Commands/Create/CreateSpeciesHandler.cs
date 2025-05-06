@@ -7,6 +7,8 @@ using PetFamily.Core.Abstractions.Database;
 using PetFamily.Core.Extensions;
 using PetFamily.Specieses.Domain.ValueObjects;
 using PetFamily.Specieses.Domain.Entities;
+using Microsoft.Extensions.DependencyInjection;
+using PetFamily.Core.Options;
 
 namespace PetFamily.Specieses.Application.Specieses.Commands.Create
 {
@@ -22,7 +24,7 @@ namespace PetFamily.Specieses.Application.Specieses.Commands.Create
             ISpeciesRepository repository,
             IValidator<CreateSpeciesCommand> validator,
             ILogger<CreateSpeciesHandler> logger,
-            IUnitOfWork unitOfWork)
+            [FromKeyedServices(UnitOfWorkKeys.Species)]IUnitOfWork unitOfWork)
         {
             _repository = repository;
             _validator = validator;

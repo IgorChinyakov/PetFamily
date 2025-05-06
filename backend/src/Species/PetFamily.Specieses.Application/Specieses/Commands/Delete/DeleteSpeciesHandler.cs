@@ -1,7 +1,9 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using PetFamily.Core.Abstractions;
 using PetFamily.Core.Abstractions.Database;
+using PetFamily.Core.Options;
 using PetFamily.SharedKernel;
 using PetFamily.Specieses.Application.Specieses;
 using PetFamily.Volunteers.Contracts;
@@ -17,7 +19,7 @@ namespace PetFamily.Specieses.Application.Specieses.Commands.Delete
 
         public DeleteSpeciesHandler(
             ISpeciesRepository repository,
-            IUnitOfWork unitOfWork,
+            [FromKeyedServices(UnitOfWorkKeys.Species)]IUnitOfWork unitOfWork,
             IVolunteersContract volunteersContract)
         {
             _repository = repository;
