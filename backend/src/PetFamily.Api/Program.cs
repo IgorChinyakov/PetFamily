@@ -27,7 +27,8 @@ builder.Services.AddSerilog();
 builder.Services.Configure<CleanUpSettings>
     (builder.Configuration.GetSection("CleanUpSettings"));
 
-builder.Services.AddFilesModule(builder.Configuration);
+builder.Services
+    .AddFilesModule(builder.Configuration);
 
 builder.Services
     .AddVolunteersModule(builder.Configuration);

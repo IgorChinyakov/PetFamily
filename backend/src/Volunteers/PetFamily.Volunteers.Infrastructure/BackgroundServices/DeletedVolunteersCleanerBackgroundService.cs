@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using PetFamily.Core.Abstractions.Database;
 using PetFamily.Core.Options;
+using PetFamily.Volunteers.Infrastructure;
 using PetFamily.Volunteers.Infrastructure.DbContexts;
 
 namespace PetFamily.Infrastructure.BackgroundServices
@@ -35,7 +36,7 @@ namespace PetFamily.Infrastructure.BackgroundServices
                 await using var scope = _scopeFactory.CreateAsyncScope();
 
                 var dbContext = scope.ServiceProvider.GetRequiredService<VolunteersWriteDbContext>();
-                var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
+                var unitOfWork = scope.ServiceProvider.GetRequiredKeyedService<IUnitOfWork>(UnitOfWorkKeys.Volunteers);
 
                 var volunteers = dbContext
                     .Volunteers

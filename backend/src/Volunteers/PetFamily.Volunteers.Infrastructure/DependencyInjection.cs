@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using PetFamily.Core.Abstractions.Database;
 using PetFamily.Core.Options;
+using PetFamily.Infrastructure;
 using PetFamily.Infrastructure.BackgroundServices;
 using PetFamily.Volunteers.Application;
 using PetFamily.Volunteers.Infrastructure.DbContexts;
@@ -38,6 +39,8 @@ namespace PetFamily.Volunteers.Infrastructure
 
             services.AddScoped<IVolunteersReadDbContext, VolunteersReadDbContext>(_ =>
                 new VolunteersReadDbContext(configuration.GetConnectionString("Database")!));
+
+            services.AddScoped<ISqlDbConnectionFactory, SqlDbConnectionFactory>();
 
             return services;
         }

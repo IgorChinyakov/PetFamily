@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.VisualStudio.TestPlatform.TestHost;
 using Npgsql;
 using NSubstitute;
 using PetFamily.Core.Abstractions.Database;
@@ -63,6 +63,9 @@ namespace PetFamily.IntegrationTests
 
             if (volunteersCleanerService is not null)
                 services.Remove(volunteersCleanerService);
+
+            if (speciesCleanerService is not null)
+                services.Remove(speciesCleanerService);
 
             if (fileService is not null)
                 services.Remove(fileService);
@@ -126,10 +129,10 @@ namespace PetFamily.IntegrationTests
             using var scope = Services.CreateScope();
 
             var volunteersWriteDbContext = scope.ServiceProvider.GetRequiredService<VolunteersWriteDbContext>();
-            await volunteersWriteDbContext.Database.EnsureCreatedAsync();
+            await volunteersWriteDbContext.Database.MigrateAsync();
 
             var speciesWriteDbContext = scope.ServiceProvider.GetRequiredService<SpeciesWriteDbContext>();
-            await speciesWriteDbContext.Database.EnsureCreatedAsync();
+            await speciesWriteDbContext.Database.MigrateAsync();
 
             _dbConnection = new NpgsqlConnection(_dbContainer.GetConnectionString());
             await InitializeRespawner();

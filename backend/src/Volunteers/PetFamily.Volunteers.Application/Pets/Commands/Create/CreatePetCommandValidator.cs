@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using PetFamily.Core.DTOs;
 using PetFamily.Core.Extensions;
 using PetFamily.SharedKernel;
 using PetFamily.Volunteers.Domain.PetsVO;
@@ -52,7 +53,7 @@ namespace PetFamily.Volunteers.Application.Pets.Commands.Create
                 .WithError(Errors.General.ValueIsInvalid("VolunteerId"));
 
             RuleFor(c => c.PetStatus)
-                .Must(p => Enum.IsDefined(typeof(Status), p))
+                .Must(p => Enum.IsDefined(typeof(PetStatusDto), p))
                 .WithError(Errors.General.ValueIsInvalid("PetStatus"));
         }
     }

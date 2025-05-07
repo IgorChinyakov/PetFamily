@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using PetFamily.Core.DTOs;
 using PetFamily.Core.Extensions;
 using PetFamily.SharedKernel;
 using PetFamily.Volunteers.Domain.PetsVO;
@@ -12,7 +13,7 @@ namespace PetFamily.Volunteers.Application.Pets.Commands.UpdateStatus
         public UpdatePetStatusCommandValidator()
         {
             RuleFor(c => c.Status)
-               .Must(p => Enum.IsDefined(typeof(Status), p))
+               .Must(p => Enum.IsDefined(typeof(PetStatusDto), p))
                .WithError(Errors.General.ValueIsInvalid("PetStatus"));
         }
     }

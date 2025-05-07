@@ -35,7 +35,7 @@ namespace PetFamily.Infrastructure.BackgroundServices
                 await using var scope = _scopeFactory.CreateAsyncScope();
 
                 var dbContext = scope.ServiceProvider.GetRequiredService<SpeciesWriteDbContext>();
-                var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
+                var unitOfWork = scope.ServiceProvider.GetRequiredKeyedService<IUnitOfWork>(UnitOfWorkKeys.Species);
 
                 var species = dbContext
                     .Species
