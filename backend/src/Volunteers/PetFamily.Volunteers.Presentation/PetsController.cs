@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PetFamily.Core.Abstractions;
-using PetFamily.Core.DTOs;
 using PetFamily.Core.Extensions;
 using PetFamily.Core.Models;
 using PetFamily.Framework;
 using PetFamily.Volunteers.Application.Pets.Queries.GetById;
 using PetFamily.Volunteers.Application.Pets.Queries.GetFilteredWithPagiation;
+using PetFamily.Volunteers.Contracts.DTOs;
 using PetFamily.Volunteers.Contracts.Requests.Pets;
 
 namespace PetFamily.Api.Controllers

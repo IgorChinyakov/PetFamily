@@ -7,8 +7,9 @@ using PetFamily.Core.Abstractions;
 using PetFamily.SharedKernel;
 using PetFamily.Core.Options;
 using Microsoft.Extensions.DependencyInjection;
-using PetFamily.Core.FileDtos;
-using PetFamily.Files.Application;
+using PetFamily.Volunteers.Application.Database;
+using PetFamily.Files.Contracts.DTOs;
+using PetFamily.Files.Contracts;
 
 namespace PetFamily.Volunteers.Application.Pets.Commands.Delete
 {
@@ -19,20 +20,21 @@ namespace PetFamily.Volunteers.Application.Pets.Commands.Delete
         private readonly IValidator<DeletePetCommand> _validator;
         private readonly ILogger<DeletePetHandler> _logger;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IFilesProvider _filesProvider;
+        private readonly IFilesContract _filesContract;
 
         public DeletePetHandler(
             IVolunteersRepository repository,
             IValidator<DeletePetCommand> validator,
             ILogger<DeletePetHandler> logger,
             [FromKeyedServices(UnitOfWorkKeys.Volunteers)] IUnitOfWork unitOfWork,
-            IFilesProvider fileProvider)
+            IFilesContract filesContract)
         {
             _repository = repository;
             _validator = validator;
             _logger = logger;
             _unitOfWork = unitOfWork;
-            _filesProvider = fileProvider;
+            _filesContract = filesContract
+;
         }
 
         public async Task<Result<Guid, ErrorsList>> Handle(DeletePetCommand command,
@@ -62,7 +64,7 @@ namespace PetFamily.Volunteers.Application.Pets.Commands.Delete
                 case DeletionOptions.Hard:
                     volunteerResult.Value.HardDeletePet(command.PetId);
                     foreach (var file in filPaths)
-                        await _filesProvider.RemoveFile(
+                        await _filesContract.RemoveFile(
                             new FileMeta(command.BucketName, file), cancellationToken);
                     break;
                 default: throw new NotImplementedException("Invalid deletion options");

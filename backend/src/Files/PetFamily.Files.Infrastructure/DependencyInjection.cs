@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Minio;
-using PetFamily.Core.FileDtos;
 using PetFamily.Core.Options;
 using PetFamily.Files.Application;
+using PetFamily.Files.Contracts.DTOs;
 using PetFamily.Files.Infrastructure.MessageQueues;
 using PetFamily.Files.Infrastructure.Messaging;
 using PetFamily.Files.Infrastructure.Providers;

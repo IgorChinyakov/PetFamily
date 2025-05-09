@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using PetFamily.Core.DTOs;
 using PetFamily.SharedKernel;
+using PetFamily.Specieses.Contracts.DTOs;
 
 namespace PetFamily.Specieses.Contracts
 {

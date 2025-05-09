@@ -5,7 +5,7 @@ using PetFamily.Core.Abstractions;
 using PetFamily.Core.Abstractions.Database;
 using PetFamily.Core.Options;
 using PetFamily.SharedKernel;
-using PetFamily.Specieses.Application.Specieses;
+using PetFamily.Specieses.Application.Database;
 using PetFamily.Volunteers.Contracts;
 using PetFamily.Volunteers.Contracts.Requests.Pets;
 

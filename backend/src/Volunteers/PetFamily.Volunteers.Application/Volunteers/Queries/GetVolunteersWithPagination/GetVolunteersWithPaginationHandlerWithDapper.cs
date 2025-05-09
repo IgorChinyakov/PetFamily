@@ -3,6 +3,7 @@ using PetFamily.Core.Abstractions;
 using PetFamily.Core.Abstractions.Database;
 using PetFamily.Core.DTOs;
 using PetFamily.Core.Models;
+using PetFamily.Volunteers.Contracts.DTOs;
 using System.Text.Json;
 
 namespace PetFamily.Volunteers.Application.Volunteers.Queries.GetVolunteersWithPagination

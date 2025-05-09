@@ -3,6 +3,7 @@ using PetFamily.Core.Abstractions.Database;
 using PetFamily.Core.DTOs;
 using PetFamily.Core.Models;
 using PetFamily.Core.Extensions;
+using PetFamily.Specieses.Contracts.DTOs;
 
 namespace PetFamily.Specieses.Application.Specieses.Queries.GetSpeciesWithPagination
 {

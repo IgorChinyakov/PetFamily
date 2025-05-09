@@ -1,6 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
-using PetFamily.Core.DTOs;
 using PetFamily.Core.Models;
+using PetFamily.Volunteers.Contracts.DTOs;
 using PetFamily.Volunteers.Contracts.Requests.Pets;
 
 namespace PetFamily.Volunteers.Contracts

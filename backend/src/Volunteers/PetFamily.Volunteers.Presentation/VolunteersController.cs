@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PetFamily.Core.Abstractions;
-using PetFamily.Core.DTOs;
 using PetFamily.Core.Extensions;
 using PetFamily.Core.Models;
 using PetFamily.Core.Options;
@@ -21,6 +20,7 @@ using PetFamily.Volunteers.Application.Volunteers.Commands.UpdateMainInfo;
 using PetFamily.Volunteers.Application.Volunteers.Commands.UpdateSocialMedia;
 using PetFamily.Volunteers.Application.Volunteers.Queries.GetVolunteerById;
 using PetFamily.Volunteers.Application.Volunteers.Queries.GetVolunteersWithPagination;
+using PetFamily.Volunteers.Contracts.DTOs;
 using PetFamily.Volunteers.Contracts.Requests.Pets;
 using PetFamily.Volunteers.Contracts.Requests.Volunteers;
 

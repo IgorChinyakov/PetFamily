@@ -1,9 +1,9 @@
 ﻿using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using PetFamily.Core.Abstractions;
-using PetFamily.Core.DTOs;
 using PetFamily.Core.Models;
 using PetFamily.Volunteers.Application.Pets.Queries.GetFilteredWithPagiation;
+using PetFamily.Volunteers.Contracts.DTOs;
 
 namespace PetFamily.IntegrationTests.Pets
 {

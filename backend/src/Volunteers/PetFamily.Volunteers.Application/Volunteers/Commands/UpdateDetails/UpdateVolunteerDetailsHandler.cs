@@ -7,6 +7,7 @@ using PetFamily.Core.Abstractions.Database;
 using PetFamily.Core.Extensions;
 using PetFamily.Core.Options;
 using PetFamily.SharedKernel;
+using PetFamily.Volunteers.Application.Database;
 using PetFamily.Volunteers.Domain.SharedVO;
 
 namespace PetFamily.Volunteers.Application.Volunteers.Commands.UpdateDetails

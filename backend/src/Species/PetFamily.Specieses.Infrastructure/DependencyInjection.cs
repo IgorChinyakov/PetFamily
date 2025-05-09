@@ -4,7 +4,7 @@ using PetFamily.Core.Abstractions.Database;
 using PetFamily.Core.Options;
 using PetFamily.Infrastructure.BackgroundServices;
 using PetFamily.Infrastructure.Repositories;
-using PetFamily.Specieses.Application.Specieses;
+using PetFamily.Specieses.Application.Database;
 using PetFamily.Volunteers.Infrastructure.DbContexts;
 using System;
 using System.Collections.Generic;

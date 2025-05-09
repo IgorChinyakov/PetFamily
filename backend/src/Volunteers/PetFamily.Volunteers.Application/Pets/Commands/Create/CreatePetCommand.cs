@@ -1,6 +1,6 @@
 ﻿using PetFamily.Core.Abstractions;
 using PetFamily.Core.DTOs;
-using PetFamily.Volunteers.Domain.PetsVO;
+using PetFamily.Volunteers.Contracts.DTOs;
 
 namespace PetFamily.Volunteers.Application.Pets.Commands.Create
 {

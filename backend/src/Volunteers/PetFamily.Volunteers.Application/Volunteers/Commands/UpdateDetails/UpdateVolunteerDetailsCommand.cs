@@ -1,5 +1,6 @@
 ﻿using PetFamily.Core.Abstractions;
 using PetFamily.Core.DTOs;
+using PetFamily.Volunteers.Contracts.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;

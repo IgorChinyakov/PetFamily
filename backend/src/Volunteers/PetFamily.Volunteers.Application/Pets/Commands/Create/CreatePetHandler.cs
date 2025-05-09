@@ -10,7 +10,7 @@ using PetFamily.Core.Options;
 using PetFamily.SharedKernel;
 using PetFamily.Specieses.Contracts;
 using PetFamily.Specieses.Contracts.Requests.Species;
-using PetFamily.Volunteers.Application;
+using PetFamily.Volunteers.Application.Database;
 using PetFamily.Volunteers.Domain.Entities;
 using PetFamily.Volunteers.Domain.PetsVO;
 using PetFamily.Volunteers.Domain.SharedVO;
@@ -55,12 +55,12 @@ namespace PetFamily.Volunteers.Application.Pets.Commands.Create
             var speciesResult = await _speciesContract
                 .GetSpeciesById(command.SpeciesId, token);
             if (speciesResult.IsFailure)
-                return Errors.General.NotFound(command.SpeciesId).ToErrorsList();
+                return speciesResult.Error;
 
             var breedResult = await _speciesContract
                 .GetBreedById(command.SpeciesId, command.BreedId);
-            if (speciesResult.IsFailure)
-                return Errors.General.NotFound(command.BreedId).ToErrorsList();
+            if (breedResult.IsFailure)
+                return breedResult.Error;
 
             var nickName = NickName.Create(command.NickName).Value;
             var description = Description.Create(command.Description).Value;

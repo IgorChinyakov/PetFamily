@@ -7,7 +7,8 @@ using PetFamily.Core.Abstractions.Database;
 using PetFamily.Core.Extensions;
 using PetFamily.Core.Options;
 using PetFamily.SharedKernel;
-using PetFamily.Volunteers.Application;
+using PetFamily.Specieses.Contracts;
+using PetFamily.Volunteers.Application.Database;
 using PetFamily.Volunteers.Domain.PetsVO;
 using static PetFamily.Volunteers.Domain.PetsVO.PetStatus;
 
@@ -17,7 +18,6 @@ namespace PetFamily.Volunteers.Application.Pets.Commands.UpdateStatus
         ICommandHandler<UpdatePetStatusCommand>
     {
         private readonly IVolunteersRepository _repository;
-        private readonly ISpeciesReadDbContext _readDbContext;
         private readonly IValidator<UpdatePetStatusCommand> _validator;
         private readonly ILogger<UpdatePetStatusHandler> _logger;
         private readonly IUnitOfWork _unitOfWork;
@@ -26,14 +26,12 @@ namespace PetFamily.Volunteers.Application.Pets.Commands.UpdateStatus
             IVolunteersRepository volunteerRepository,
             IValidator<UpdatePetStatusCommand> validator,
             ILogger<UpdatePetStatusHandler> logger,
-            [FromKeyedServices(UnitOfWorkKeys.Volunteers)] IUnitOfWork unitOfWork,
-            ISpeciesReadDbContext readDbContext)
+            [FromKeyedServices(UnitOfWorkKeys.Volunteers)] IUnitOfWork unitOfWork)
         {
             _repository = volunteerRepository;
             _validator = validator;
             _logger = logger;
             _unitOfWork = unitOfWork;
-            _readDbContext = readDbContext;
         }
 
         public async Task<UnitResult<ErrorsList>> Handle(

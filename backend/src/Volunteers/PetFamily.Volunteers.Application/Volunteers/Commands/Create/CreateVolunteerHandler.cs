@@ -10,6 +10,7 @@ using PetFamily.Core.Extensions;
 using PetFamily.Core.Abstractions.Database;
 using Microsoft.Extensions.DependencyInjection;
 using PetFamily.Core.Options;
+using PetFamily.Volunteers.Application.Database;
 
 namespace PetFamily.Volunteers.Application.Volunteers.Commands.Create
 {

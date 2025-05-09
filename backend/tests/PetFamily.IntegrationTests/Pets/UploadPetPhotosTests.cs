@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using PetFamily.Core.Abstractions;
-using PetFamily.Core.FileDtos;
+using PetFamily.Files.Contracts.DTOs;
 using PetFamily.Volunteers.Application.Pets.Commands.UploadPhotos;
 
 namespace PetFamily.IntegrationTests.Pets

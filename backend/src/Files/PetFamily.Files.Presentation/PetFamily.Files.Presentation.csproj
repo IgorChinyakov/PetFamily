@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PetFamily.Files.Contracts\PetFamily.Files.Contracts.csproj" />
+    <ProjectReference Include="..\PetFamily.Files.Application\PetFamily.Files.Application.csproj" />
   </ItemGroup>
 
 </Project>

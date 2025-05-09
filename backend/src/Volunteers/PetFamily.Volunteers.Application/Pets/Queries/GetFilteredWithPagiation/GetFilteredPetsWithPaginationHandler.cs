@@ -1,8 +1,9 @@
 ﻿using PetFamily.Core.Abstractions;
-using PetFamily.Core.Abstractions.Database;
 using PetFamily.Core.DTOs;
 using PetFamily.Core.Extensions;
 using PetFamily.Core.Models;
+using PetFamily.Volunteers.Application.Database;
+using PetFamily.Volunteers.Contracts.DTOs;
 using PetFamily.Volunteers.Domain.PetsVO;
 using System.Linq.Expressions;
 using static PetFamily.Volunteers.Domain.PetsVO.PetStatus;

@@ -9,6 +9,7 @@ using PetFamily.Specieses.Domain.ValueObjects;
 using PetFamily.Specieses.Domain.Entities;
 using Microsoft.Extensions.DependencyInjection;
 using PetFamily.Core.Options;
+using PetFamily.Specieses.Application.Database;
 
 namespace PetFamily.Specieses.Application.Specieses.Commands.Create
 {

@@ -2,6 +2,7 @@
 using PetFamily.Core.DTOs;
 using PetFamily.Core.Extensions;
 using PetFamily.SharedKernel;
+using PetFamily.Volunteers.Contracts.DTOs;
 using PetFamily.Volunteers.Domain.PetsVO;
 using static PetFamily.Volunteers.Domain.PetsVO.PetStatus;
 

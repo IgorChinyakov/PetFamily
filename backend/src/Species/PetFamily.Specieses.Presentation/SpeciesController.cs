@@ -10,6 +10,7 @@ using PetFamily.Specieses.Application.Breeds.Queries.GetBreedsWithPagination;
 using PetFamily.Specieses.Application.Specieses.Commands.Create;
 using PetFamily.Specieses.Application.Specieses.Commands.Delete;
 using PetFamily.Specieses.Application.Specieses.Queries.GetSpeciesWithPagination;
+using PetFamily.Specieses.Contracts.DTOs;
 using PetFamily.Specieses.Contracts.Requests.Breeds;
 using PetFamily.Specieses.Contracts.Requests.Species;
 

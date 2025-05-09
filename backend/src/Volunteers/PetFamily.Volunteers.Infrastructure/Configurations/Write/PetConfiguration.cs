@@ -6,6 +6,7 @@ using PetFamily.Volunteers.Domain.PetsVO;
 using PetFamily.Volunteers.Domain.SharedVO;
 using PetFamily.Core.Extensions;
 using PetFamily.Core.DTOs;
+using PetFamily.Volunteers.Contracts.DTOs;
 
 namespace PetFamily.Volunteers.Infrastructure.Configurations.Write
 {

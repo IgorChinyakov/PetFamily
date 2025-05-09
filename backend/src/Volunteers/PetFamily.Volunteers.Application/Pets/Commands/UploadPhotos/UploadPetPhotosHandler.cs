@@ -3,11 +3,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using PetFamily.Core.Abstractions;
 using PetFamily.Core.Abstractions.Database;
-using PetFamily.Core.FileDtos;
 using PetFamily.Core.Options;
-using PetFamily.Files.Application;
-using PetFamily.Files.Infrastructure.Messaging;
+using PetFamily.Files.Contracts;
+using PetFamily.Files.Contracts.DTOs;
 using PetFamily.SharedKernel;
+using PetFamily.Volunteers.Application.Database;
 using PetFamily.Volunteers.Application.Pets.Commands.Move;
 using PetFamily.Volunteers.Domain.PetsVO;
 
@@ -17,22 +17,19 @@ namespace PetFamily.Volunteers.Application.Pets.Commands.UploadPhotos
         ICommandHandler<IReadOnlyList<string>, UploadPetPhotosCommand>
     {
         private readonly IVolunteersRepository _volunteerRepository;
-        private readonly IFilesProvider _filesProvider;
+        private readonly IFilesContract _filesContract;
         private readonly ILogger<MovePetHandler> _logger;
-        private readonly IMessageQueue<IEnumerable<FileMeta>> _messageQueue;
         private readonly IUnitOfWork _unitOfWork;
 
         public UploadPetPhotosHandler(
             IVolunteersRepository volunteerRepository,
-            IFilesProvider filesProvider,
+            IFilesContract filesContract,
             ILogger<MovePetHandler> logger,
-            IMessageQueue<IEnumerable<FileMeta>> messageQueue,
             [FromKeyedServices(UnitOfWorkKeys.Volunteers)] IUnitOfWork unitOfWork)
         {
             _volunteerRepository = volunteerRepository;
-            _filesProvider = filesProvider;
+            _filesContract = filesContract;
             _logger = logger;
-            _messageQueue = messageQueue;
             _unitOfWork = unitOfWork;
         }
 
@@ -69,12 +66,12 @@ namespace PetFamily.Volunteers.Application.Pets.Commands.UploadPhotos
                     filesData.Add(fileData);
                 }
 
-                var uploadResult = await _filesProvider.UploadFiles(filesData, token);
+                var uploadResult = await _filesContract.UploadFiles(filesData, token);
                 if (uploadResult.IsFailure)
                 {
                     //добавить данные о путях в channel
                     var fileMetas = filesData.Select(fc => new FileMeta(command.BucketName, fc.FilePath));
-                    await _messageQueue.WriteAsync(fileMetas);
+                    await _filesContract.AddToMessageQueue(fileMetas);
                     return uploadResult.Error.ToErrorsList();
                 }
 

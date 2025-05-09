@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using PetFamily.Core.Abstractions.Database;
 using PetFamily.Core.DTOs;
+using PetFamily.Specieses.Contracts.DTOs;
 
 namespace PetFamily.Volunteers.Infrastructure.DbContexts
 {

@@ -5,12 +5,13 @@ using Microsoft.EntityFrameworkCore;
 using PetFamily.Core.Abstractions.Database;
 using PetFamily.Core.Extensions;
 using PetFamily.Core.Abstractions;
-using PetFamily.Volunteers.Application;
 using PetFamily.Volunteers.Domain.SharedVO;
 using PetFamily.Volunteers.Domain.PetsVO;
 using PetFamily.SharedKernel;
 using Microsoft.Extensions.DependencyInjection;
 using PetFamily.Core.Options;
+using PetFamily.Volunteers.Application.Database;
+using PetFamily.Specieses.Contracts;
 
 namespace PetFamily.Volunteers.Application.Pets.Commands.UpdateMainInfo
 {
@@ -18,7 +19,7 @@ namespace PetFamily.Volunteers.Application.Pets.Commands.UpdateMainInfo
         ICommandHandler<UpdatePetMainInfoCommand>
     {
         private readonly IVolunteersRepository _repository;
-        private readonly ISpeciesReadDbContext _readDbContext;
+        private readonly ISpeciesContract _speciesContract;
         private readonly IValidator<UpdatePetMainInfoCommand> _validator;
         private readonly ILogger<UpdatePetMainInfoHandler> _logger;
         private readonly IUnitOfWork _unitOfWork;
@@ -28,13 +29,13 @@ namespace PetFamily.Volunteers.Application.Pets.Commands.UpdateMainInfo
             IValidator<UpdatePetMainInfoCommand> validator,
             ILogger<UpdatePetMainInfoHandler> logger,
             [FromKeyedServices(UnitOfWorkKeys.Volunteers)] IUnitOfWork unitOfWork,
-            ISpeciesReadDbContext readDbContext)
+            ISpeciesContract speciesContract)
         {
             _repository = volunteerRepository;
             _validator = validator;
             _logger = logger;
             _unitOfWork = unitOfWork;
-            _readDbContext = readDbContext;
+            _speciesContract = speciesContract;
         }
 
         public async Task<UnitResult<ErrorsList>> Handle(
@@ -45,17 +46,15 @@ namespace PetFamily.Volunteers.Application.Pets.Commands.UpdateMainInfo
             if (!validationResult.IsValid)
                 return validationResult.ToErrorsList();
 
-            var species = await _readDbContext.Species
-                .FirstOrDefaultAsync(s => s.Id == command.SpeciesId, cancellationToken);
-            if (species == null)
-                return Errors.General.NotFound(command.SpeciesId).ToErrorsList();
+            var speciesResult = await _speciesContract
+                .GetSpeciesById(command.SpeciesId, cancellationToken);
+            if (speciesResult.IsFailure)
+                return speciesResult.Error;
 
-            var breed = await _readDbContext.Breeds
-                .FirstOrDefaultAsync(b =>
-                    b.Id == command.BreedId
-                    && b.SpeciesId == command.SpeciesId, cancellationToken);
-            if (breed == null)
-                return Errors.General.NotFound(command.BreedId).ToErrorsList();
+            var breedResult = await _speciesContract
+                .GetBreedById(command.SpeciesId, command.BreedId);
+            if (breedResult.IsFailure)
+                return breedResult.Error;
 
             var volunteerResult = await _repository
                 .GetById(command.VolunteerId, cancellationToken);

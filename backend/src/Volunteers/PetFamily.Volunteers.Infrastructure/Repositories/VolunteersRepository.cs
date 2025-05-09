@@ -1,7 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.EntityFrameworkCore;
 using PetFamily.SharedKernel;
-using PetFamily.Volunteers.Application;
+using PetFamily.Volunteers.Application.Database;
 using PetFamily.Volunteers.Domain.Entities;
 using PetFamily.Volunteers.Domain.SharedVO;
 using PetFamily.Volunteers.Infrastructure.DbContexts;

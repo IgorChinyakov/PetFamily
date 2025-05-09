@@ -4,6 +4,7 @@ using PetFamily.Core.Abstractions;
 using PetFamily.Core.DTOs;
 using PetFamily.Core.Models;
 using PetFamily.Specieses.Application.Breeds.Queries.GetBreedsWithPagination;
+using PetFamily.Specieses.Contracts.DTOs;
 
 namespace PetFamily.IntegrationTests.Breeds
 {

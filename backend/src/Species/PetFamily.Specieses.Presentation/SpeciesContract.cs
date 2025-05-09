@@ -6,6 +6,7 @@ using PetFamily.Specieses.Application.Breeds.Queries.GetBreedById;
 using PetFamily.Specieses.Application.Specieses.Queries.GetSpeciesById;
 using PetFamily.Specieses.Application.Specieses.Queries.GetSpeciesWithPagination;
 using PetFamily.Specieses.Contracts;
+using PetFamily.Specieses.Contracts.DTOs;
 using PetFamily.Specieses.Contracts.Requests.Species;
 using System;
 using System.Collections.Generic;

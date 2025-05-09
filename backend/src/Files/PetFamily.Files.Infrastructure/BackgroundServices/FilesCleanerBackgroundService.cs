@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using PetFamily.Core.FileDtos;
 using PetFamily.Files.Application;
+using PetFamily.Files.Contracts.DTOs;
 using PetFamily.Files.Infrastructure.Messaging;
 
 namespace PetFamily.Infrastructure.BackgroundServices

@@ -4,11 +4,11 @@ using Microsoft.Extensions.Logging;
 using PetFamily.Core.Abstractions.Database;
 using PetFamily.Core.Extensions;
 using PetFamily.Core.Abstractions;
-using PetFamily.Volunteers.Application;
 using PetFamily.Volunteers.Domain.PetsVO;
 using PetFamily.SharedKernel;
 using Microsoft.Extensions.DependencyInjection;
 using PetFamily.Core.Options;
+using PetFamily.Volunteers.Application.Database;
 
 namespace PetFamily.Volunteers.Application.Pets.Commands.Move
 {

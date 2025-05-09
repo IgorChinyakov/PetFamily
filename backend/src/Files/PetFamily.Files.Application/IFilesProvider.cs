@@ -1,5 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
-using PetFamily.Core.FileDtos;
+using PetFamily.Files.Contracts.DTOs;
 using PetFamily.SharedKernel;
 
 namespace PetFamily.Files.Application

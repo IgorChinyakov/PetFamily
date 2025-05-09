@@ -7,10 +7,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
 using NSubstitute;
 using PetFamily.Core.Abstractions.Database;
-using PetFamily.Core.FileDtos;
 using PetFamily.Files.Application;
+using PetFamily.Files.Contracts;
+using PetFamily.Files.Contracts.DTOs;
 using PetFamily.Infrastructure.BackgroundServices;
 using PetFamily.SharedKernel;
+using PetFamily.Volunteers.Application.Database;
 using PetFamily.Volunteers.Infrastructure.DbContexts;
 using Respawn;
 using System.Data.Common;
@@ -21,7 +23,7 @@ namespace PetFamily.IntegrationTests
     public class IntegrationTestsWebFactory :
         WebApplicationFactory<Program>, IAsyncLifetime
     {
-        private readonly IFilesProvider _filesProviderMock = Substitute.For<IFilesProvider>();
+        private readonly IFilesContract _filesProviderMock = Substitute.For<IFilesContract>();
 
         private readonly PostgreSqlContainer _dbContainer = new PostgreSqlBuilder()
             .WithImage("postgres")
@@ -58,8 +60,11 @@ namespace PetFamily.IntegrationTests
             var speciesCleanerService = services.SingleOrDefault(s =>
                 s.ImplementationType == typeof(DeletedSpeciesCleanerBackgroundService));
 
-            var fileService = services.SingleOrDefault(s =>
-                s.ServiceType == typeof(IFilesProvider));
+            var filesCleanerService = services.SingleOrDefault(s =>
+                s.ImplementationType == typeof(FilesCleanerBackgroundService));
+
+            var filesContract = services.SingleOrDefault(s =>
+                s.ServiceType == typeof(IFilesContract));
 
             if (volunteersCleanerService is not null)
                 services.Remove(volunteersCleanerService);
@@ -67,8 +72,11 @@ namespace PetFamily.IntegrationTests
             if (speciesCleanerService is not null)
                 services.Remove(speciesCleanerService);
 
-            if (fileService is not null)
-                services.Remove(fileService);
+            if (filesContract is not null)
+                services.Remove(filesContract);
+
+            if (filesCleanerService is not null)
+                services.Remove(filesCleanerService);
 
             if (volunteersWriteContext is not null)
                 services.Remove(volunteersWriteContext);
