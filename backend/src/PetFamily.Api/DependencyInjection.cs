@@ -5,6 +5,7 @@ using PetFamily.Files.Infrastructure;
 using PetFamily.Specieses.Infrastructure;
 using PetFamily.Volunteers.Presentation;
 using PetFamily.Specieses.Presentation;
+using PetFamily.Files.Presentation;
 
 namespace PetFamily.Web
 {
@@ -35,7 +36,9 @@ namespace PetFamily.Web
         public static IServiceCollection AddFilesModule(
             this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddFilesInfrastructure(configuration);
+            services
+                .AddFilesInfrastructure(configuration)
+                .AddFilesContracts();
 
             return services;
         }

@@ -38,6 +38,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Files\PetFamily.Files.Infrastructure\PetFamily.Files.Infrastructure.csproj" />
+    <ProjectReference Include="..\Files\PetFamily.Files.Presentation\PetFamily.Files.Presentation.csproj" />
     <ProjectReference Include="..\Species\PetFamily.Specieses.Infrastructure\PetFamily.Specieses.Infrastructure.csproj" />
     <ProjectReference Include="..\Species\PetFamily.Specieses.Presentation\PetFamily.Specieses.Presentation.csproj" />
     <ProjectReference Include="..\Volunteers\PetFamily.Volunteers.Infrastructure\PetFamily.Volunteers.Infrastructure.csproj" />
