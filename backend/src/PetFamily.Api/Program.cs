@@ -1,7 +1,6 @@
 using PetFamily.Api.Middlewares;
-using PetFamily.Application;
-using PetFamily.Infrastructure;
-using PetFamily.Infrastructure.Options;
+using PetFamily.Core.Options;
+using PetFamily.Web;
 using Serilog;
 using Serilog.Events;
 using SwaggerThemes;
@@ -29,10 +28,13 @@ builder.Services.Configure<CleanUpSettings>
     (builder.Configuration.GetSection("CleanUpSettings"));
 
 builder.Services
-    .AddInfrastructure(builder.Configuration);
+    .AddFilesModule(builder.Configuration);
 
 builder.Services
-    .AddApplication();
+    .AddVolunteersModule(builder.Configuration);
+
+builder.Services
+    .AddSpeciesModule(builder.Configuration);
 
 var app = builder.Build();
 

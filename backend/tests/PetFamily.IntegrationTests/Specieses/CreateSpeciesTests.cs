@@ -1,16 +1,8 @@
-﻿using AutoFixture;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using PetFamily.Application.Abstractions;
-using PetFamily.Application.EntitiesHandling.Specieses.Commands.Create;
-using PetFamily.Application.EntitiesHandling.Volunteers.Commands.Create;
-using PetFamily.Infrastructure.DbContexts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using PetFamily.Core.Abstractions;
+using PetFamily.Specieses.Application.Specieses.Commands.Create;
 
 namespace PetFamily.IntegrationTests.Specieses
 {
@@ -38,7 +30,7 @@ namespace PetFamily.IntegrationTests.Specieses
             result.IsSuccess.Should().BeTrue();
             result.Value.Should().NotBeEmpty();
 
-            var volunteers = await ReadDbContext.Species.ToListAsync();
+            var volunteers = await SpeciesReadDbContext.Species.ToListAsync();
 
             volunteers.Should().NotBeNull();
             volunteers.Should().HaveCount(1);

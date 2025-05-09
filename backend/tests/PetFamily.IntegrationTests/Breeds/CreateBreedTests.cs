@@ -1,14 +1,8 @@
 ﻿using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using PetFamily.Application.Abstractions;
-using PetFamily.Application.EntitiesHandling.Breeds.Commands.Create;
-using PetFamily.Application.EntitiesHandling.Pets.Commands.Create;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using PetFamily.Core.Abstractions;
+using PetFamily.Specieses.Application.Breeds.Commands.Create;
 
 namespace PetFamily.IntegrationTests.Breeds
 {
@@ -39,7 +33,7 @@ namespace PetFamily.IntegrationTests.Breeds
             result.IsSuccess.Should().BeTrue();
             result.Value.Should().NotBeEmpty();
 
-            var pet = await ReadDbContext.Breeds.FirstOrDefaultAsync(p => p.SpeciesId == command.SpeciesId);
+            var pet = await SpeciesReadDbContext.Breeds.FirstOrDefaultAsync(p => p.SpeciesId == command.SpeciesId);
 
             pet.Should().NotBeNull();
         }
@@ -58,7 +52,7 @@ namespace PetFamily.IntegrationTests.Breeds
             //Assert
             result.IsSuccess.Should().BeFalse();
 
-            var pet = await ReadDbContext.Pets.FirstOrDefaultAsync(p => p.SpeciesId == command.SpeciesId);
+            var pet = await VolunteersReadDbContext.Pets.FirstOrDefaultAsync(p => p.SpeciesId == command.SpeciesId);
 
             pet.Should().BeNull();
         }

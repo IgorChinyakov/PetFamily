@@ -1,15 +1,8 @@
 ﻿using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using PetFamily.Application.Abstractions;
-using PetFamily.Application.EntitiesHandling.Pets.Commands.UpdateMainInfo;
-using PetFamily.Application.EntitiesHandling.Pets.Commands.UpdateStatus;
-using PetFamily.Domain.VolunteerContext.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using PetFamily.Core.Abstractions;
+using PetFamily.Volunteers.Application.Pets.Commands.UpdateStatus;
 
 namespace PetFamily.IntegrationTests.Pets
 {
@@ -41,7 +34,7 @@ namespace PetFamily.IntegrationTests.Pets
             //Assert
             result.IsSuccess.Should().BeTrue();
 
-            var pet = await ReadDbContext
+            var pet = await VolunteersReadDbContext
                 .Pets.FirstOrDefaultAsync(v => v.Id == command.PetId, cancellationToken);
 
             pet!.Status.Should().Be(command.Status);

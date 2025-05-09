@@ -2,17 +2,18 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Minio;
 using Npgsql;
 using NSubstitute;
-using PetFamily.Application.Database;
-using PetFamily.Application.FileProvider;
-using PetFamily.Application.Providers;
-using PetFamily.Domain.Shared;
-using PetFamily.Infrastructure;
+using PetFamily.Core.Abstractions.Database;
+using PetFamily.Files.Application;
+using PetFamily.Files.Contracts;
+using PetFamily.Files.Contracts.DTOs;
 using PetFamily.Infrastructure.BackgroundServices;
-using PetFamily.Infrastructure.DbContexts;
+using PetFamily.SharedKernel;
+using PetFamily.Volunteers.Application.Database;
+using PetFamily.Volunteers.Infrastructure.DbContexts;
 using Respawn;
 using System.Data.Common;
 using Testcontainers.PostgreSql;
@@ -22,7 +23,7 @@ namespace PetFamily.IntegrationTests
     public class IntegrationTestsWebFactory :
         WebApplicationFactory<Program>, IAsyncLifetime
     {
-        private readonly IFilesProvider _filesProviderMock = Substitute.For<IFilesProvider>();
+        private readonly IFilesContract _filesProviderMock = Substitute.For<IFilesContract>();
 
         private readonly PostgreSqlContainer _dbContainer = new PostgreSqlBuilder()
             .WithImage("postgres")
@@ -41,37 +42,67 @@ namespace PetFamily.IntegrationTests
 
         protected virtual void ConfigureDefaultServices(IServiceCollection services)
         {
-            var writeContext = services.SingleOrDefault(s =>
-                s.ServiceType == typeof(WriteDbContext));
+            var volunteersWriteContext = services.SingleOrDefault(s =>
+                s.ServiceType == typeof(VolunteersWriteDbContext));
 
-            var readContext = services.SingleOrDefault(s =>
-                s.ServiceType == typeof(IReadDbContext));
+            var speciesWriteContext = services.SingleOrDefault(s =>
+                s.ServiceType == typeof(SpeciesWriteDbContext));
 
-            var cleanerService = services.SingleOrDefault(s =>
-                s.ImplementationType == typeof(DeletedEntitiesCleanerBackgroundService));
+            var volunteersReadContext = services.SingleOrDefault(s =>
+                s.ServiceType == typeof(ISpeciesReadDbContext));
 
-            var fileService = services.SingleOrDefault(s =>
-                s.ServiceType == typeof(IFilesProvider));
+            var speciesReadContext = services.SingleOrDefault(s =>
+               s.ServiceType == typeof(IVolunteersReadDbContext));
 
-            if (cleanerService is not null)
-                services.Remove(cleanerService);
+            var volunteersCleanerService = services.SingleOrDefault(s =>
+                s.ImplementationType == typeof(DeletedVolunteersCleanerBackgroundService));
 
-            if (fileService is not null)
-                services.Remove(fileService);
+            var speciesCleanerService = services.SingleOrDefault(s =>
+                s.ImplementationType == typeof(DeletedSpeciesCleanerBackgroundService));
 
-            if (writeContext is not null)
-                services.Remove(writeContext);
+            var filesCleanerService = services.SingleOrDefault(s =>
+                s.ImplementationType == typeof(FilesCleanerBackgroundService));
 
-            if (readContext is not null)
-                services.Remove(readContext);
+            var filesContract = services.SingleOrDefault(s =>
+                s.ServiceType == typeof(IFilesContract));
+
+            if (volunteersCleanerService is not null)
+                services.Remove(volunteersCleanerService);
+
+            if (speciesCleanerService is not null)
+                services.Remove(speciesCleanerService);
+
+            if (filesContract is not null)
+                services.Remove(filesContract);
+
+            if (filesCleanerService is not null)
+                services.Remove(filesCleanerService);
+
+            if (volunteersWriteContext is not null)
+                services.Remove(volunteersWriteContext);
+
+            if (speciesWriteContext is not null)
+                services.Remove(speciesWriteContext);
+
+            if (volunteersReadContext is not null)
+                services.Remove(volunteersReadContext);
+
+            if (speciesReadContext is not null)
+                services.Remove(speciesReadContext);
 
             services.AddSingleton(_ => _filesProviderMock);
 
             services.AddScoped(_ =>
-                new WriteDbContext(_dbContainer.GetConnectionString()));
+                new VolunteersWriteDbContext(_dbContainer.GetConnectionString()));
 
-            services.AddScoped<IReadDbContext>(_ =>
-                new ReadDbContext(_dbContainer.GetConnectionString()));
+            services.AddScoped(_ =>
+                new SpeciesWriteDbContext(_dbContainer.GetConnectionString()));
+
+            services.AddScoped<IVolunteersReadDbContext>(_ =>
+                new VolunteersReadDbContext(_dbContainer.GetConnectionString()));
+
+            services.AddScoped<ISpeciesReadDbContext>(_ =>
+                new SpeciesReadDbContext(_dbContainer.GetConnectionString()));
         }
 
         public void SetupSuccessFilesProviderMock()
@@ -104,8 +135,12 @@ namespace PetFamily.IntegrationTests
             await _dbContainer.StartAsync();
 
             using var scope = Services.CreateScope();
-            var dbContext = scope.ServiceProvider.GetRequiredService<WriteDbContext>();
-            await dbContext.Database.EnsureCreatedAsync();
+
+            var volunteersWriteDbContext = scope.ServiceProvider.GetRequiredService<VolunteersWriteDbContext>();
+            await volunteersWriteDbContext.Database.MigrateAsync();
+
+            var speciesWriteDbContext = scope.ServiceProvider.GetRequiredService<SpeciesWriteDbContext>();
+            await speciesWriteDbContext.Database.MigrateAsync();
 
             _dbConnection = new NpgsqlConnection(_dbContainer.GetConnectionString());
             await InitializeRespawner();

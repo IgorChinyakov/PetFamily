@@ -1,8 +1,9 @@
 using FluentAssertions;
-using PetFamily.Domain.VolunteerContext.Entities;
-using PetFamily.Domain.VolunteerContext.PetsVO;
-using PetFamily.Domain.VolunteerContext.SharedVO;
-using PetFamily.Domain.VolunteerContext.VolunteerVO;
+using PetFamily.Volunteers.Domain.Entities;
+using PetFamily.Volunteers.Domain.PetsVO;
+using PetFamily.Volunteers.Domain.SharedVO;
+using PetFamily.Volunteers.Domain.VolunteersVO;
+using static PetFamily.Volunteers.Domain.PetsVO.PetStatus;
 
 namespace PetFamily.Domain.UnitTests
 {

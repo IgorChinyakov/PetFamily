@@ -1,15 +1,8 @@
 ﻿using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using PetFamily.Api.Controllers;
-using PetFamily.Application.Abstractions;
-using PetFamily.Application.EntitiesHandling;
-using PetFamily.Application.EntitiesHandling.Breeds.Commands.Delete;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using PetFamily.Core.Abstractions;
+using PetFamily.Specieses.Application.Breeds.Commands.Delete;
 
 namespace PetFamily.IntegrationTests.Breeds
 {
@@ -41,7 +34,7 @@ namespace PetFamily.IntegrationTests.Breeds
             result.IsSuccess.Should().BeTrue();
             result.Value.Should().NotBeEmpty();
 
-            var pets = await ReadDbContext
+            var pets = await SpeciesReadDbContext
                 .Breeds.ToListAsync();
 
             pets.Should().BeNullOrEmpty();

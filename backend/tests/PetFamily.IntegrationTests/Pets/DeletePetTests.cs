@@ -1,16 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using PetFamily.Application.Abstractions;
-using PetFamily.Application.EntitiesHandling.Volunteers.Commands.Delete;
-using PetFamily.Application.EntitiesHandling;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using PetFamily.Api.Controllers;
 using FluentAssertions;
-using PetFamily.Domain.VolunteerContext.Entities;
+using PetFamily.Core.Options;
+using PetFamily.Core.Abstractions;
+using PetFamily.Volunteers.Application.Pets.Commands.Delete;
 
 namespace PetFamily.IntegrationTests.Pets
 {
@@ -44,7 +37,7 @@ namespace PetFamily.IntegrationTests.Pets
             result.IsSuccess.Should().BeTrue();
             result.Value.Should().NotBeEmpty();
 
-            var pets = await ReadDbContext
+            var pets = await VolunteersReadDbContext
                 .Pets.ToListAsync();
 
             pets.Should().BeNullOrEmpty();
@@ -70,7 +63,7 @@ namespace PetFamily.IntegrationTests.Pets
             result.IsSuccess.Should().BeTrue();
             result.Value.Should().NotBeEmpty();
 
-            var pet = await ReadDbContext
+            var pet = await VolunteersReadDbContext
                 .Pets.FirstOrDefaultAsync();
 
             pet!.IsDeleted.Should().BeTrue();

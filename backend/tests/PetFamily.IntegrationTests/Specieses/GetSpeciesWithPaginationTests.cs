@@ -1,15 +1,9 @@
 ﻿using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
-using PetFamily.Application.Abstractions;
-using PetFamily.Application.DTOs;
-using PetFamily.Application.EntitiesHandling.Specieses.Queries.GetSpeciesWithPagination;
-using PetFamily.Application.EntitiesHandling.Volunteers.Queries.GetVolunteersWithPagination;
-using PetFamily.Application.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using PetFamily.Core.Abstractions;
+using PetFamily.Core.Models;
+using PetFamily.Specieses.Application.Specieses.Queries.GetSpeciesWithPagination;
+using PetFamily.Specieses.Contracts.DTOs;
 
 namespace PetFamily.IntegrationTests.Specieses
 {

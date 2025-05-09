@@ -1,24 +1,19 @@
 ﻿using AutoFixture;
-using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using PetFamily.Application.Abstractions;
-using PetFamily.Application.Database;
-using PetFamily.Application.EntitiesHandling.Volunteers.Commands.Create;
-using PetFamily.Infrastructure.DbContexts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using PetFamily.Core.Abstractions.Database;
+using PetFamily.Volunteers.Application.Database;
+using PetFamily.Volunteers.Infrastructure.DbContexts;
 
 namespace PetFamily.IntegrationTests
 {
     public class TestsBase :
         IClassFixture<IntegrationTestsWebFactory>, IAsyncLifetime
     {
-        protected readonly WriteDbContext WriteDbContext;
-        protected readonly IReadDbContext ReadDbContext;
+        protected readonly SpeciesWriteDbContext SpeciesWriteDbContext;
+        protected readonly VolunteersWriteDbContext VolunteersWriteDbContext;
+        protected readonly ISpeciesReadDbContext SpeciesReadDbContext;
+        protected readonly IVolunteersReadDbContext VolunteersReadDbContext;
         protected readonly IServiceScope Scope;
         protected readonly IFixture Fixture;
         protected readonly IntegrationTestsWebFactory Factory;
@@ -29,8 +24,10 @@ namespace PetFamily.IntegrationTests
             Factory = factory;
             Fixture = new Fixture();
             Scope = factory.Services.CreateScope();
-            ReadDbContext = Scope.ServiceProvider.GetRequiredService<IReadDbContext>();
-            WriteDbContext = Scope.ServiceProvider.GetRequiredService<WriteDbContext>();
+            SpeciesReadDbContext = Scope.ServiceProvider.GetRequiredService<ISpeciesReadDbContext>();
+            VolunteersReadDbContext = Scope.ServiceProvider.GetRequiredService<IVolunteersReadDbContext>();
+            SpeciesWriteDbContext = Scope.ServiceProvider.GetRequiredService<SpeciesWriteDbContext>();
+            VolunteersWriteDbContext = Scope.ServiceProvider.GetRequiredService<VolunteersWriteDbContext>();
         }
 
         public Task InitializeAsync() => Task.CompletedTask;
@@ -45,9 +42,9 @@ namespace PetFamily.IntegrationTests
         {
             var species = Fixture.CreateSpecies();
 
-            await WriteDbContext.Species.AddAsync(species);
+            await SpeciesWriteDbContext.Species.AddAsync(species);
 
-            await WriteDbContext.SaveChangesAsync();
+            await SpeciesWriteDbContext.SaveChangesAsync();
 
             return species.Id;
         }
@@ -56,11 +53,11 @@ namespace PetFamily.IntegrationTests
         {
             var breed = Fixture.CreateBreed();
 
-            var species = await WriteDbContext.Species.FirstOrDefaultAsync(s => s.Id == speciesId);
+            var species = await SpeciesWriteDbContext.Species.FirstOrDefaultAsync(s => s.Id == speciesId);
 
             species!.AddBreed(breed);
 
-            await WriteDbContext.SaveChangesAsync();
+            await SpeciesWriteDbContext.SaveChangesAsync();
 
             return breed.Id;
         }
@@ -69,12 +66,12 @@ namespace PetFamily.IntegrationTests
         {
             var pet = Fixture.CreatePet(speciesId, breedId);
 
-            var volunteer = await WriteDbContext.Volunteers
+            var volunteer = await VolunteersWriteDbContext.Volunteers
                 .FirstOrDefaultAsync(s => s.Id == volunteerId);
 
             volunteer!.AddPet(pet);
 
-            await WriteDbContext.SaveChangesAsync();
+            await VolunteersWriteDbContext.SaveChangesAsync();
 
             return pet.Id;
         }
@@ -83,9 +80,9 @@ namespace PetFamily.IntegrationTests
         {
             var volunteer = Fixture.CreateVolunteer();
 
-            await WriteDbContext.Volunteers.AddAsync(volunteer);
+            await VolunteersWriteDbContext.Volunteers.AddAsync(volunteer);
 
-            await WriteDbContext.SaveChangesAsync();
+            await VolunteersWriteDbContext.SaveChangesAsync();
 
             return volunteer.Id;
         }
@@ -96,10 +93,10 @@ namespace PetFamily.IntegrationTests
             {
                 var volunteer = Fixture.CreateVolunteer();
 
-                await WriteDbContext.Volunteers.AddAsync(volunteer);
+                await VolunteersWriteDbContext.Volunteers.AddAsync(volunteer);
             }
 
-            await WriteDbContext.SaveChangesAsync();
+            await VolunteersWriteDbContext.SaveChangesAsync();
         }
 
         public async Task SeedSpecieses(int count)
@@ -108,15 +105,15 @@ namespace PetFamily.IntegrationTests
             {
                 var species = Fixture.CreateSpecies();
 
-                await WriteDbContext.Species.AddAsync(species);
+                await SpeciesWriteDbContext.Species.AddAsync(species);
             }
 
-            await WriteDbContext.SaveChangesAsync();
+            await SpeciesWriteDbContext.SaveChangesAsync();
         }
 
         public async Task SeedPets(Guid speciesId, Guid breedId, Guid volunteerId, int count)
         {
-            var volunteer = await WriteDbContext.Volunteers
+            var volunteer = await VolunteersWriteDbContext.Volunteers
                 .FirstOrDefaultAsync(s => s.Id == volunteerId);
 
             for (int i = 0; i < count; i++)
@@ -126,12 +123,12 @@ namespace PetFamily.IntegrationTests
                 volunteer!.AddPet(pet);
             }
 
-            await WriteDbContext.SaveChangesAsync();
+            await VolunteersWriteDbContext.SaveChangesAsync();
         }
 
         public async Task SeedBreeds(Guid speciesId, int count)
         {
-            var species = await WriteDbContext.Species
+            var species = await SpeciesWriteDbContext.Species
                 .FirstOrDefaultAsync(s => s.Id == speciesId);
 
             for (int i = 0; i < count; i++)
@@ -141,7 +138,7 @@ namespace PetFamily.IntegrationTests
                 species!.AddBreed(breed);
             }
 
-            await WriteDbContext.SaveChangesAsync();
+            await SpeciesWriteDbContext.SaveChangesAsync();
         }
     }
 }
