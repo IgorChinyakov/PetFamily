@@ -4,6 +4,7 @@ using PetFamily.Core.Abstractions.Database;
 using PetFamily.Core.Options;
 using PetFamily.Infrastructure;
 using PetFamily.Infrastructure.BackgroundServices;
+using PetFamily.SharedKernel;
 using PetFamily.Volunteers.Application.Database;
 using PetFamily.Volunteers.Infrastructure.DbContexts;
 using PetFamily.Volunteers.Infrastructure.Repositories;
@@ -35,10 +36,10 @@ namespace PetFamily.Volunteers.Infrastructure
             this IServiceCollection services, IConfiguration configuration)
         {
             services.AddScoped<VolunteersWriteDbContext>(_ => 
-                new VolunteersWriteDbContext(configuration.GetConnectionString("Database")!));
+                new VolunteersWriteDbContext(configuration.GetConnectionString(Constants.DATABASE)!));
 
             services.AddScoped<IVolunteersReadDbContext, VolunteersReadDbContext>(_ =>
-                new VolunteersReadDbContext(configuration.GetConnectionString("Database")!));
+                new VolunteersReadDbContext(configuration.GetConnectionString(Constants.DATABASE)!));
 
             services.AddScoped<ISqlDbConnectionFactory, SqlDbConnectionFactory>();
 

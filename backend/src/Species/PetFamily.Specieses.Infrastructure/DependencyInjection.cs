@@ -4,6 +4,7 @@ using PetFamily.Core.Abstractions.Database;
 using PetFamily.Core.Options;
 using PetFamily.Infrastructure.BackgroundServices;
 using PetFamily.Infrastructure.Repositories;
+using PetFamily.SharedKernel;
 using PetFamily.Specieses.Application.Database;
 using PetFamily.Volunteers.Infrastructure.DbContexts;
 using System;
@@ -53,10 +54,10 @@ namespace PetFamily.Specieses.Infrastructure
             this IServiceCollection services, IConfiguration configuration)
         {
             services.AddScoped<SpeciesWriteDbContext>(_ =>
-                new SpeciesWriteDbContext(configuration.GetConnectionString("Database")!));
+                new SpeciesWriteDbContext(configuration.GetConnectionString(Constants.DATABASE)!));
 
             services.AddScoped<ISpeciesReadDbContext, SpeciesReadDbContext>(_ =>
-                new SpeciesReadDbContext(configuration.GetConnectionString("Database")!));
+                new SpeciesReadDbContext(configuration.GetConnectionString(Constants.DATABASE)!));
 
             return services;
         }

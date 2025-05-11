@@ -1,3 +1,6 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using PetFamily.Api.Middlewares;
 using PetFamily.Core.Options;
 using PetFamily.Web;
@@ -20,7 +23,38 @@ Log.Logger = new LoggerConfiguration()
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+
+    // Добавляем схему авторизации
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Введите JWT токен, используя формат: Bearer {токен}"
+    });
+
+    // Применяем эту схему ко всем операциям по умолчанию
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] {}
+        }
+    });
+});
 
 builder.Services.AddSerilog();
 
@@ -35,6 +69,9 @@ builder.Services
 
 builder.Services
     .AddSpeciesModule(builder.Configuration);
+
+builder.Services
+    .AddAccountsModule(builder.Configuration);
 
 var app = builder.Build();
 

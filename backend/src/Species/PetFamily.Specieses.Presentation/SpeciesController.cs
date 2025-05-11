@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PetFamily.Core.Abstractions;
 using PetFamily.Core.DTOs;
 using PetFamily.Core.Extensions;
@@ -47,6 +48,7 @@ namespace PetFamily.Specieses.Presentation
             return Ok(Envelope.Ok(result.Value));
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult> Create(
             [FromBody] CreateSpeciesRequest request,

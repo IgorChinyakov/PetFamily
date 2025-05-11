@@ -10,5 +10,6 @@ namespace PetFamily.SharedKernel
     {
         public const int MAX_LOW_TITLE_LENGTH = 100;
         public const int MAX_HIGH_TITLE_LENGTH = 2000;
+        public const string DATABASE = "Database";
     }
 }

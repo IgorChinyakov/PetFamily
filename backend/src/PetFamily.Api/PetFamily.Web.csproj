@@ -13,6 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.15" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -37,6 +38,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Accounts\PetFamily.Accounts.Infrastructure\PetFamily.Accounts.Infrastructure.csproj" />
+    <ProjectReference Include="..\Accounts\PetFamily.Accounts.Presentation\PetFamily.Accounts.Presentation.csproj" />
     <ProjectReference Include="..\Files\PetFamily.Files.Infrastructure\PetFamily.Files.Infrastructure.csproj" />
     <ProjectReference Include="..\Files\PetFamily.Files.Presentation\PetFamily.Files.Presentation.csproj" />
     <ProjectReference Include="..\Species\PetFamily.Specieses.Infrastructure\PetFamily.Specieses.Infrastructure.csproj" />

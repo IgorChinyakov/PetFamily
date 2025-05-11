@@ -6,6 +6,7 @@ using PetFamily.Specieses.Infrastructure;
 using PetFamily.Volunteers.Presentation;
 using PetFamily.Specieses.Presentation;
 using PetFamily.Files.Presentation;
+using PetFamily.Accounts.Application;
 
 namespace PetFamily.Web
 {
@@ -39,6 +40,16 @@ namespace PetFamily.Web
             services
                 .AddFilesInfrastructure(configuration)
                 .AddFilesContracts();
+
+            return services;
+        }
+
+        public static IServiceCollection AddAccountsModule(
+            this IServiceCollection services, IConfiguration configuration)
+        {
+            services
+                .AddAccountsInfrastructure(configuration)
+                .AddAccountsApplication();
 
             return services;
         }
