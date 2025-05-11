@@ -39,5 +39,13 @@ namespace PetFamily.SharedKernel
                 return Error.Conflict("connected.entities.exist", $"Entity can't be removed due to connected entities existence", null);
             }
         }
+
+        public class User
+        {
+            public static Error InvalidCredentials()
+            {
+                return Error.Validation("invalid.credentials", "Credentials are invalid");
+            }
+        }
     }
 }
