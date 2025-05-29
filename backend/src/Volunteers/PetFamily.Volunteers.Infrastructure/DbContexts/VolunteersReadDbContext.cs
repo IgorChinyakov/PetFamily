@@ -33,6 +33,8 @@ namespace PetFamily.Volunteers.Infrastructure.DbContexts
             modelBuilder.ApplyConfigurationsFromAssembly(
                 typeof(VolunteersReadDbContext).Assembly,
                 type => type.FullName?.Contains("Configurations.Read") ?? false);
+
+            modelBuilder.HasDefaultSchema("pet_management");
         }
 
         private ILoggerFactory CreateLoggerFactory() =>

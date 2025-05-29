@@ -1,8 +1,8 @@
 ﻿using CSharpFunctionalExtensions;
 using PetFamily.Files.Application;
+using PetFamily.Files.Application.Messaging;
 using PetFamily.Files.Contracts;
 using PetFamily.Files.Contracts.DTOs;
-using PetFamily.Files.Infrastructure.Messaging;
 using PetFamily.SharedKernel;
 using System;
 using System.Collections.Generic;

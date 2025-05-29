@@ -37,7 +37,7 @@ namespace PetFamily.Core.Extensions
         private static IReadOnlyList<TValueObject> DeserializeDto<TValueObject, TDto>(
             string json, Func<TDto, TValueObject> selector)
         {
-            var dtos = JsonSerializer.Deserialize<IEnumerable<TDto>>(json, JsonSerializerOptions.Default) ?? [];
+            var dtos = JsonSerializer.Deserialize<IReadOnlyList<TDto>>(json, JsonSerializerOptions.Default) ?? [];
 
             return dtos.Select(selector).ToList();
         }

@@ -27,6 +27,8 @@ namespace PetFamily.Volunteers.Infrastructure.DbContexts
             modelBuilder.ApplyConfigurationsFromAssembly(
                 typeof(VolunteersWriteDbContext).Assembly,
                 type => type.FullName?.Contains("Configurations.Write") ?? false);
+
+            modelBuilder.HasDefaultSchema("pet_management");
         }
 
         private ILoggerFactory CreateLoggerFactory() =>

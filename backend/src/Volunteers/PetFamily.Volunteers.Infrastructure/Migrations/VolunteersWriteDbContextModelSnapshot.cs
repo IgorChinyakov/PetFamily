@@ -18,6 +18,7 @@ namespace PetFamily.Volunteers.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasDefaultSchema("pet_management")
                 .HasAnnotation("ProductVersion", "9.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
@@ -227,7 +228,7 @@ namespace PetFamily.Volunteers.Infrastructure.Migrations
                     b.HasIndex("volunteer_id")
                         .HasDatabaseName("ix_pets_volunteer_id");
 
-                    b.ToTable("pets", (string)null);
+                    b.ToTable("pets", "pet_management");
                 });
 
             modelBuilder.Entity("PetFamily.Volunteers.Domain.Entities.Volunteer", b =>
@@ -241,19 +242,9 @@ namespace PetFamily.Volunteers.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("deletion_date");
 
-                    b.Property<string>("DetailsList")
-                        .IsRequired()
-                        .HasColumnType("Jsonb")
-                        .HasColumnName("details");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean")
                         .HasColumnName("is_deleted");
-
-                    b.Property<string>("SocialMediaList")
-                        .IsRequired()
-                        .HasColumnType("Jsonb")
-                        .HasColumnName("social_media");
 
                     b.ComplexProperty<Dictionary<string, object>>("Description", "PetFamily.Volunteers.Domain.Entities.Volunteer.Description#Description", b1 =>
                         {
@@ -322,7 +313,7 @@ namespace PetFamily.Volunteers.Infrastructure.Migrations
                     b.HasKey("Id")
                         .HasName("pk_volunteers");
 
-                    b.ToTable("volunteers", (string)null);
+                    b.ToTable("volunteers", "pet_management");
                 });
 
             modelBuilder.Entity("PetFamily.Volunteers.Domain.Entities.Pet", b =>

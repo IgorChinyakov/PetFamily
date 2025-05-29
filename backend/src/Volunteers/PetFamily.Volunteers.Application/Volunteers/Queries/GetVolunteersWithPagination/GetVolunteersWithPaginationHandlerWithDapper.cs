@@ -26,30 +26,30 @@ namespace PetFamily.Volunteers.Application.Volunteers.Queries.GetVolunteersWithP
 
             var parameters = new DynamicParameters();
 
-            var totalCount = await connection.ExecuteScalarAsync<long>("SELECT COUNT(*) FROM volunteers");
+            var totalCount = await connection.ExecuteScalarAsync<long>("SELECT COUNT(*) FROM pet_management.volunteers");
 
             var sql = """
-                    SELECT id, description, email, experience, phone_number, details, social_media, name, second_name, family_name FROM volunteers
+                    SELECT id, description, email, experience, phone_number, name, second_name, family_name FROM pet_management.volunteers
                     LIMIT @PageSize OFFSET @OffSet
                     """;
 
             parameters.Add("@PageSize", query.PageSize);
             parameters.Add("@OffSet", (query.Page - 1) * query.PageSize);
 
-            var volunteers = await connection.QueryAsync<VolunteerDto, string, string, FullNameDto, VolunteerDto>(
+            var volunteers = await connection.QueryAsync<VolunteerDto, FullNameDto, VolunteerDto>(
                 sql,
-                (volunteer, jsonDetails, jsonSocialMedia, fullName) =>
+                (volunteer, fullName) =>
                 {
-                    var details = JsonSerializer.Deserialize<DetailsDto[]>(jsonDetails) ?? [];
-                    var socialMedia = JsonSerializer.Deserialize<SocialMediaDto[]>(jsonSocialMedia) ?? [];
+                    //var details = JsonSerializer.Deserialize<DetailsDto[]>(jsonDetails) ?? [];
+                    //var socialMedia = JsonSerializer.Deserialize<SocialMediaDto[]>(jsonSocialMedia) ?? [];
 
-                    volunteer.Details = details;
-                    volunteer.SocialMedia = socialMedia;
+                    //volunteer.Details = details;
+                    //volunteer.SocialMedia = socialMedia;
                     volunteer.FullName = fullName;
 
                     return volunteer;
                 },
-                splitOn: "details, social_media, name",
+                splitOn: "name",
                 param: parameters);
 
             return new PagedList<VolunteerDto>()

@@ -3,7 +3,7 @@ using PetFamily.Accounts.Application.Accounts.Login;
 using PetFamily.Accounts.Application.Accounts.Register;
 using PetFamily.Accounts.Contracts.Requests;
 using PetFamily.Core.Abstractions;
-using PetFamily.Core.Extensions;
+using PetFamily.Core.Models;
 using PetFamily.Framework;
 using System;
 using System.Collections.Generic;
@@ -21,7 +21,13 @@ namespace PetFamily.Accounts.Presentation
             [FromServices] ICommandHandler<RegisterUserCommand> handler)
         {
             var result = await handler
-                .Handle(new RegisterUserCommand(request.Email, request.Password, request.UserName));
+                .Handle(new RegisterUserCommand(
+                    request.Email, 
+                    request.Password, 
+                    request.UserName, 
+                    request.FirstName,
+                    request.SecondName,
+                    request.LastName));
             if (result.IsFailure)
                 return result.Error.ToResponse();
 

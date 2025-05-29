@@ -2,10 +2,9 @@
 using Microsoft.Extensions.DependencyInjection;
 using PetFamily.Core.Abstractions.Database;
 using PetFamily.Core.Options;
-using PetFamily.Infrastructure;
-using PetFamily.Infrastructure.BackgroundServices;
 using PetFamily.SharedKernel;
 using PetFamily.Volunteers.Application.Database;
+using PetFamily.Volunteers.Infrastructure.BackgroundServices;
 using PetFamily.Volunteers.Infrastructure.DbContexts;
 using PetFamily.Volunteers.Infrastructure.Repositories;
 

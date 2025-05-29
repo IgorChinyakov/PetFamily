@@ -1,11 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PetFamily.Core.Abstractions;
-using PetFamily.Core.Extensions;
 using PetFamily.Core.Models;
 using PetFamily.Core.Options;
-using PetFamily.Core.Processors;
 using PetFamily.Framework;
+using PetFamily.Framework.Processors;
 using PetFamily.Volunteers.Application.Pets.Commands.ChooseMainPhoto;
 using PetFamily.Volunteers.Application.Pets.Commands.Create;
 using PetFamily.Volunteers.Application.Pets.Commands.Delete;
@@ -15,16 +14,14 @@ using PetFamily.Volunteers.Application.Pets.Commands.UpdateStatus;
 using PetFamily.Volunteers.Application.Pets.Commands.UploadPhotos;
 using PetFamily.Volunteers.Application.Volunteers.Commands.Create;
 using PetFamily.Volunteers.Application.Volunteers.Commands.Delete;
-using PetFamily.Volunteers.Application.Volunteers.Commands.UpdateDetails;
 using PetFamily.Volunteers.Application.Volunteers.Commands.UpdateMainInfo;
-using PetFamily.Volunteers.Application.Volunteers.Commands.UpdateSocialMedia;
 using PetFamily.Volunteers.Application.Volunteers.Queries.GetVolunteerById;
 using PetFamily.Volunteers.Application.Volunteers.Queries.GetVolunteersWithPagination;
 using PetFamily.Volunteers.Contracts.DTOs;
 using PetFamily.Volunteers.Contracts.Requests.Pets;
 using PetFamily.Volunteers.Contracts.Requests.Volunteers;
 
-namespace PetFamily.Api.Controllers
+namespace PetFamily.Volunteers.Presentation
 {
     public class VolunteersController : ApplicationController
     {
@@ -83,9 +80,7 @@ namespace PetFamily.Api.Controllers
                 request.Email,
                 request.Description,
                 request.Experience,
-                request.PhoneNumber,
-                request.DetailsList,
-                request.SocialMediaList);
+                request.PhoneNumber);
 
             var result = await handler.Handle(command, token);
             if (result.IsFailure)
@@ -116,39 +111,39 @@ namespace PetFamily.Api.Controllers
             return Ok(Envelope.Ok(result.Value));
         }
 
-        [HttpPut("{id:guid}/social-media")]
-        public async Task<ActionResult> UpdateSocialMedia(
-            [FromServices] ICommandHandler<Guid, UpdateVolunteerSocialMediaCommand> handler,
-            [FromBody] UpdateVolunteerSocialMediaRequest request,
-            [FromRoute] Guid id,
-            CancellationToken token = default)
-        {
-            var command = new UpdateVolunteerSocialMediaCommand(
-                id,
-                 request.SocialMedia);
+        //[HttpPut("{id:guid}/social-media")]
+        //public async Task<ActionResult> UpdateSocialMedia(
+        //    [FromServices] ICommandHandler<Guid, UpdateVolunteerSocialMediaCommand> handler,
+        //    [FromBody] UpdateVolunteerSocialMediaRequest request,
+        //    [FromRoute] Guid id,
+        //    CancellationToken token = default)
+        //{
+        //    var command = new UpdateVolunteerSocialMediaCommand(
+        //        id,
+        //         request.SocialMedia);
 
-            var result = await handler.Handle(command, token);
-            if (result.IsFailure)
-                return result.Error.ToResponse();
+        //    var result = await handler.Handle(command, token);
+        //    if (result.IsFailure)
+        //        return result.Error.ToResponse();
 
-            return Ok(Envelope.Ok(result.Value));
-        }
+        //    return Ok(Envelope.Ok(result.Value));
+        //}
 
-        [HttpPut("{id:guid}/details")]
-        public async Task<ActionResult> UpdateDetails(
-            [FromServices] ICommandHandler<Guid, UpdateVolunteerDetailsCommand> handler,
-            [FromBody] UpdateVolunteerDetailsRequest request,
-            [FromRoute] Guid id,
-            CancellationToken token = default)
-        {
-            var command = new UpdateVolunteerDetailsCommand(id, request.Details);
+        //[HttpPut("{id:guid}/details")]
+        //public async Task<ActionResult> UpdateDetails(
+        //    [FromServices] ICommandHandler<Guid, UpdateVolunteerDetailsCommand> handler,
+        //    [FromBody] UpdateVolunteerDetailsRequest request,
+        //    [FromRoute] Guid id,
+        //    CancellationToken token = default)
+        //{
+        //    var command = new UpdateVolunteerDetailsCommand(id, request.Details);
 
-            var result = await handler.Handle(command, token);
-            if (result.IsFailure)
-                return result.Error.ToResponse();
+        //    var result = await handler.Handle(command, token);
+        //    if (result.IsFailure)
+        //        return result.Error.ToResponse();
 
-            return Ok(Envelope.Ok(result.Value));
-        }
+        //    return Ok(Envelope.Ok(result.Value));
+        //}
 
         [HttpDelete("{id:guid}")]
         public async Task<ActionResult> Delete(
@@ -187,7 +182,8 @@ namespace PetFamily.Api.Controllers
                 request.Weight, 
                 request.Height, 
                 request.Birthday, 
-                request.PetStatus);
+                request.PetStatus,
+                request.Details);
 
             var result = await handler.Handle(command, token);
 

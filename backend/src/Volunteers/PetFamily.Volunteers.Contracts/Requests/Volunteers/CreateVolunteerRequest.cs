@@ -8,7 +8,5 @@ namespace PetFamily.Volunteers.Contracts.Requests.Volunteers
         string Email,
         string Description,
         int Experience,
-        string PhoneNumber,
-        List<DetailsDto> DetailsList,
-        List<SocialMediaDto> SocialMediaList);
+        string PhoneNumber);
 }

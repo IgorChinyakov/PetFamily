@@ -1,19 +1,20 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using PetFamily.Accounts.Application.Authorization;
-using PetFamily.Accounts.Domain;
-using PetFamily.Accounts.Infrastructure;
+using PetFamily.Accounts.Application.Providers;
+using PetFamily.Accounts.Domain.Entities;
+using PetFamily.Accounts.Infrastructure.Authorization;
 using PetFamily.Accounts.Infrastructure.Options;
 using PetFamily.Accounts.Infrastructure.Providers;
 using PetFamily.SharedKernel;
 using System.Text;
 using static CSharpFunctionalExtensions.Result;
 
-namespace PetFamily.Volunteers.Infrastructure
+namespace PetFamily.Accounts.Infrastructure
 {
     public static class DependencyInjection
     {
@@ -25,7 +26,7 @@ namespace PetFamily.Volunteers.Infrastructure
             services
                 .AddIdentity();
 
-            services.AddScoped<AccountDbContext>
+            services.AddScoped
                 (_ => new AccountDbContext(configuration.GetConnectionString(Constants.DATABASE)!));
 
             services
@@ -33,6 +34,11 @@ namespace PetFamily.Volunteers.Infrastructure
 
             services
                 .AddAuthenticationAndBearer(configuration);
+
+            services.AddSingleton<AccountsSeeder>();
+
+            services
+                .AddAuthorizationAndPolicies();
 
             return services;
         }
@@ -47,6 +53,9 @@ namespace PetFamily.Volunteers.Infrastructure
                 })
                 .AddEntityFrameworkStores<AccountDbContext>()
                 .AddDefaultTokenProviders();
+
+            services.AddScoped<IPermissionManager, PermissionManager>();
+            services.AddScoped<RolePermissionManager>();
 
             return services;
         }
@@ -63,21 +72,36 @@ namespace PetFamily.Volunteers.Infrastructure
                 })
             .AddJwtBearer(options =>
             {
-                    var jwtSettings = configuration.GetSection(JwtSettings.JwtPath).Get<JwtSettings>()
-                    ?? throw new ApplicationException("Missing configuration");
+                var jwtSettings = configuration.GetSection(JwtSettings.JwtPath).Get<JwtSettings>()
+                ?? throw new ApplicationException("Missing configuration");
 
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateAudience = true,
-                        ValidAudience = jwtSettings.Audience,
-                        ValidateIssuer = true,
-                        ValidIssuer = jwtSettings.Issuer,
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey =
-                            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SecretKey)),
-                        ValidateLifetime = true
-                    };
-                });
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateAudience = true,
+                    ValidAudience = jwtSettings.Audience,
+                    ValidateIssuer = true,
+                    ValidIssuer = jwtSettings.Issuer,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey =
+                        new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SecretKey)),
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.Zero
+                };
+            });
+
+            return services;
+        }
+
+        private static IServiceCollection AddAuthorizationAndPolicies(
+            this IServiceCollection services)
+        {
+            services.AddAuthorization(options => 
+            { 
+                options.DefaultPolicy = new AuthorizationPolicyBuilder()
+                    .RequireClaim("role", "user")
+                    .RequireAuthenticatedUser()
+                    .Build();
+            });
 
             return services;
         }

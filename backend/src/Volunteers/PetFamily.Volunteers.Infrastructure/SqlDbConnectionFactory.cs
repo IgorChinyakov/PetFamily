@@ -3,7 +3,7 @@ using Npgsql;
 using PetFamily.Core.Abstractions.Database;
 using System.Data;
 
-namespace PetFamily.Infrastructure
+namespace PetFamily.Volunteers.Infrastructure
 {
     public class SqlDbConnectionFactory : ISqlDbConnectionFactory
     {

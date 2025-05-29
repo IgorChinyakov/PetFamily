@@ -2,7 +2,7 @@
 using PetFamily.Core.DTOs;
 using PetFamily.Specieses.Contracts.DTOs;
 
-namespace PetFamily.Core.Abstractions.Database
+namespace PetFamily.Specieses.Application.Database
 {
     public interface ISpeciesReadDbContext
     {

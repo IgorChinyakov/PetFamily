@@ -82,7 +82,7 @@ namespace PetFamily.Volunteers.Application.Pets.Commands.Create
 
             var creationDate = CreationDate.Create(DateTime.UtcNow).Value;
             var phoneNumber = volunteerResult.Value.PhoneNumber;
-            var detailsList = volunteerResult.Value.DetailsList
+            var detailsList = command.Details
                 .Select(dl => Details.Create(dl.Title, dl.Description).Value);
 
             var pet = new Pet(

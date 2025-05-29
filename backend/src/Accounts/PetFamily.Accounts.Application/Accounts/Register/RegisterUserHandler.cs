@@ -1,7 +1,8 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
-using PetFamily.Accounts.Domain;
+using PetFamily.Accounts.Domain.Entities;
+using PetFamily.Accounts.Domain.ValueObjects;
 using PetFamily.Core.Abstractions;
 using PetFamily.SharedKernel;
 using System;
@@ -30,8 +31,15 @@ namespace PetFamily.Accounts.Application.Accounts.Register
         {
             var user = new User
             {
+                SecurityStamp = Guid.NewGuid().ToString(),
                 Email = command.Email,
                 UserName = command.UserName,
+                FullName = new FullName
+                {
+                    Name = command.FirstName,
+                    SecondName = command.SecondName,
+                    FamilyName = command.LastName
+                }
             };
 
             var result = await _userManager.CreateAsync(user, command.Password);
@@ -40,6 +48,7 @@ namespace PetFamily.Accounts.Application.Accounts.Register
                 _logger.LogInformation("User with username: {UserName} has been created", command.UserName);
                 return Result.Success<ErrorsList>();
             }
+            await _userManager.AddToRoleAsync(user, "Participant");
 
             _logger.LogInformation("Failed to create user with username: {UserName}", command.UserName);
             var errors = result.Errors.Select(e => Error.Failure(e.Code, e.Description));

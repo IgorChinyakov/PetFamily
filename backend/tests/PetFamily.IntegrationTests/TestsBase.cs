@@ -1,7 +1,8 @@
 ﻿using AutoFixture;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using PetFamily.Core.Abstractions.Database;
+using PetFamily.Specieses.Application.Database;
+using PetFamily.Specieses.Infrastructure.DbContexts;
 using PetFamily.Volunteers.Application.Database;
 using PetFamily.Volunteers.Infrastructure.DbContexts;
 

@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using PetFamily.Core.Abstractions;
 using PetFamily.Core.DTOs;
-using PetFamily.Core.Extensions;
 using PetFamily.Core.Models;
 using PetFamily.Framework;
 using PetFamily.Specieses.Application.Breeds.Commands.Create;

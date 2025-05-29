@@ -8,7 +8,7 @@ using PetFamily.Core.Options;
 using PetFamily.Volunteers.Infrastructure;
 using PetFamily.Volunteers.Infrastructure.DbContexts;
 
-namespace PetFamily.Infrastructure.BackgroundServices
+namespace PetFamily.Volunteers.Infrastructure.BackgroundServices
 {
     public class DeletedVolunteersCleanerBackgroundService : BackgroundService
     {

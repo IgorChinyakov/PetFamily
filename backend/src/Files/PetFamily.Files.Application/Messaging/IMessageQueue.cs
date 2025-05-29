@@ -1,4 +1,4 @@
-﻿namespace PetFamily.Files.Infrastructure.Messaging
+﻿namespace PetFamily.Files.Application.Messaging
 {
     public interface IMessageQueue<TMessage>
     {

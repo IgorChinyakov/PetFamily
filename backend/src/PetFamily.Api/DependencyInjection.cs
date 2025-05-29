@@ -7,6 +7,8 @@ using PetFamily.Volunteers.Presentation;
 using PetFamily.Specieses.Presentation;
 using PetFamily.Files.Presentation;
 using PetFamily.Accounts.Application;
+using PetFamily.Accounts.Infrastructure;
+using PetFamily.Accounts.Presentation;
 
 namespace PetFamily.Web
 {
@@ -49,7 +51,8 @@ namespace PetFamily.Web
         {
             services
                 .AddAccountsInfrastructure(configuration)
-                .AddAccountsApplication();
+                .AddAccountsApplication()
+                .AddAccountsContracts();
 
             return services;
         }

@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using PetFamily.Accounts.Application.Accounts.Login;
-using PetFamily.Accounts.Application.Authorization;
-using PetFamily.Accounts.Domain;
+using PetFamily.Accounts.Application.Providers;
+using PetFamily.Accounts.Domain.Entities;
 using PetFamily.Core.Abstractions;
 using PetFamily.SharedKernel;
 using System;

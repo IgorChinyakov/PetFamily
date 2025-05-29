@@ -5,7 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using PetFamily.Volunteers.Infrastructure.DbContexts;
+using PetFamily.Specieses.Infrastructure.DbContexts;
+
 
 #nullable disable
 
@@ -18,6 +19,7 @@ namespace PetFamily.Specieses.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasDefaultSchema("species")
                 .HasAnnotation("ProductVersion", "9.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
@@ -59,7 +61,7 @@ namespace PetFamily.Specieses.Infrastructure.Migrations
                     b.HasIndex("species_id")
                         .HasDatabaseName("ix_breeds_species_id");
 
-                    b.ToTable("breeds", (string)null);
+                    b.ToTable("breeds", "species");
                 });
 
             modelBuilder.Entity("PetFamily.Specieses.Domain.Entities.Species", b =>
@@ -91,7 +93,7 @@ namespace PetFamily.Specieses.Infrastructure.Migrations
                     b.HasKey("Id")
                         .HasName("pk_species");
 
-                    b.ToTable("species", (string)null);
+                    b.ToTable("species", "species");
                 });
 
             modelBuilder.Entity("PetFamily.Specieses.Domain.Entities.Breed", b =>

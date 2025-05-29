@@ -1,9 +1,9 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.EntityFrameworkCore;
 using PetFamily.Core.Abstractions;
-using PetFamily.Core.Abstractions.Database;
 using PetFamily.Core.DTOs;
 using PetFamily.SharedKernel;
+using PetFamily.Specieses.Application.Database;
 using PetFamily.Specieses.Contracts.DTOs;
 using System;
 using System.Collections.Generic;

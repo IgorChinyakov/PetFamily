@@ -1,7 +1,7 @@
-﻿using PetFamily.Framework;
+﻿using PetFamily.Core.Models;
 using PetFamily.SharedKernel;
 
-namespace PetFamily.Api.Middlewares
+namespace PetFamily.Web.Middlewares
 {
     public class ExceptionMiddleware
     {
