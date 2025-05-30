@@ -82,10 +82,10 @@ namespace PetFamily.Accounts.Infrastructure
                     builder.Property(fn => fn.FamilyName).HasColumnName("family_name");
                 });
 
-            modelBuilder.Entity<User>()
-                .HasOne(u => u.Role)
-                .WithMany()
-                .HasForeignKey(u => u.RoleId);
+            //modelBuilder.Entity<User>()
+            //    .HasOne(u => u.Role)
+            //    .WithMany()
+            //    .HasForeignKey(u => u.RoleId);
 
             modelBuilder.Entity<VolunteerAccount>()
                 .HasOne(u => u.User)

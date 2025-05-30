@@ -4,6 +4,7 @@ using PetFamily.Core.Abstractions;
 using PetFamily.Core.Models;
 using PetFamily.Core.Options;
 using PetFamily.Framework;
+using PetFamily.Framework.Authorization;
 using PetFamily.Framework.Processors;
 using PetFamily.Volunteers.Application.Pets.Commands.ChooseMainPhoto;
 using PetFamily.Volunteers.Application.Pets.Commands.Create;
@@ -27,6 +28,7 @@ namespace PetFamily.Volunteers.Presentation
     {
         public const string BUCKET_NAME = "photos";
 
+        [Permission(Permissions.Volunteer.GET)]
         [HttpGet]
         public async Task<ActionResult> Get(
             [FromQuery] GetVolunteersWithPaginationRequest request,
@@ -42,6 +44,7 @@ namespace PetFamily.Volunteers.Presentation
             return Ok(Envelope.Ok(response));
         }
 
+        [Permission(Permissions.Volunteer.GET)]
         [HttpGet("{id:guid}")]
         public async Task<ActionResult> GetById(
             [FromRoute] Guid id,
@@ -56,6 +59,7 @@ namespace PetFamily.Volunteers.Presentation
             return Ok(Envelope.Ok(response));
         }
 
+        [Permission(Permissions.Volunteer.GET)]
         [HttpGet("dapper")]
         public async Task<ActionResult> GetWithDapper(
             [FromQuery] GetVolunteersWithPaginationRequest request,
@@ -69,6 +73,7 @@ namespace PetFamily.Volunteers.Presentation
             return Ok(Envelope.Ok(response));
         }
 
+        [Permission(Permissions.Volunteer.CREATE)]
         [HttpPost]
         public async Task<ActionResult> Create(
             [FromServices] ICommandHandler<Guid, CreateVolunteerCommand> handler,
@@ -89,6 +94,7 @@ namespace PetFamily.Volunteers.Presentation
             return Ok(Envelope.Ok(result.Value));
         }
 
+        [Permission(Permissions.Volunteer.UPDATE)]
         [HttpPut("{id:guid}/main-info")]
         public async Task<ActionResult> UpdateMainInfo(
             [FromServices] ICommandHandler<Guid, UpdateVolunteerMainInfoCommand> handler,
@@ -145,6 +151,7 @@ namespace PetFamily.Volunteers.Presentation
         //    return Ok(Envelope.Ok(result.Value));
         //}
 
+        [Permission(Permissions.Volunteer.DELETE)]
         [HttpDelete("{id:guid}")]
         public async Task<ActionResult> Delete(
             [FromServices] ICommandHandler<Guid, DeleteVolunteerCommand> handler,
@@ -161,6 +168,7 @@ namespace PetFamily.Volunteers.Presentation
             return Ok(Envelope.Ok(result.Value));
         }
 
+        [Permission(Permissions.Pet.CREATE)]
         [HttpPost("{volunteerId:guid}/pets")]
         public async Task<ActionResult> CreatePet(
             [FromServices] ICommandHandler<Guid, CreatePetCommand> handler,
@@ -193,6 +201,7 @@ namespace PetFamily.Volunteers.Presentation
             return Ok(Envelope.Ok(result.Value));
         }
 
+        [Permission(Permissions.Volunteer.UPDATE)]
         [HttpPost("{volunteerId:guid}/pets/{petId:guid}/photos")]
         public async Task<ActionResult> AddPetPhotos(
             [FromServices] ICommandHandler<IReadOnlyList<string>, UploadPetPhotosCommand> handler,
@@ -216,6 +225,7 @@ namespace PetFamily.Volunteers.Presentation
             return Ok(Envelope.Ok(result.Value));
         }
 
+        [Permission(Permissions.Pet.UPDATE)]
         [HttpPost("{volunteerId:guid}/pets/{petId:guid}/pet-movement")]
         public async Task<ActionResult> MovePet(
             [FromServices] ICommandHandler<MovePetCommand> handler,
@@ -233,6 +243,7 @@ namespace PetFamily.Volunteers.Presentation
             return Ok(Envelope.Ok());
         }
 
+        [Permission(Permissions.Pet.UPDATE)]
         [HttpPut("{volunteerId:guid}/pets/{petId:guid}/main-info")]
         public async Task<ActionResult> UpdatePetMainInfo(
             [FromServices] ICommandHandler<UpdatePetMainInfoCommand> handler,
@@ -266,6 +277,7 @@ namespace PetFamily.Volunteers.Presentation
             return Ok(Envelope.Ok());
         }
 
+        [Permission(Permissions.Pet.GET)]
         [HttpPut("{volunteerId:guid}/pets/{petId:guid}/status")]
         public async Task<ActionResult> UpdatePetStatus(
             [FromServices] ICommandHandler<UpdatePetStatusCommand> handler,
@@ -283,6 +295,7 @@ namespace PetFamily.Volunteers.Presentation
             return Ok(Envelope.Ok());
         }
 
+        [Permission(Permissions.Pet.DELETE)]
         [HttpDelete("{volunteerId:guid}/pets/{petId:guid}")]
         public async Task<ActionResult> DeletePet(
             [FromServices] ICommandHandler<Guid, DeletePetCommand> handler,
@@ -304,6 +317,7 @@ namespace PetFamily.Volunteers.Presentation
             return Ok(Envelope.Ok(result.Value));
         }
 
+        [Permission(Permissions.Pet.UPDATE)]
         [HttpPost("{volunteerId:guid}/pets/{petId:guid}/main-photo")]
         public async Task<ActionResult> ChoosePetMainPhoto(
             [FromServices] ICommandHandler<string, ChoosePetMainPhotoCommand> handler,

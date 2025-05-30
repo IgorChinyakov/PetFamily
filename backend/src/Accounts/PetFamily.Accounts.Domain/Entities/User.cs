@@ -10,10 +10,6 @@ namespace PetFamily.Accounts.Domain.Entities
 {
     public class User : IdentityUser<Guid>
     {
-        public Guid RoleId { get; set; }
-
-        public Role Role { get; set; } = default!;
-
         public string PathToPhoto { get; set; } = string.Empty;
 
         public FullName FullName { get; set; } = default!;

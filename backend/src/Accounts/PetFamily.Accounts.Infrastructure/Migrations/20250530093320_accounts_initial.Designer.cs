@@ -13,8 +13,8 @@ using PetFamily.Accounts.Infrastructure;
 namespace PetFamily.Accounts.Infrastructure.Migrations
 {
     [DbContext(typeof(AccountDbContext))]
-    [Migration("20250528191034_initial")]
-    partial class initial
+    [Migration("20250530093320_accounts_initial")]
+    partial class accounts_initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -337,10 +337,6 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
                         .HasColumnType("boolean")
                         .HasColumnName("phone_number_confirmed");
 
-                    b.Property<Guid>("RoleId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("role_id");
-
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("text")
                         .HasColumnName("security_stamp");
@@ -388,9 +384,6 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
-
-                    b.HasIndex("RoleId")
-                        .HasDatabaseName("ix_users_role_id");
 
                     b.ToTable("users", "accounts");
                 });
@@ -523,18 +516,6 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
                         .HasConstraintName("fk_role_permissions_roles_role_id");
 
                     b.Navigation("Permission");
-
-                    b.Navigation("Role");
-                });
-
-            modelBuilder.Entity("PetFamily.Accounts.Domain.Entities.User", b =>
-                {
-                    b.HasOne("PetFamily.Accounts.Domain.Entities.Role", "Role")
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_users_asp_net_roles_role_id");
 
                     b.Navigation("Role");
                 });

@@ -52,16 +52,16 @@ namespace PetFamily.Accounts.Infrastructure.Authorization
                 return Errors.General.NotFound(userId).ToErrorsList();
 
             var userPermisssions = await _accountDbContext.Roles
-                .Join(_accountDbContext.Users, r => r.Id, u => u.RoleId, (r, u) => new
+                .Join(_accountDbContext.UserRoles, r => r.Id, ur => ur.RoleId, (r, ur) => new
                 {
-                    UserId = u.Id,
-                    Permissions = r.Permissions
+                    ur.UserId,
+                    r.Permissions
                 }).FirstOrDefaultAsync(up => up.UserId == userId, cancellationToken);
 
             if (userPermisssions == null)
                 return Errors.User.AccessDenied(userId).ToErrorsList();
 
-            if(userPermisssions.Permissions.Select(p => p.Code).Contains(permissionCode))
+            if (!userPermisssions.Permissions.Select(p => p.Code).Contains(permissionCode))
                 return Errors.User.AccessDenied(userId).ToErrorsList();
 
             return Result.Success<ErrorsList>();

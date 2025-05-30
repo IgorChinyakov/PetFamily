@@ -12,6 +12,7 @@ namespace PetFamily.Volunteers.Presentation
 {
     public class PetsController : ApplicationController
     {
+        [Permission(Permissions.Pet.GET)]
         [HttpGet("{petId:guid}")]
         public async Task<ActionResult> GetPetById(
             [FromServices] IQueryHandlerWithResult<PetDto, GetPetByIdQuery> handler,
@@ -28,7 +29,7 @@ namespace PetFamily.Volunteers.Presentation
             return Ok(Envelope.Ok(result.Value));
         }
 
-        [Permission("volunteers.get.pet")]
+        [Permission(Permissions.Pet.GET)]
         [HttpGet]
         public async Task<ActionResult> GetFilteredPetsWithPagination(
             [FromServices] IQueryHandler<PagedList<PetDto>, GetFilteredPetsWithPaginationQuery> handler,

@@ -46,9 +46,9 @@ namespace PetFamily.Accounts.Application.Accounts.Register
             if (result.Succeeded)
             {
                 _logger.LogInformation("User with username: {UserName} has been created", command.UserName);
+                await _userManager.AddToRoleAsync(user, "Participant"); 
                 return Result.Success<ErrorsList>();
             }
-            await _userManager.AddToRoleAsync(user, "Participant");
 
             _logger.LogInformation("Failed to create user with username: {UserName}", command.UserName);
             var errors = result.Errors.Select(e => Error.Failure(e.Code, e.Description));
