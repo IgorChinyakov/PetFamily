@@ -34,6 +34,9 @@ namespace PetFamily.SharedKernel
         public static Error Conflict(string code, string message, string? propertyName)
             => new Error(code, message, ErrorType.Conflict, propertyName);
 
+        public static Error AccessDenied(string code, string message)
+            => new Error(code, message, ErrorType.AccessDenied);
+
         public string Serialize()
             => string.Join(SEPARATOR, Code, Message, PropertyName, Type);
 
@@ -62,7 +65,8 @@ namespace PetFamily.SharedKernel
         Validation,
         NotFound,
         Failure,
-        Conflict
+        Conflict,
+        AccessDenied
     }
 }
 

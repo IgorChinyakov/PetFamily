@@ -22,17 +22,17 @@ namespace PetFamily.Volunteers.Infrastructure.Configurations.Write
                 .OnDelete(DeleteBehavior.Cascade)
                 .IsRequired();
 
-            builder.Property(v => v.SocialMediaList)
-                .ValueObjectCollectionJsonConversion(
-                    socialMedia => socialMedia,
-                    json => json)
-                .HasColumnName("social_media");
+            //builder.Property(v => v.SocialMediaList.AsEnumerable())
+            //    .ValueObjectCollectionJsonConversion(
+            //        socialMedia => socialMedia,
+            //        json => json)
+            //    .HasColumnName("social_media");
 
-            builder.Property(v => v.DetailsList)
-                .ValueObjectCollectionJsonConversion(
-                    details => details,
-                    json => json)
-                .HasColumnName("details");
+            //builder.Property(v => v.DetailsList.AsEnumerable())
+            //    .ValueObjectCollectionJsonConversion(
+            //        details => details,
+            //        json => json)
+            //    .HasColumnName("details");
 
             builder.ComplexProperty(v => v.FullName, vb =>
             {

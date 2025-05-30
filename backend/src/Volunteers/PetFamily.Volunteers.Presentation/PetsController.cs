@@ -1,17 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PetFamily.Core.Abstractions;
-using PetFamily.Core.Extensions;
 using PetFamily.Core.Models;
 using PetFamily.Framework;
+using PetFamily.Framework.Authorization;
 using PetFamily.Volunteers.Application.Pets.Queries.GetById;
 using PetFamily.Volunteers.Application.Pets.Queries.GetFilteredWithPagiation;
 using PetFamily.Volunteers.Contracts.DTOs;
 using PetFamily.Volunteers.Contracts.Requests.Pets;
 
-namespace PetFamily.Api.Controllers
+namespace PetFamily.Volunteers.Presentation
 {
     public class PetsController : ApplicationController
     {
+        [Permission(Permissions.Pet.GET)]
         [HttpGet("{petId:guid}")]
         public async Task<ActionResult> GetPetById(
             [FromServices] IQueryHandlerWithResult<PetDto, GetPetByIdQuery> handler,
@@ -28,6 +29,7 @@ namespace PetFamily.Api.Controllers
             return Ok(Envelope.Ok(result.Value));
         }
 
+        [Permission(Permissions.Pet.GET)]
         [HttpGet]
         public async Task<ActionResult> GetFilteredPetsWithPagination(
             [FromServices] IQueryHandler<PagedList<PetDto>, GetFilteredPetsWithPaginationQuery> handler,

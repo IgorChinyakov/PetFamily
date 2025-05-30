@@ -13,9 +13,7 @@ using PetFamily.Volunteers.Application.Pets.Commands.UpdateMainInfo;
 using PetFamily.Volunteers.Application.Pets.Commands.UpdateStatus;
 using PetFamily.Volunteers.Application.Volunteers.Commands.Create;
 using PetFamily.Volunteers.Application.Volunteers.Commands.Delete;
-using PetFamily.Volunteers.Application.Volunteers.Commands.UpdateDetails;
 using PetFamily.Volunteers.Application.Volunteers.Commands.UpdateMainInfo;
-using PetFamily.Volunteers.Application.Volunteers.Commands.UpdateSocialMedia;
 using PetFamily.Volunteers.Domain.Entities;
 using PetFamily.Volunteers.Domain.PetsVO;
 using PetFamily.Volunteers.Domain.SharedVO;
@@ -124,23 +122,23 @@ namespace PetFamily.IntegrationTests
                 .Create();
         }
 
-        public static UpdateVolunteerDetailsCommand CreateUpdateVolunteerDetailsCommand(
-            this IFixture fixture,
-            Guid volunteerId)
-        {
-            return fixture.Build<UpdateVolunteerDetailsCommand>()
-                .With(d => d.VolunteerId, volunteerId)
-                .Create();
-        }
+        //public static UpdateVolunteerDetailsCommand CreateUpdateVolunteerDetailsCommand(
+        //    this IFixture fixture,
+        //    Guid volunteerId)
+        //{
+        //    return fixture.Build<UpdateVolunteerDetailsCommand>()
+        //        .With(d => d.VolunteerId, volunteerId)
+        //        .Create();
+        //}
 
-        public static UpdateVolunteerSocialMediaCommand CreateUpdateVolunteerSocialMediaCommand(
-            this IFixture fixture,
-            Guid volunteerId)
-        {
-            return fixture.Build<UpdateVolunteerSocialMediaCommand>()
-                .With(d => d.Id, volunteerId)
-                .Create();
-        }
+        //public static UpdateVolunteerSocialMediaCommand CreateUpdateVolunteerSocialMediaCommand(
+        //    this IFixture fixture,
+        //    Guid volunteerId)
+        //{
+        //    return fixture.Build<UpdateVolunteerSocialMediaCommand>()
+        //        .With(d => d.Id, volunteerId)
+        //        .Create();
+        //}
 
         public static UpdateVolunteerMainInfoCommand CreateUpdateVolunteerMainInfoCommand(
             this IFixture fixture,
@@ -194,9 +192,7 @@ namespace PetFamily.IntegrationTests
                 Email.Create("oojdngjndjg@gmail.com").Value,
                 Description.Create(fixture.Create<string>()).Value,
                 Experience.Create(fixture.Create<int>()).Value,
-                PhoneNumber.Create("89103454545").Value,
-                [Details.Create(fixture.Create<string>(), fixture.Create<string>()).Value],
-                [SocialMedia.Create(fixture.Create<string>(), fixture.Create<string>()).Value]);
+                PhoneNumber.Create("89103454545").Value);
         }
 
         public static Pet CreatePet(

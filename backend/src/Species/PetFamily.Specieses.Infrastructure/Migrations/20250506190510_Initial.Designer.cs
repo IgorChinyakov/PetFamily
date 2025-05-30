@@ -6,7 +6,8 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using PetFamily.Volunteers.Infrastructure.DbContexts;
+using PetFamily.Specieses.Infrastructure.DbContexts;
+
 
 #nullable disable
 

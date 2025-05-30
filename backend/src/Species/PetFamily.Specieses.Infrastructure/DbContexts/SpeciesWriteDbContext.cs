@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using PetFamily.Core.DTOs;
 using PetFamily.Specieses.Domain.Entities;
 
-namespace PetFamily.Volunteers.Infrastructure.DbContexts
+namespace PetFamily.Specieses.Infrastructure.DbContexts
 {
     public class SpeciesWriteDbContext : DbContext
     {
@@ -28,6 +28,8 @@ namespace PetFamily.Volunteers.Infrastructure.DbContexts
             modelBuilder.ApplyConfigurationsFromAssembly(
                 typeof(SpeciesWriteDbContext).Assembly,
                 type => type.FullName?.Contains("Configurations.Write") ?? false);
+
+            modelBuilder.HasDefaultSchema("species");
         }
 
         private ILoggerFactory CreateLoggerFactory() =>

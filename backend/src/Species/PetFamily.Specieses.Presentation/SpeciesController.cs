@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using PetFamily.Core.Abstractions;
 using PetFamily.Core.DTOs;
-using PetFamily.Core.Extensions;
 using PetFamily.Core.Models;
 using PetFamily.Framework;
+using PetFamily.Framework.Authorization;
 using PetFamily.Specieses.Application.Breeds.Commands.Create;
 using PetFamily.Specieses.Application.Breeds.Commands.Delete;
 using PetFamily.Specieses.Application.Breeds.Queries.GetBreedsWithPagination;
@@ -19,6 +19,7 @@ namespace PetFamily.Specieses.Presentation
 {
     public class SpeciesController : ApplicationController
     {
+        [Permission(Permissions.Species.DELETE)]
         [HttpDelete("{id:guid}")]
         public async Task<ActionResult> Delete(
             [FromRoute] Guid id,
@@ -33,6 +34,7 @@ namespace PetFamily.Specieses.Presentation
             return Ok(Envelope.Ok(result.Value));
         }
 
+        [Permission(Permissions.Breeds.DELETE)]
         [HttpDelete("{speciesId:guid}/breeds/{breedId:guid}")]
         public async Task<ActionResult> DeleteBreed(
             [FromRoute] Guid speciesId,
@@ -48,7 +50,7 @@ namespace PetFamily.Specieses.Presentation
             return Ok(Envelope.Ok(result.Value));
         }
 
-        [Authorize]
+        [Permission(Permissions.Species.CREATE)]
         [HttpPost]
         public async Task<ActionResult> Create(
             [FromBody] CreateSpeciesRequest request,
@@ -63,6 +65,7 @@ namespace PetFamily.Specieses.Presentation
             return Ok(Envelope.Ok(result.Value));
         }
 
+        [Permission(Permissions.Breeds.CREATE)]
         [HttpPost("{speciesId:guid}/breeds")]
         public async Task<ActionResult> CreateBreed(
             [FromBody] CreateBreedRequest request,
@@ -78,6 +81,7 @@ namespace PetFamily.Specieses.Presentation
             return Ok(Envelope.Ok(result.Value));
         }
 
+        [Permission(Permissions.Species.GET)]
         [HttpGet]
         public async Task<ActionResult<Guid>> Get(
             [FromQuery] GetSpeciesWithPaginationRequest request,
@@ -91,6 +95,7 @@ namespace PetFamily.Specieses.Presentation
             return Ok(Envelope.Ok(response));
         }
 
+        [Permission(Permissions.Breeds.GET)]
         [HttpGet("{id:guid}/breeds")]
         public async Task<ActionResult> GetBreedsBySpeciesId(
             [FromRoute] Guid id,

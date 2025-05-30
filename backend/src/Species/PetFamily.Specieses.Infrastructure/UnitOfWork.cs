@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Storage;
 using PetFamily.Core.Abstractions.Database;
-using PetFamily.Volunteers.Infrastructure.DbContexts;
+using PetFamily.Specieses.Infrastructure.DbContexts;
 using System.Data;
 
 namespace PetFamily.Specieses.Infrastructure

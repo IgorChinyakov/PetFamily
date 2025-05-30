@@ -1,9 +1,10 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using PetFamily.Api.Middlewares;
 using PetFamily.Core.Options;
+using PetFamily.Framework;
 using PetFamily.Web;
+using PetFamily.Web.Middlewares;
 using Serilog;
 using Serilog.Events;
 using SwaggerThemes;
@@ -73,7 +74,12 @@ builder.Services
 builder.Services
     .AddAccountsModule(builder.Configuration);
 
+builder.Services
+    .AddFramework();
+
 var app = builder.Build();
+
+await app.ExecuteSeeder();
 
 app.UseExceptionMiddleware();
 

@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using PetFamily.Accounts.Application.Authorization;
-using PetFamily.Accounts.Domain;
+using PetFamily.Accounts.Application.Providers;
+using PetFamily.Accounts.Domain.Entities;
 using PetFamily.Accounts.Infrastructure.Options;
 using System;
 using System.Collections.Generic;
@@ -29,8 +29,8 @@ namespace PetFamily.Accounts.Infrastructure.Providers
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SecretKey));
 
             Claim[] claims = [
-                new Claim(CustomClaims.Sub, user.Id.ToString()),
-                new Claim(CustomClaims.Email, user.Email!)
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+                new Claim(JwtRegisteredClaimNames.Email, user.Email!)
             ]; 
 
             var jwtToken = new JwtSecurityToken(

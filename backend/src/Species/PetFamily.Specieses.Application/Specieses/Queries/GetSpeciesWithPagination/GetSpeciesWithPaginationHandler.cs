@@ -1,9 +1,9 @@
 ﻿using PetFamily.Core.Abstractions;
-using PetFamily.Core.Abstractions.Database;
 using PetFamily.Core.DTOs;
 using PetFamily.Core.Models;
 using PetFamily.Core.Extensions;
 using PetFamily.Specieses.Contracts.DTOs;
+using PetFamily.Specieses.Application.Database;
 
 namespace PetFamily.Specieses.Application.Specieses.Queries.GetSpeciesWithPagination
 {

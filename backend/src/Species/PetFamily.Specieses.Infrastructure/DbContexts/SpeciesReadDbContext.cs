@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using PetFamily.Core.Abstractions.Database;
 using PetFamily.Core.DTOs;
+using PetFamily.Specieses.Application.Database;
 using PetFamily.Specieses.Contracts.DTOs;
 
-namespace PetFamily.Volunteers.Infrastructure.DbContexts
+namespace PetFamily.Specieses.Infrastructure.DbContexts
 {
 
     public class SpeciesReadDbContext : DbContext, ISpeciesReadDbContext
@@ -33,6 +33,8 @@ namespace PetFamily.Volunteers.Infrastructure.DbContexts
             modelBuilder.ApplyConfigurationsFromAssembly(
                 typeof(SpeciesReadDbContext).Assembly,
                 type => type.FullName?.Contains("Configurations.Read") ?? false);
+
+            modelBuilder.HasDefaultSchema("species");
         }
 
         private ILoggerFactory CreateLoggerFactory() =>

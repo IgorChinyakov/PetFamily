@@ -50,9 +50,6 @@ namespace PetFamily.Volunteers.Application.Volunteers.Commands.Create
             var descriptionResult = Description.Create(command.Description).Value;
             var experienceResult = Experience.Create(command.Experience).Value;
 
-            var detailsList = command.DetailsList.Select(d => Details.Create(d.Title, d.Description).Value).ToList();
-            var socialMediaList = command.SocialMediaList.Select(d => SocialMedia.Create(d.Title, d.Link).Value).ToList();
-
             var volunteerResult = await _repository.GetByPhoneNumber(phoneNumberResult);
 
             if (volunteerResult.IsSuccess)
@@ -64,9 +61,7 @@ namespace PetFamily.Volunteers.Application.Volunteers.Commands.Create
                 emailResult,
                 descriptionResult,
                 experienceResult,
-                phoneNumberResult,
-                detailsList,
-                socialMediaList);
+                phoneNumberResult);
 
             await _repository.Add(volunteer, token);
             await _unitOfWork.SaveChanges(token);

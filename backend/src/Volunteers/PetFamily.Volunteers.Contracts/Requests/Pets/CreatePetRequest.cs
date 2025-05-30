@@ -16,5 +16,6 @@ namespace PetFamily.Volunteers.Contracts.Requests.Pets
         float Weight,
         float Height,
         DateTime Birthday,
-        PetStatusDto PetStatus);
+        PetStatusDto PetStatus,
+        List<DetailsDto> Details);
 }

@@ -22,11 +22,11 @@ namespace PetFamily.Volunteers.Application.Volunteers.Commands.Create
             RuleFor(c => c.FullName)
                 .MustBeValueObject(fn => FullName.Create(fn.Name, fn.SecondName, fn.FamilyName));
 
-            RuleForEach(c => c.DetailsList)
-                .MustBeValueObject(d => Details.Create(d.Title, d.Description));
+            //RuleForEach(c => c.DetailsList)
+            //    .MustBeValueObject(d => Details.Create(d.Title, d.Description));
 
-            RuleForEach(c => c.SocialMediaList)
-                .MustBeValueObject(sm => SocialMedia.Create(sm.Title, sm.Link));
+            //RuleForEach(c => c.SocialMediaList)
+            //    .MustBeValueObject(sm => SocialMedia.Create(sm.Title, sm.Link));
         }
     }
 }

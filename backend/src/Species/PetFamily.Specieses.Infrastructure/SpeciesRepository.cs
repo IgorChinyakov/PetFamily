@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using PetFamily.SharedKernel;
 using PetFamily.Specieses.Application.Database;
 using PetFamily.Specieses.Domain.Entities;
-using PetFamily.Volunteers.Infrastructure.DbContexts;
+using PetFamily.Specieses.Infrastructure.DbContexts;
 
-namespace PetFamily.Infrastructure.Repositories
+namespace PetFamily.Specieses.Infrastructure
 {
     public class SpeciesRepository : ISpeciesRepository
     {

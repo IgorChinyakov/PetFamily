@@ -16,9 +16,9 @@ namespace PetFamily.Volunteers.Contracts.DTOs
 
         public string PhoneNumber { get; set; } = string.Empty;
 
-        public DetailsDto[] Details { get; set; } = null!;
+        //public DetailsDto[] Details { get; set; } = null!;
 
-        public SocialMediaDto[] SocialMedia { get; set; } = null!;
+        //public SocialMediaDto[] SocialMedia { get; set; } = null!;
 
         public bool IsDeleted { get; set; }
     }

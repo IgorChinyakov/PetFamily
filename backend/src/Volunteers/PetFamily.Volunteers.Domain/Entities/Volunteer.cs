@@ -11,12 +11,8 @@ namespace PetFamily.Volunteers.Domain.Entities
     public class Volunteer : SoftDeletableEntity
     {
         private readonly List<Pet> _pets = [];
-        private IReadOnlyList<SocialMedia> _socialMediaList = [];
-        private IReadOnlyList<Details> _detailsList = [];
 
         public IReadOnlyList<Pet> Pets => _pets;
-        public IReadOnlyList<SocialMedia> SocialMediaList => _socialMediaList;
-        public IReadOnlyList<Details> DetailsList => _detailsList;
 
         public FullName FullName { get; private set; }
         public Email Email { get; private set; }
@@ -32,17 +28,13 @@ namespace PetFamily.Volunteers.Domain.Entities
             Email email,
             Description description,
             Experience experience,
-            PhoneNumber phoneNumber,
-            IEnumerable<Details> detailsList,
-            IEnumerable<SocialMedia> socialMediaList) : base(id)
+            PhoneNumber phoneNumber) : base(id)
         {
             FullName = fullName;
             Email = email;
             Description = description;
             Experience = experience;
             PhoneNumber = phoneNumber;
-            _socialMediaList = socialMediaList.ToList();
-            _detailsList = detailsList.ToList();
         }
 
         public int ShelteredPets() => _pets.Count(p => p.PetStatus.Value == Status.FoundHome);
@@ -63,15 +55,15 @@ namespace PetFamily.Volunteers.Domain.Entities
             Experience = experience;
         }
 
-        public void UpdateSocialMediaList(IEnumerable<SocialMedia> socialMedia)
-        {
-            _socialMediaList = socialMedia.ToList();
-        }
+        //public void UpdateSocialMediaList(IEnumerable<SocialMedia> socialMedia)
+        //{
+        //    _socialMediaList = socialMedia.ToList();
+        //}
 
-        public void UpdateDetailsList(IEnumerable<Details> details)
-        {
-            _detailsList = details.ToList();
-        }
+        //public void UpdateDetailsList(IEnumerable<Details> details)
+        //{
+        //    _detailsList = details.ToList();
+        //}
 
         public override void Delete()
         {

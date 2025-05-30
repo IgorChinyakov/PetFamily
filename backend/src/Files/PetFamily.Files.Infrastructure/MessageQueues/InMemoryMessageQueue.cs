@@ -1,4 +1,4 @@
-﻿using PetFamily.Files.Infrastructure.Messaging;
+﻿using PetFamily.Files.Application.Messaging;
 using System.Threading.Channels;
 
 namespace PetFamily.Files.Infrastructure.MessageQueues

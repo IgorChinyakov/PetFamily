@@ -256,8 +256,7 @@ namespace PetFamily.Domain.UnitTests
                 email,
                 description,
                 experience,
-                phoneNumber,
-                [], []);
+                phoneNumber);
 
             return volunteer;
         }

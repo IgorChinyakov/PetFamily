@@ -5,9 +5,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using PetFamily.Core.Abstractions.Database;
 using PetFamily.Core.Options;
-using PetFamily.Volunteers.Infrastructure.DbContexts;
+using PetFamily.Specieses.Infrastructure.DbContexts;
 
-namespace PetFamily.Infrastructure.BackgroundServices
+namespace PetFamily.Specieses.Infrastructure.BackgroundServices
 {
     public class DeletedSpeciesCleanerBackgroundService : BackgroundService
     {

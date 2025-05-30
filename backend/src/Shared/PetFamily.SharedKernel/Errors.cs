@@ -46,6 +46,12 @@ namespace PetFamily.SharedKernel
             {
                 return Error.Validation("invalid.credentials", "Credentials are invalid");
             }
+
+            public static Error AccessDenied(Guid? id = null)
+            {
+                var label = id == null ? "User " : $"User with {id} ";
+                return Error.AccessDenied("inappropriate.role", $"{label}has inappropriate role");
+            }
         }
     }
 }
