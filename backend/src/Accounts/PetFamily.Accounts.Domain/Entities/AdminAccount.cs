@@ -8,10 +8,23 @@ namespace PetFamily.Accounts.Domain.Entities
 {
     public class AdminAccount
     {
+        public const string ADMIN = nameof(ADMIN);
+
         public Guid Id { get; set; }
 
         public Guid UserId { get; set; }
 
         public User User { get; set; } = default!;
+
+        //ef core
+        public AdminAccount()
+        {
+        }
+
+        public AdminAccount(User user)
+        {
+            Id = Guid.NewGuid();
+            User = user;
+        }
     }
 }

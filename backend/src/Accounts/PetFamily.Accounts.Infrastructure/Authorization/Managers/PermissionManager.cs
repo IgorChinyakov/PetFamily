@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PetFamily.Accounts.Infrastructure.Authorization
+namespace PetFamily.Accounts.Infrastructure.Authorization.Managers
 {
     public class PermissionManager : IPermissionManager
     {
@@ -59,10 +59,10 @@ namespace PetFamily.Accounts.Infrastructure.Authorization
                 }).FirstOrDefaultAsync(up => up.UserId == userId, cancellationToken);
 
             if (userPermisssions == null)
-                return Errors.User.AccessDenied(userId).ToErrorsList();
+                return Errors.Authorization.AccessDenied(userId).ToErrorsList();
 
             if (!userPermisssions.Permissions.Select(p => p.Code).Contains(permissionCode))
-                return Errors.User.AccessDenied(userId).ToErrorsList();
+                return Errors.Authorization.AccessDenied(userId).ToErrorsList();
 
             return Result.Success<ErrorsList>();
         }

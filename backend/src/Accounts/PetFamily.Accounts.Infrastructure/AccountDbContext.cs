@@ -50,6 +50,12 @@ namespace PetFamily.Accounts.Infrastructure
             modelBuilder
                 .Entity<User>().ToTable("users");
 
+            modelBuilder
+                .Entity<User>()
+                .HasMany(u => u.Roles)
+                .WithMany()
+                .UsingEntity<IdentityUserRole<Guid>>();
+
             modelBuilder.Entity<User>()
                 .Property(u => u.SocialMedia)
                 .HasConversion(

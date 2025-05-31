@@ -7,7 +7,8 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using PetFamily.Accounts.Application.Providers;
 using PetFamily.Accounts.Domain.Entities;
-using PetFamily.Accounts.Infrastructure.Authorization;
+using PetFamily.Accounts.Infrastructure.Authorization.Managers;
+using PetFamily.Accounts.Infrastructure.Authorization.Seeding;
 using PetFamily.Accounts.Infrastructure.Options;
 using PetFamily.Accounts.Infrastructure.Providers;
 using PetFamily.SharedKernel;
@@ -33,6 +34,9 @@ namespace PetFamily.Accounts.Infrastructure
                 .Configure<JwtSettings>(configuration.GetSection(JwtSettings.JwtPath));
 
             services
+                .Configure<AdminOptions>(configuration.GetSection(AdminOptions.ADMIN));
+
+            services
                 .AddAuthenticationAndBearer(configuration);
 
             services.AddSingleton<AccountsSeeder>();
@@ -56,6 +60,7 @@ namespace PetFamily.Accounts.Infrastructure
 
             services.AddScoped<IPermissionManager, PermissionManager>();
             services.AddScoped<RolePermissionManager>();
+            services.AddScoped<AdminAccountManager>();
 
             return services;
         }

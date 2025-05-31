@@ -29,6 +29,15 @@ namespace PetFamily.Accounts.Application.Accounts.Register
         public async Task<UnitResult<ErrorsList>> Handle(
             RegisterUserCommand command, CancellationToken cancellationToken = default)
         {
+            var user = User.CreateParticipant(
+                command.UserName,
+                command.Email,
+                new FullName
+                {
+                    Name = command.FirstName,
+                    SecondName = command.SecondName,
+                    FamilyName = command.LastName
+                });
             var user = new User
             {
                 SecurityStamp = Guid.NewGuid().ToString(),

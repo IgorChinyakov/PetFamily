@@ -1,4 +1,4 @@
-﻿using PetFamily.Accounts.Infrastructure.Authorization;
+﻿using PetFamily.Accounts.Infrastructure.Authorization.Seeding;
 using System;
 using System.Collections.Generic;
 using System.Linq;

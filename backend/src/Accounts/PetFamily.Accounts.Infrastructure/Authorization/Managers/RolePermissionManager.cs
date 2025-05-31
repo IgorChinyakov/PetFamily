@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PetFamily.Accounts.Infrastructure.Authorization
+namespace PetFamily.Accounts.Infrastructure.Authorization.Managers
 {
     public class RolePermissionManager
     {
