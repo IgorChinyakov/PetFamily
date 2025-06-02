@@ -16,10 +16,12 @@
       "species.delete.breed",
       "species.create.breed",
       "species.update.breed",
-      "species.get.breed"
+      "species.get.breed",
+      "accounts.update"
     ],
     "Participant": [
-      "volunteers.get.pet"
+      "volunteers.get.pet",
+      "accounts.update"
     ],
     "Volunteer": [
       "volunteers.create",
@@ -29,7 +31,8 @@
       "volunteers.create.pet",
       "volunteers.update.pet",
       "volunteers.get.pet",
-      "volunteers.delete.pet"
+      "volunteers.delete.pet",
+      "accounts.volunteer.update"
     ]
   },
   "Permissions": {
@@ -52,6 +55,10 @@
       "species.create.breed",
       "species.update.breed",
       "species.get.breed"
+    ],
+    "Accounts": [
+      "accounts.update",
+      "accounts.volunteer.update"
     ]
   }
 }

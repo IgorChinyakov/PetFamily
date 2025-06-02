@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using CSharpFunctionalExtensions;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -8,12 +10,16 @@ using PetFamily.Accounts.Domain.Entities;
 using PetFamily.Accounts.Domain.ValueObjects;
 using PetFamily.Accounts.Infrastructure.Authorization.Managers;
 using PetFamily.Accounts.Infrastructure.Options;
+using PetFamily.Core.Abstractions.Database;
+using PetFamily.Core.Options;
+using PetFamily.SharedKernel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace PetFamily.Accounts.Infrastructure.Authorization.Seeding
 {
@@ -41,11 +47,12 @@ namespace PetFamily.Accounts.Infrastructure.Authorization.Seeding
 
             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
             var adminOptions = scope.ServiceProvider.GetRequiredService<IOptions<AdminOptions>>().Value;
-            var adminAccountManager = scope.ServiceProvider.GetRequiredService<AdminAccountManager>();
+            var adminAccountManager = scope.ServiceProvider.GetRequiredService<IAdminAccountManager>();
             var accountsContext = scope.ServiceProvider.GetRequiredService<AccountDbContext>();
             var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<Role>>();
             var permissionManager = scope.ServiceProvider.GetRequiredService<IPermissionManager>();
-            var rolePermissionManager = scope.ServiceProvider.GetRequiredService<RolePermissionManager>();
+            var rolePermissionManager = scope.ServiceProvider.GetRequiredService<IRolePermissionManager>();
+            var unitOfWork = scope.ServiceProvider.GetRequiredKeyedService<IUnitOfWork>(UnitOfWorkKeys.Accounts);
 
             var seedData = JsonSerializer.Deserialize<RolePermissionConfig>(json)
                 ?? throw new ApplicationException("couldn't deserialize role permission config");
@@ -56,27 +63,31 @@ namespace PetFamily.Accounts.Infrastructure.Authorization.Seeding
 
             await SeedRolePermissions(roleManager, rolePermissionManager, seedData);
 
-            await SeedAdmin(userManager, adminOptions, adminAccountManager, roleManager, accountsContext);
+            await SeedAdmin(
+                userManager, 
+                adminOptions, 
+                adminAccountManager, 
+                roleManager, 
+                accountsContext,
+                unitOfWork);
         }
 
         private async Task SeedAdmin(
             UserManager<User> userManager, 
             AdminOptions adminOptions, 
-            AdminAccountManager adminAccountManager, 
+            IAdminAccountManager adminAccountManager, 
             RoleManager<Role> roleManager,
-            AccountDbContext accountDbContext)
+            AccountDbContext accountDbContext,
+            IUnitOfWork unitOfWork)
         {
-            var transaction = await accountDbContext.Database.BeginTransactionAsync();
-
             var adminRole = await roleManager.FindByNameAsync(AdminAccount.ADMIN)
                             ?? throw new ApplicationException("Could not find admin role.");
 
+            var transaction = await unitOfWork.BeginTransaction();
+
             var adminExists = await userManager.FindByEmailAsync(adminOptions.Email);
             if (adminExists != null)
-            {
-                await transaction.RollbackAsync();
                 return;
-            }
 
             var fullName = new FullName
             {
@@ -86,22 +97,25 @@ namespace PetFamily.Accounts.Infrastructure.Authorization.Seeding
             };
             var adminUserResult = User.CreateAdmin(adminOptions.UserName, adminOptions.Email, fullName, adminRole);
             if (adminUserResult.IsFailure)
-            {
-                await transaction.RollbackAsync();
                 throw new ApplicationException("trying to create user with invalid role. Role must be admin");
-            }
 
-            await userManager.CreateAsync(adminUserResult.Value, adminOptions.Password);
+            var userResult = await userManager.CreateAsync(adminUserResult.Value, adminOptions.Password);
+            if (!userResult.Succeeded)
+            {
+                _logger.LogInformation("Failed to create user with role admin");
+                transaction.Rollback();
+                return;
+            }
 
             var adminAccount = new AdminAccount(adminUserResult.Value);
             await adminAccountManager.CreateAdminAccount(adminAccount);
 
-            await transaction.CommitAsync();
+            transaction.Commit();
         }
 
         private async Task SeedRolePermissions( 
             RoleManager<Role> roleManager, 
-            RolePermissionManager rolePermissionManager, 
+            IRolePermissionManager rolePermissionManager, 
             RolePermissionConfig seedData)
         {
             foreach (var roleName in seedData.Roles.Keys)

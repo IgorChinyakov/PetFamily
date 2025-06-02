@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using PetFamily.Accounts.Application.Providers;
 using PetFamily.Accounts.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace PetFamily.Accounts.Infrastructure.Authorization.Managers
 {
-    public class RolePermissionManager
+    public class RolePermissionManager : IRolePermissionManager
     {
         private readonly AccountDbContext _accountDbContext;
 

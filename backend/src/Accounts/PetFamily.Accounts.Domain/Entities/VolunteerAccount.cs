@@ -9,6 +9,8 @@ namespace PetFamily.Accounts.Domain.Entities
 {
     public class VolunteerAccount
     {
+        public const string VOLUNTEER = nameof(VOLUNTEER);
+
         public Guid Id { get; set; }
 
         public int Experience { get; set; }
@@ -18,5 +20,22 @@ namespace PetFamily.Accounts.Domain.Entities
         public Guid UserId { get; set; }
 
         public User User { get; set; } = default!;
+
+        //ef core
+        public VolunteerAccount()
+        {
+        }
+
+        public VolunteerAccount(User user, int experience)
+        {
+            //Id = Guid.NewGuid();
+            User = user;
+            Experience = experience;
+        }
+
+        public void UpdateDetails(List<Details> details)
+        {
+            Details = details;
+        }
     }
 }

@@ -25,7 +25,7 @@ namespace PetFamily.Accounts.Domain.Entities
 
         public ParticipantAccount(User user)
         {
-            Id = Guid.NewGuid();
+            //Id = Guid.NewGuid();
             User = user;
         }
     }

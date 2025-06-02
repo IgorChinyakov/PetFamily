@@ -23,7 +23,7 @@ namespace PetFamily.Accounts.Domain.Entities
 
         public AdminAccount(User user)
         {
-            Id = Guid.NewGuid();
+            //Id = Guid.NewGuid();
             User = user;
         }
     }

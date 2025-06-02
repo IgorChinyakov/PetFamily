@@ -9,6 +9,7 @@ namespace PetFamily.Core.Options
     public enum UnitOfWorkKeys
     {
         Volunteers,
-        Species
+        Species,
+        Accounts
     }
 }

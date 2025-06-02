@@ -11,9 +11,10 @@ using PetFamily.Accounts.Infrastructure.Authorization.Managers;
 using PetFamily.Accounts.Infrastructure.Authorization.Seeding;
 using PetFamily.Accounts.Infrastructure.Options;
 using PetFamily.Accounts.Infrastructure.Providers;
+using PetFamily.Core.Abstractions.Database;
+using PetFamily.Core.Options;
 using PetFamily.SharedKernel;
 using System.Text;
-using static CSharpFunctionalExtensions.Result;
 
 namespace PetFamily.Accounts.Infrastructure
 {
@@ -29,6 +30,8 @@ namespace PetFamily.Accounts.Infrastructure
 
             services.AddScoped
                 (_ => new AccountDbContext(configuration.GetConnectionString(Constants.DATABASE)!));
+
+            services.AddKeyedScoped<IUnitOfWork, UnitOfWork>(UnitOfWorkKeys.Accounts);
 
             services
                 .Configure<JwtSettings>(configuration.GetSection(JwtSettings.JwtPath));
@@ -59,8 +62,10 @@ namespace PetFamily.Accounts.Infrastructure
                 .AddDefaultTokenProviders();
 
             services.AddScoped<IPermissionManager, PermissionManager>();
-            services.AddScoped<RolePermissionManager>();
-            services.AddScoped<AdminAccountManager>();
+            services.AddScoped<IRolePermissionManager, RolePermissionManager>();
+            services.AddScoped<IAdminAccountManager, AdminAccountManager>();
+            services.AddScoped<IParticipantAccountManager, ParticipantAccountManager>();
+            services.AddScoped<IVolunteerAccountManager, VolunteerAccountManager>();
 
             return services;
         }

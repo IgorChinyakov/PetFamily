@@ -8,6 +8,8 @@ namespace PetFamily.Core.Options
 {
     public class CleanUpSettings()
     {
+        public const string CLEAN_UP_SETTINGS = "CleanUpSettings";
+
         public int DaysBeforeDeletion { get; set; }
     }
 }

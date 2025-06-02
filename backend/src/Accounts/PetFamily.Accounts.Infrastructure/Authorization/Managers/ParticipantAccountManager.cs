@@ -8,18 +8,18 @@ using System.Threading.Tasks;
 
 namespace PetFamily.Accounts.Infrastructure.Authorization.Managers
 {
-    public class AdminAccountManager : IAdminAccountManager
+    public class ParticipantAccountManager : IParticipantAccountManager
     {
         private readonly AccountDbContext _context;
 
-        public AdminAccountManager(AccountDbContext context)
+        public ParticipantAccountManager(AccountDbContext context)
         {
             _context = context;
         }
 
-        public async Task CreateAdminAccount(AdminAccount adminAccount)
+        public async Task CreateAdminAccount(ParticipantAccount participantAccount)
         {
-            await _context.AdminAccounts.AddAsync(adminAccount);
+            await _context.ParticipantAccounts.AddAsync(participantAccount);
             await _context.SaveChangesAsync();
         }
     }

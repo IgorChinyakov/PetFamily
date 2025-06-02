@@ -48,7 +48,7 @@ namespace PetFamily.Accounts.Domain.Entities
             FullName fullName, 
             Role role)
         {
-            if (role.Name != AdminAccount.ADMIN)
+            if (role.NormalizedName != AdminAccount.ADMIN)
                 return Errors.General.ValueIsInvalid("role");
 
             return new User(userName, email, fullName, role);
@@ -60,10 +60,27 @@ namespace PetFamily.Accounts.Domain.Entities
             FullName fullName,
             Role role)
         {
-            if (role.Name != ParticipantAccount.PARTICIPANT)
+            if (role.NormalizedName != ParticipantAccount.PARTICIPANT)
                 return Errors.General.ValueIsInvalid("role");
 
             return new User(userName, email, fullName, role);
+        }
+
+        public static Result<User, Error> CreateVolunteer(
+            string userName,
+            string email,
+            FullName fullName,
+            Role role)
+        {
+            if (role.NormalizedName != VolunteerAccount.VOLUNTEER)
+                return Errors.General.ValueIsInvalid("role");
+
+            return new User(userName, email, fullName, role);
+        }
+
+        public void UpdateSocialMedia(List<SocialMedia> socialMedia)
+        {
+            SocialMedia = socialMedia;
         }
     }
 }
