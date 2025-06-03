@@ -18,7 +18,7 @@ namespace PetFamily.Files.Infrastructure
         {
             services
                 .AddFilesProvider()
-                .AddBackgroundServices()
+                .AddBackgroundServices(configuration)
                 .AddMinio(configuration);
 
             services
@@ -34,8 +34,12 @@ namespace PetFamily.Files.Infrastructure
             return services;
         }
 
-        private static IServiceCollection AddBackgroundServices(this IServiceCollection services)
+        private static IServiceCollection AddBackgroundServices(
+            this IServiceCollection services, IConfiguration configuration)
         {
+            services.Configure<CleanUpSettings>
+                (configuration.GetSection(CleanUpSettings.CLEAN_UP_SETTINGS));
+
             services.AddHostedService<FilesCleanerBackgroundService>();
 
             return services;

@@ -1,6 +1,10 @@
 ﻿using AutoFixture;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using PetFamily.Accounts.Application.Providers;
+using PetFamily.Accounts.Domain.Entities;
+using PetFamily.Accounts.Infrastructure.Authorization.Managers;
 using PetFamily.Specieses.Application.Database;
 using PetFamily.Specieses.Infrastructure.DbContexts;
 using PetFamily.Volunteers.Application.Database;
@@ -15,6 +19,10 @@ namespace PetFamily.IntegrationTests
         protected readonly VolunteersWriteDbContext VolunteersWriteDbContext;
         protected readonly ISpeciesReadDbContext SpeciesReadDbContext;
         protected readonly IVolunteersReadDbContext VolunteersReadDbContext;
+        protected readonly UserManager<User> UserManager;
+        protected readonly RoleManager<Role> RoleManager;
+        protected readonly IParticipantAccountManager ParticipantAccountManager;
+        protected readonly IVolunteerAccountManager VolunteerAccountManager;
         protected readonly IServiceScope Scope;
         protected readonly IFixture Fixture;
         protected readonly IntegrationTestsWebFactory Factory;
@@ -29,6 +37,10 @@ namespace PetFamily.IntegrationTests
             VolunteersReadDbContext = Scope.ServiceProvider.GetRequiredService<IVolunteersReadDbContext>();
             SpeciesWriteDbContext = Scope.ServiceProvider.GetRequiredService<SpeciesWriteDbContext>();
             VolunteersWriteDbContext = Scope.ServiceProvider.GetRequiredService<VolunteersWriteDbContext>();
+            UserManager = Scope.ServiceProvider.GetRequiredService<UserManager<User>>();
+            RoleManager = Scope.ServiceProvider.GetRequiredService<RoleManager<Role>>();
+            ParticipantAccountManager = Scope.ServiceProvider.GetRequiredService<IParticipantAccountManager>();
+            VolunteerAccountManager = Scope.ServiceProvider.GetRequiredService<IVolunteerAccountManager>();
         }
 
         public Task InitializeAsync() => Task.CompletedTask;
@@ -86,6 +98,32 @@ namespace PetFamily.IntegrationTests
             await VolunteersWriteDbContext.SaveChangesAsync();
 
             return volunteer.Id;
+        }
+
+        public async Task<Guid> SeedParticipantUser()
+        {
+            var role = await RoleManager.FindByNameAsync(ParticipantAccount.PARTICIPANT);
+            var userResult = Fixture.CreateParticipantUser(role!);
+
+            await UserManager.CreateAsync(userResult.Value, userResult.Key);
+
+            var participantAccount = new ParticipantAccount(userResult.Value);
+            await ParticipantAccountManager.CreateAdminAccount(participantAccount);
+
+            return userResult.Value.Id;
+        }
+
+        public async Task<Guid> SeedVolunteerUser()
+        {
+            var role = await RoleManager.FindByNameAsync(VolunteerAccount.VOLUNTEER);
+            var userResult = Fixture.CreateVolunteerUser(role!);
+
+            await UserManager.CreateAsync(userResult.Value, userResult.Key);
+
+            var volunteerAccount = new VolunteerAccount(userResult.Value, 5);
+            await VolunteerAccountManager.CreateVolunteerAccount(volunteerAccount);
+
+            return userResult.Value.Id;
         }
 
         public async Task SeedVolunteers(int count)

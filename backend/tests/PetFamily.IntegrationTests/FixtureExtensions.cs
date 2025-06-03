@@ -1,4 +1,7 @@
 ﻿using AutoFixture;
+using PetFamily.Accounts.Application.Features.UpdateDetails;
+using PetFamily.Accounts.Application.Features.UpdateSocialMedia;
+using PetFamily.Accounts.Domain.Entities;
 using PetFamily.Core.Options;
 using PetFamily.Specieses.Application.Breeds.Commands.Create;
 using PetFamily.Specieses.Application.Breeds.Commands.Delete;
@@ -122,23 +125,23 @@ namespace PetFamily.IntegrationTests
                 .Create();
         }
 
-        //public static UpdateVolunteerDetailsCommand CreateUpdateVolunteerDetailsCommand(
-        //    this IFixture fixture,
-        //    Guid volunteerId)
-        //{
-        //    return fixture.Build<UpdateVolunteerDetailsCommand>()
-        //        .With(d => d.VolunteerId, volunteerId)
-        //        .Create();
-        //}
+        public static UpdateUserSocialMediaCommand CreateUpdateUserSocialMediaCommand(
+            this IFixture fixture,
+            Guid userId)
+        {
+            return fixture.Build<UpdateUserSocialMediaCommand>()
+                .With(d => d.Id, userId)
+                .Create();
+        }
 
-        //public static UpdateVolunteerSocialMediaCommand CreateUpdateVolunteerSocialMediaCommand(
-        //    this IFixture fixture,
-        //    Guid volunteerId)
-        //{
-        //    return fixture.Build<UpdateVolunteerSocialMediaCommand>()
-        //        .With(d => d.Id, volunteerId)
-        //        .Create();
-        //}
+        public static UpdateUserDetailsCommand CreateUpdateUserDetailsCommand(
+            this IFixture fixture,
+            Guid userId)
+        {
+            return fixture.Build<UpdateUserDetailsCommand>()
+                .With(d => d.Id, userId)
+                .Create();
+        }
 
         public static UpdateVolunteerMainInfoCommand CreateUpdateVolunteerMainInfoCommand(
             this IFixture fixture,
@@ -193,6 +196,41 @@ namespace PetFamily.IntegrationTests
                 Description.Create(fixture.Create<string>()).Value,
                 Experience.Create(fixture.Create<int>()).Value,
                 PhoneNumber.Create("89103454545").Value);
+        }
+
+        public static KeyValuePair<string, User> CreateParticipantUser(
+            this IFixture fixture,
+            Role role)
+        {
+            return new KeyValuePair<string, User>(
+                "admin123@A", 
+                User.CreateParticipant(
+                fixture.Create<string>(), 
+                "oojdngjndjg@gmail.com",
+                new PetFamily.Accounts.Domain.ValueObjects.FullName {
+                    Name = fixture.Create<string>(),
+                    SecondName = fixture.Create<string>(),
+                    FamilyName = fixture.Create<string>()
+                },
+                role).Value);
+        }
+
+        public static KeyValuePair<string, User> CreateVolunteerUser(
+            this IFixture fixture,
+            Role role)
+        {
+            return new KeyValuePair<string, User>(
+                "admin123@A",
+                User.CreateVolunteer(
+                fixture.Create<string>(),
+                "qqqqwwrwrrr@gmail.com",
+                new PetFamily.Accounts.Domain.ValueObjects.FullName
+                {
+                    Name = fixture.Create<string>(),
+                    SecondName = fixture.Create<string>(),
+                    FamilyName = fixture.Create<string>()
+                },
+                role).Value);
         }
 
         public static Pet CreatePet(

@@ -22,12 +22,6 @@ namespace PetFamily.SharedKernel
                 return Error.NotFound("record.not.found", $"record not found{forId}", null);
             }
 
-            public static Error ValueIsRequired(string? name = null)
-            {
-                var label = name == null ? " " : " " + name + " ";
-                return Error.Validation("length.is.invalid", $"invalid{label}length", name ?? "value");
-            }
-
             public static Error Conflict(string? name = null)
             {
                 var label = name == null ? "" : name + " ";
@@ -40,7 +34,7 @@ namespace PetFamily.SharedKernel
             }
         }
 
-        public class User
+        public class Authorization
         {
             public static Error InvalidCredentials()
             {

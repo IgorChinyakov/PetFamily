@@ -35,11 +35,11 @@ namespace PetFamily.Accounts.Application.Accounts.Login
         {
             var user = await _userManager.FindByEmailAsync(command.Email);
             if (user == null)
-                return Errors.User.InvalidCredentials().ToErrorsList();
+                return Errors.Authorization.InvalidCredentials().ToErrorsList();
 
             var isValidPassword = await _userManager.CheckPasswordAsync(user, command.Password);
             if (!isValidPassword)
-                return Errors.User.InvalidCredentials().ToErrorsList();
+                return Errors.Authorization.InvalidCredentials().ToErrorsList();
 
             var token = _tokenProvider.GenerateAccessToken(user, cancellationToken);
 

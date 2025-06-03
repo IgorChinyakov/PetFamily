@@ -50,6 +50,12 @@ namespace PetFamily.Accounts.Infrastructure
             modelBuilder
                 .Entity<User>().ToTable("users");
 
+            modelBuilder
+                .Entity<User>()
+                .HasMany(u => u.Roles)
+                .WithMany()
+                .UsingEntity<IdentityUserRole<Guid>>();
+
             modelBuilder.Entity<User>()
                 .Property(u => u.SocialMedia)
                 .HasConversion(
@@ -81,11 +87,6 @@ namespace PetFamily.Accounts.Infrastructure
                     builder.Property(fn => fn.SecondName).HasColumnName("second_name");
                     builder.Property(fn => fn.FamilyName).HasColumnName("family_name");
                 });
-
-            //modelBuilder.Entity<User>()
-            //    .HasOne(u => u.Role)
-            //    .WithMany()
-            //    .HasForeignKey(u => u.RoleId);
 
             modelBuilder.Entity<VolunteerAccount>()
                 .HasOne(u => u.User)

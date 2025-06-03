@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace PetFamily.Volunteers.Contracts.DTOs
+namespace PetFamily.Core.DTOs
 {
     public record SocialMediaDto(string Title, string Link);
 }

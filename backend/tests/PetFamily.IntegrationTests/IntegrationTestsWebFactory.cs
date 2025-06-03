@@ -1,11 +1,15 @@
 ﻿using CSharpFunctionalExtensions;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
 using NSubstitute;
+using PetFamily.Accounts.Infrastructure;
+using PetFamily.Accounts.Infrastructure.Authorization.Seeding;
 using PetFamily.Files.Application;
 using PetFamily.Files.Contracts;
 using PetFamily.Files.Contracts.DTOs;
@@ -41,12 +45,16 @@ namespace PetFamily.IntegrationTests
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
             builder.ConfigureTestServices(ConfigureDefaultServices);
+            builder.UseEnvironment("Testing");
         }
 
         protected virtual void ConfigureDefaultServices(IServiceCollection services)
         {
             var volunteersWriteContext = services.SingleOrDefault(s =>
                 s.ServiceType == typeof(VolunteersWriteDbContext));
+
+            var accountDbContext = services.SingleOrDefault(s =>
+                s.ServiceType == typeof(AccountDbContext));
 
             var speciesWriteContext = services.SingleOrDefault(s =>
                 s.ServiceType == typeof(SpeciesWriteDbContext));
@@ -56,6 +64,9 @@ namespace PetFamily.IntegrationTests
 
             var speciesReadContext = services.SingleOrDefault(s =>
                s.ServiceType == typeof(IVolunteersReadDbContext));
+
+            var accountSeeder = services.SingleOrDefault(s =>
+                s.ServiceType == typeof(AccountsSeeder));
 
             var volunteersCleanerService = services.SingleOrDefault(s =>
                 s.ImplementationType == typeof(DeletedVolunteersCleanerBackgroundService));
@@ -84,6 +95,12 @@ namespace PetFamily.IntegrationTests
             if (volunteersWriteContext is not null)
                 services.Remove(volunteersWriteContext);
 
+            if (accountSeeder is not null)
+                services.Remove(accountSeeder);
+
+            if (accountDbContext is not null)
+                services.Remove(accountDbContext);
+
             if (speciesWriteContext is not null)
                 services.Remove(speciesWriteContext);
 
@@ -95,8 +112,13 @@ namespace PetFamily.IntegrationTests
 
             services.AddSingleton(_ => _filesProviderMock);
 
+            services.AddSingleton<AccountsSeeder>();
+
             services.AddScoped(_ =>
                 new VolunteersWriteDbContext(_dbContainer.GetConnectionString()));
+            
+            services.AddScoped(_ =>
+                new AccountDbContext(_dbContainer.GetConnectionString()));
 
             services.AddScoped(_ =>
                 new SpeciesWriteDbContext(_dbContainer.GetConnectionString()));
@@ -144,6 +166,12 @@ namespace PetFamily.IntegrationTests
 
             var speciesWriteDbContext = scope.ServiceProvider.GetRequiredService<SpeciesWriteDbContext>();
             await speciesWriteDbContext.Database.MigrateAsync();
+
+            var accountDbContext = scope.ServiceProvider.GetRequiredService<AccountDbContext>();
+            await accountDbContext.Database.MigrateAsync();
+
+            var seeder = scope.ServiceProvider.GetRequiredService<AccountsSeeder>();
+            await seeder.SeedAsync();
 
             _dbConnection = new NpgsqlConnection(_dbContainer.GetConnectionString());
             await InitializeRespawner();

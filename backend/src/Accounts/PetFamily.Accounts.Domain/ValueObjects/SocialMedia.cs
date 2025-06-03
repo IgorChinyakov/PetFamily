@@ -1,4 +1,6 @@
-﻿using System;
+﻿using CSharpFunctionalExtensions;
+using PetFamily.SharedKernel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,6 +20,16 @@ namespace PetFamily.Accounts.Domain.ValueObjects
         {
             Title = title;
             Link = link;
+        }
+
+        public static Result<SocialMedia, Error> Create(string title, string link)
+        {
+            if (string.IsNullOrWhiteSpace(title))
+                return Errors.General.ValueIsInvalid("Title");
+            if (string.IsNullOrWhiteSpace(link))
+                return Errors.General.ValueIsInvalid("Link");
+
+            return new SocialMedia(title, link);
         }
     }
 }

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using PetFamily.Accounts.Infrastructure;
 using PetFamily.Core.Options;
 using PetFamily.Framework;
 using PetFamily.Web;
@@ -9,10 +10,13 @@ using Serilog;
 using Serilog.Events;
 using SwaggerThemes;
 
+DotNetEnv.Env.Load();
 var builder = WebApplication.CreateBuilder(args);
 
+//для тестов
+builder.Configuration.AddUserSecrets(typeof(Program).Assembly);
+
 Log.Logger = new LoggerConfiguration()
-    //.MinimumLevel.Warning()
     .WriteTo.Console()
     .WriteTo.Debug()
     .WriteTo.Seq(builder.Configuration.GetConnectionString("Seq") ?? throw new ArgumentNullException("Seq"))
@@ -20,7 +24,6 @@ Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Override("Microsoft.AspNetCore.Mvc", LogEventLevel.Warning)
     .MinimumLevel.Override("Microsoft.AspNetCore.Routing", LogEventLevel.Warning)
     .CreateLogger();
-
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -59,9 +62,6 @@ builder.Services.AddSwaggerGen(options =>
 
 builder.Services.AddSerilog();
 
-builder.Services.Configure<CleanUpSettings>
-    (builder.Configuration.GetSection("CleanUpSettings"));
-
 builder.Services
     .AddFilesModule(builder.Configuration);
 
@@ -79,14 +79,14 @@ builder.Services
 
 var app = builder.Build();
 
-await app.ExecuteSeeder();
-
 app.UseExceptionMiddleware();
 
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI(Theme.NordDark);
+
+    await app.ExecuteSeeder();
 }
 
 app.UseSerilogRequestLogging();
