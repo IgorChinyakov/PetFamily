@@ -8,10 +8,12 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="8.0.15" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.1.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Shared\PetFamily.Core\PetFamily.Core.csproj" />
+    <ProjectReference Include="..\PetFamily.Accounts.Contracts\PetFamily.Accounts.Contracts.csproj" />
     <ProjectReference Include="..\PetFamily.Accounts.Domain\PetFamily.Accounts.Domain.csproj" />
   </ItemGroup>
 

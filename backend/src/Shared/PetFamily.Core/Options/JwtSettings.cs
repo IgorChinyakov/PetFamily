@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PetFamily.Accounts.Infrastructure.Options
+namespace PetFamily.Core.Options
 {
     public class JwtSettings
     {

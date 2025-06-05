@@ -46,6 +46,16 @@ namespace PetFamily.SharedKernel
                 var label = id == null ? "User " : $"User with {id} ";
                 return Error.AccessDenied("inappropriate.role", $"{label}has inappropriate role");
             }
+
+            public static Error ExpiredToken()
+            {
+                return Error.Validation("token.is.expired", $"Your token is expired");
+            }
+
+            public static Error InvalidToken()
+            {
+                return Error.Validation("token.is.invalid", $"Your token is invalid");
+            }
         }
     }
 }
