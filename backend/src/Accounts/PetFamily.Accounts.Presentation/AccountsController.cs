@@ -1,18 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PetFamily.Accounts.Application.Accounts.Login;
+using PetFamily.Accounts.Application.Accounts.RefreshTokens;
 using PetFamily.Accounts.Application.Accounts.Register;
 using PetFamily.Accounts.Application.Features.UpdateDetails;
 using PetFamily.Accounts.Application.Features.UpdateSocialMedia;
 using PetFamily.Accounts.Contracts.Requests;
+using PetFamily.Accounts.Contracts.Responses;
 using PetFamily.Core.Abstractions;
 using PetFamily.Core.Models;
 using PetFamily.Framework;
 using PetFamily.Framework.Authorization;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PetFamily.Accounts.Presentation
 {
@@ -37,17 +34,34 @@ namespace PetFamily.Accounts.Presentation
             return Ok(Envelope.Ok());
         }
 
+        [HttpPost("refresh")]
+        public async Task<ActionResult> Refresh(
+            [FromBody] RefreshTokensRequest request,
+            [FromServices] ICommandHandler<LoginResponse, RefreshTokensCommand> handler)
+        {
+            var result = await handler
+                .Handle(new RefreshTokensCommand(request.AccessToken, request.RefreshToken));
+            if (result.IsFailure)
+                return result.Error.ToResponse();
+
+            Response.Cookies.Append("refreshToken", result.Value.RefreshToken.ToString());
+
+            return Ok(Envelope.Ok(result.Value.AccessToken));
+        }
+
         [HttpPost("login")]
         public async Task<ActionResult> Login(
             [FromBody] LoginUserRequest request,
-            [FromServices] ICommandHandler<string, LoginUserCommand> handler)
+            [FromServices] ICommandHandler<LoginResponse, LoginUserCommand> handler)
         {
             var result = await handler
                 .Handle(new LoginUserCommand(request.Email, request.Password));
             if (result.IsFailure)
                 return result.Error.ToResponse();
 
-            return Ok(Envelope.Ok(result.Value));
+            Response.Cookies.Append("refreshToken", result.Value.RefreshToken.ToString());
+
+            return Ok(Envelope.Ok(result.Value.AccessToken));
         }
 
         [Permission(Permissions.UPDATE)]

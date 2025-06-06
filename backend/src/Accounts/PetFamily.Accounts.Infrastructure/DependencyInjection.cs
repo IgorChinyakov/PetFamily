@@ -62,6 +62,7 @@ namespace PetFamily.Accounts.Infrastructure
                 .AddDefaultTokenProviders();
 
             services.AddScoped<IPermissionManager, PermissionManager>();
+            services.AddScoped<IRefreshSessionManager, RefreshSessionManager>();
             services.AddScoped<IRolePermissionManager, RolePermissionManager>();
             services.AddScoped<IAdminAccountManager, AdminAccountManager>();
             services.AddScoped<IParticipantAccountManager, ParticipantAccountManager>();

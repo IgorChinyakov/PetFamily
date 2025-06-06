@@ -36,6 +36,8 @@ namespace PetFamily.Accounts.Infrastructure
 
         public DbSet<RolePermission> RolePermissions => Set<RolePermission>();
 
+        public DbSet<RefreshSession> RefreshSessions => Set<RefreshSession>();
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseNpgsql(_connectionString);
@@ -114,6 +116,19 @@ namespace PetFamily.Accounts.Infrastructure
                         c => c.ToList()))
                 .HasColumnName("favorite_pets")
                 .HasColumnType("Jsonb");
+
+            modelBuilder
+                .Entity<RefreshSession>().ToTable("refresh_sessions");
+
+            modelBuilder
+                .Entity<RefreshSession>()
+                .HasKey(rs => rs.Id);
+
+            modelBuilder
+                .Entity<RefreshSession>()
+                .HasOne(rs => rs.User)
+                .WithMany()
+                .HasForeignKey(rs => rs.UserId);
 
             modelBuilder
                 .Entity<Role>().ToTable("roles");
