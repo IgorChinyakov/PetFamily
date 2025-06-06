@@ -108,7 +108,7 @@ namespace PetFamily.IntegrationTests
             await UserManager.CreateAsync(userResult.Value, userResult.Key);
 
             var participantAccount = new ParticipantAccount(userResult.Value);
-            await ParticipantAccountManager.CreateAdminAccount(participantAccount);
+            await ParticipantAccountManager.CreateParticipantAccount(participantAccount);
 
             return userResult.Value.Id;
         }

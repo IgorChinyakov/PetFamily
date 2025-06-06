@@ -14,7 +14,7 @@ DotNetEnv.Env.Load();
 var builder = WebApplication.CreateBuilder(args);
 
 //для тестов
-//builder.Configuration.AddUserSecrets(typeof(Program).Assembly);
+builder.Configuration.AddUserSecrets(typeof(Program).Assembly);
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()

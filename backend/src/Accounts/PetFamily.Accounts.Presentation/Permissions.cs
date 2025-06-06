@@ -10,6 +10,7 @@ namespace PetFamily.Accounts.Presentation
     public class Permissions
     {
         public const string UPDATE = "accounts.update";
+        public const string GET = "accounts.get";
 
         public class VolunteerAccount
         {
