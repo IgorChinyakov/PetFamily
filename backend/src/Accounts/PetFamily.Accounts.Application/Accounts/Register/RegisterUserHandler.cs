@@ -71,7 +71,7 @@ namespace PetFamily.Accounts.Application.Accounts.Register
             }
 
             var participantAccount = new ParticipantAccount(userResult.Value);
-            await _participantAccountManager.CreateAdminAccount(participantAccount);
+            await _participantAccountManager.CreateParticipantAccount(participantAccount);
 
             _logger.LogInformation("User with username: {UserName} has been created", command.UserName);
 
