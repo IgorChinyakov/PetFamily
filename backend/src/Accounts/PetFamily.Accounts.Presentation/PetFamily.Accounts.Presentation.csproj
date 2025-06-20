@@ -6,6 +6,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+	<ItemGroup>
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.1" />
+	</ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\..\Shared\PetFamily.Core\PetFamily.Core.csproj" />
     <ProjectReference Include="..\..\Shared\PetFamily.Framework\PetFamily.Framework.csproj" />

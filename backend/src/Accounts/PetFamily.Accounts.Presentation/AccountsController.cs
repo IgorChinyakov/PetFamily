@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PetFamily.Accounts.Application.Accounts.GetAccountsData;
 using PetFamily.Accounts.Application.Accounts.Login;
 using PetFamily.Accounts.Application.Accounts.RefreshTokens;
 using PetFamily.Accounts.Application.Accounts.Register;
@@ -73,6 +74,22 @@ namespace PetFamily.Accounts.Presentation
             CancellationToken token = default)
         {
             var command = new UpdateUserSocialMediaCommand(id, request.SocialMedia);
+
+            var result = await handler.Handle(command, token);
+            if (result.IsFailure)
+                return result.Error.ToResponse();
+
+            return Ok(Envelope.Ok(result.Value));
+        }
+
+        [Permission(Permissions.GET)]
+        [HttpGet("{id:guid}/accounts-data")]
+        public async Task<ActionResult> GetAccountsData(
+            [FromServices] ICommandHandler<AccountsDataResponse, GetUserAccountsDataCommand> handler,
+            [FromRoute] Guid id,
+            CancellationToken token = default)
+        {
+            var command = new GetUserAccountsDataCommand(id);
 
             var result = await handler.Handle(command, token);
             if (result.IsFailure)

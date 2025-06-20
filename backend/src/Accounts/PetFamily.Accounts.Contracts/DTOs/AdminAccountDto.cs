@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PetFamily.Accounts.Contracts.Responses
+namespace PetFamily.Accounts.Contracts.DTOs
 {
-    public record LoginResponse(string AccessToken, Guid RefreshToken);
+    public record AdminAccountDto(
+        Guid Id,
+        Guid UserId);
 }

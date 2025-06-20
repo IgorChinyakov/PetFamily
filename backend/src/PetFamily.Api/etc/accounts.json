@@ -17,11 +17,13 @@
       "species.create.breed",
       "species.update.breed",
       "species.get.breed",
-      "accounts.update"
+      "accounts.update",
+      "accounts.get"
     ],
     "Participant": [
       "volunteers.get.pet",
-      "accounts.update"
+      "accounts.update",
+      "accounts.get"
     ],
     "Volunteer": [
       "volunteers.create",
@@ -32,7 +34,8 @@
       "volunteers.update.pet",
       "volunteers.get.pet",
       "volunteers.delete.pet",
-      "accounts.volunteer.update"
+      "accounts.volunteer.update",
+      "accounts.get"
     ]
   },
   "Permissions": {
@@ -58,7 +61,8 @@
     ],
     "Accounts": [
       "accounts.update",
-      "accounts.volunteer.update"
+      "accounts.volunteer.update",
+      "accounts.get"
     ]
   }
 }

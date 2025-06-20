@@ -4,6 +4,8 @@ namespace PetFamily.Accounts.Application.Providers
 {
     public interface IParticipantAccountManager
     {
-        Task CreateAdminAccount(ParticipantAccount participantAccount);
+        Task CreateParticipantAccount(ParticipantAccount participantAccount);
+
+        Task<ParticipantAccount?> FindAccountByUserId(Guid userId);
     }
 }
