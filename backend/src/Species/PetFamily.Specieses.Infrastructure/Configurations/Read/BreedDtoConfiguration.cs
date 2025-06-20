@@ -11,7 +11,10 @@ namespace PetFamily.Specieses.Infrastructure.Configurations.Read
         {
             builder.ToTable("breeds");
 
-            builder.HasKey(x => x.Id);
+            builder.HasKey(x => x.Id).HasName("pk_breeds");
+
+            builder.Property(s => s.Id)
+                .HasColumnName("breed_id");
         }
     }
 }

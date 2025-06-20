@@ -75,6 +75,9 @@ builder.Services
     .AddAccountsModule(builder.Configuration);
 
 builder.Services
+    .AddVolunteerRequestsModule(builder.Configuration);
+
+builder.Services
     .AddFramework();
 
 var app = builder.Build();

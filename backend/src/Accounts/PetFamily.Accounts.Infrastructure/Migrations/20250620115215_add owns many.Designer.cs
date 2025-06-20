@@ -13,8 +13,8 @@ using PetFamily.Accounts.Infrastructure;
 namespace PetFamily.Accounts.Infrastructure.Migrations
 {
     [DbContext(typeof(AccountDbContext))]
-    [Migration("20250602140240_admin_manager")]
-    partial class admin_manager
+    [Migration("20250620115215_add owns many")]
+    partial class addownsmany
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -226,6 +226,42 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
                     b.ToTable("permissions", "accounts");
                 });
 
+            modelBuilder.Entity("PetFamily.Accounts.Domain.Entities.RefreshSession", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<DateTime>("ExpiresIn")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("expires_in");
+
+                    b.Property<Guid>("Jti")
+                        .HasColumnType("uuid")
+                        .HasColumnName("jti");
+
+                    b.Property<Guid>("RefreshToken")
+                        .HasColumnType("uuid")
+                        .HasColumnName("refresh_token");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_refresh_sessions");
+
+                    b.HasIndex("UserId")
+                        .HasDatabaseName("ix_refresh_sessions_user_id");
+
+                    b.ToTable("refresh_sessions", "accounts");
+                });
+
             modelBuilder.Entity("PetFamily.Accounts.Domain.Entities.Role", b =>
                 {
                     b.Property<Guid>("Id")
@@ -341,11 +377,6 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
                         .HasColumnType("text")
                         .HasColumnName("security_stamp");
 
-                    b.Property<string>("SocialMedia")
-                        .IsRequired()
-                        .HasColumnType("Jsonb")
-                        .HasColumnName("social_media");
-
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("boolean")
                         .HasColumnName("two_factor_enabled");
@@ -394,11 +425,6 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("id");
-
-                    b.Property<string>("Details")
-                        .IsRequired()
-                        .HasColumnType("Jsonb")
-                        .HasColumnName("details");
 
                     b.Property<int>("Experience")
                         .HasColumnType("integer")
@@ -499,6 +525,18 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("PetFamily.Accounts.Domain.Entities.RefreshSession", b =>
+                {
+                    b.HasOne("PetFamily.Accounts.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_refresh_sessions_users_user_id");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("PetFamily.Accounts.Domain.Entities.RolePermission", b =>
                 {
                     b.HasOne("PetFamily.Accounts.Domain.Entities.Permission", "Permission")
@@ -520,6 +558,44 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
                     b.Navigation("Role");
                 });
 
+            modelBuilder.Entity("PetFamily.Accounts.Domain.Entities.User", b =>
+                {
+                    b.OwnsMany("PetFamily.Accounts.Domain.ValueObjects.SocialMedia", "SocialMedia", b1 =>
+                        {
+                            b1.Property<Guid>("UserId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<int>("__synthesizedOrdinal")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("integer");
+
+                            b1.Property<string>("Link")
+                                .IsRequired()
+                                .HasMaxLength(2000)
+                                .HasColumnType("character varying(2000)")
+                                .HasColumnName("link");
+
+                            b1.Property<string>("Title")
+                                .IsRequired()
+                                .HasMaxLength(100)
+                                .HasColumnType("character varying(100)")
+                                .HasColumnName("title");
+
+                            b1.HasKey("UserId", "__synthesizedOrdinal")
+                                .HasName("pk_users");
+
+                            b1.ToTable("users", "accounts");
+
+                            b1.ToJson("social_media");
+
+                            b1.WithOwner()
+                                .HasForeignKey("UserId")
+                                .HasConstraintName("fk_users_users_user_id");
+                        });
+
+                    b.Navigation("SocialMedia");
+                });
+
             modelBuilder.Entity("PetFamily.Accounts.Domain.Entities.VolunteerAccount", b =>
                 {
                     b.HasOne("PetFamily.Accounts.Domain.Entities.User", "User")
@@ -528,6 +604,41 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_volunteer_accounts_users_user_id");
+
+                    b.OwnsMany("PetFamily.Accounts.Domain.ValueObjects.Details", "Details", b1 =>
+                        {
+                            b1.Property<Guid>("VolunteerAccountId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<int>("__synthesizedOrdinal")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("integer");
+
+                            b1.Property<string>("Description")
+                                .IsRequired()
+                                .HasMaxLength(2000)
+                                .HasColumnType("character varying(2000)")
+                                .HasColumnName("description");
+
+                            b1.Property<string>("Title")
+                                .IsRequired()
+                                .HasMaxLength(100)
+                                .HasColumnType("character varying(100)")
+                                .HasColumnName("title");
+
+                            b1.HasKey("VolunteerAccountId", "__synthesizedOrdinal")
+                                .HasName("pk_volunteer_accounts");
+
+                            b1.ToTable("volunteer_accounts", "accounts");
+
+                            b1.ToJson("details_list");
+
+                            b1.WithOwner()
+                                .HasForeignKey("VolunteerAccountId")
+                                .HasConstraintName("fk_volunteer_accounts_volunteer_accounts_volunteer_account_id");
+                        });
+
+                    b.Navigation("Details");
 
                     b.Navigation("User");
                 });

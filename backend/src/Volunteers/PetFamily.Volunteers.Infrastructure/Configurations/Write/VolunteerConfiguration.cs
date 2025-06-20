@@ -14,7 +14,9 @@ namespace PetFamily.Volunteers.Infrastructure.Configurations.Write
         {
             builder.ToTable("volunteers");
 
-            builder.HasKey(v => v.Id);
+            builder.HasKey(v => v.Id).HasName("pk_volunteers");
+
+            builder.Property(p => p.Id).HasColumnName("volunteer_id");
 
             builder.HasMany(v => v.Pets)
                 .WithOne()

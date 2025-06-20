@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace PetFamily.Volunteers.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class useownsmany : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -19,7 +19,7 @@ namespace PetFamily.Volunteers.Infrastructure.Migrations
                 schema: "pet_management",
                 columns: table => new
                 {
-                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    volunteer_id = table.Column<Guid>(type: "uuid", nullable: false),
                     description = table.Column<string>(type: "character varying(1500)", maxLength: 1500, nullable: false),
                     email = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     experience = table.Column<int>(type: "integer", nullable: false),
@@ -32,7 +32,7 @@ namespace PetFamily.Volunteers.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_volunteers", x => x.id);
+                    table.PrimaryKey("pk_volunteers", x => x.volunteer_id);
                 });
 
             migrationBuilder.CreateTable(
@@ -40,10 +40,9 @@ namespace PetFamily.Volunteers.Infrastructure.Migrations
                 schema: "pet_management",
                 columns: table => new
                 {
-                    id = table.Column<Guid>(type: "uuid", nullable: false),
-                    species_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    breed_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    details = table.Column<string>(type: "Jsonb", nullable: false),
+                    pet_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    SpeciesId = table.Column<Guid>(type: "uuid", nullable: false),
+                    BreedId = table.Column<Guid>(type: "uuid", nullable: false),
                     file_paths = table.Column<string>(type: "Jsonb", nullable: false),
                     volunteer_id = table.Column<Guid>(type: "uuid", nullable: false),
                     apartment = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
@@ -64,22 +63,23 @@ namespace PetFamily.Volunteers.Infrastructure.Migrations
                     position = table.Column<int>(type: "integer", nullable: false),
                     weight = table.Column<float>(type: "real", nullable: false),
                     is_deleted = table.Column<bool>(type: "boolean", nullable: false),
-                    deletion_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    deletion_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    DetailsList = table.Column<string>(type: "jsonb", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_pets", x => x.id);
+                    table.PrimaryKey("pk_pets", x => x.pet_id);
                     table.ForeignKey(
-                        name: "fk_pets_volunteers_volunteer_id",
+                        name: "FK_pets_volunteers_volunteer_id",
                         column: x => x.volunteer_id,
                         principalSchema: "pet_management",
                         principalTable: "volunteers",
-                        principalColumn: "id",
+                        principalColumn: "volunteer_id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "ix_pets_volunteer_id",
+                name: "IX_pets_volunteer_id",
                 schema: "pet_management",
                 table: "pets",
                 column: "volunteer_id");
