@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using PetFamily.Accounts.Domain.Entities;
 using PetFamily.Accounts.Domain.ValueObjects;
 using PetFamily.Core.Extensions;
+using PetFamily.SharedKernel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,7 +42,6 @@ namespace PetFamily.Accounts.Infrastructure
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseNpgsql(_connectionString);
-            optionsBuilder.UseSnakeCaseNamingConvention();
             optionsBuilder.UseLoggerFactory(CreateLoggerFactory());
         }
 
@@ -59,28 +59,36 @@ namespace PetFamily.Accounts.Infrastructure
                 .UsingEntity<IdentityUserRole<Guid>>();
 
             modelBuilder.Entity<User>()
-                .Property(u => u.SocialMedia)
-                .HasConversion(
-                    socialMedia => JsonSerializer.Serialize(socialMedia, JsonSerializerOptions.Default),
-                    json => JsonSerializer.Deserialize<List<SocialMedia>>(json, JsonSerializerOptions.Default)!,
-                   new ValueComparer<List<SocialMedia>>(
-                        (c1, c2) => c1!.SequenceEqual(c2!),
-                        c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v!.GetHashCode())),
-                        c => c.ToList()))
-                .HasColumnName("social_media")
-                .HasColumnType("Jsonb");
+                .OwnsMany(u => u.SocialMedia, vb =>
+                {
+                    vb.ToJson("social_media");
+
+                    vb.Property(d => d.Title)
+                        .IsRequired()
+                        .HasMaxLength(Constants.MAX_LOW_TITLE_LENGTH)
+                        .HasColumnName("title");
+
+                    vb.Property(d => d.Link)
+                        .IsRequired()
+                        .HasMaxLength(Constants.MAX_HIGH_TITLE_LENGTH)
+                        .HasColumnName("link");
+                });
 
             modelBuilder.Entity<VolunteerAccount>()
-                .Property(u => u.Details)
-                .HasConversion(
-                    details => JsonSerializer.Serialize(details, JsonSerializerOptions.Default),
-                    json => JsonSerializer.Deserialize<List<Details>>(json, JsonSerializerOptions.Default)!,
-                   new ValueComparer<List<Details>>(
-                        (c1, c2) => c1!.SequenceEqual(c2!),
-                        c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v!.GetHashCode())),
-                        c => c.ToList()))
-                .HasColumnName("details")
-                .HasColumnType("Jsonb");
+                .OwnsMany(u => u.Details, vb =>
+                {
+                    vb.ToJson("details_list");
+
+                    vb.Property(d => d.Title)
+                        .IsRequired()
+                        .HasMaxLength(Constants.MAX_LOW_TITLE_LENGTH)
+                        .HasColumnName("title");
+
+                    vb.Property(d => d.Description)
+                        .IsRequired()
+                        .HasMaxLength(Constants.MAX_HIGH_TITLE_LENGTH)
+                        .HasColumnName("description");
+                });
 
             modelBuilder.Entity<User>()
                 .ComplexProperty(u => u.FullName, builder =>

@@ -9,6 +9,7 @@ using PetFamily.Files.Presentation;
 using PetFamily.Accounts.Application;
 using PetFamily.Accounts.Infrastructure;
 using PetFamily.Accounts.Presentation;
+using PetFamily.VolunteerRequests.Infrastructure;
 
 namespace PetFamily.Web
 {
@@ -53,6 +54,15 @@ namespace PetFamily.Web
                 .AddAccountsInfrastructure(configuration)
                 .AddAccountsApplication()
                 .AddAccountsContracts();
+
+            return services;
+        }
+
+        public static IServiceCollection AddVolunteerRequestsModule(
+            this IServiceCollection services, IConfiguration configuration)
+        {
+            services
+                .AddVolunteerRequestsInfrastructure(configuration);
 
             return services;
         }

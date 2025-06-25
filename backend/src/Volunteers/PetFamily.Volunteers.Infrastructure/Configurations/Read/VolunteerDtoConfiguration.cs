@@ -12,7 +12,9 @@ namespace PetFamily.Volunteers.Infrastructure.Configurations.Read
         {
             builder.ToTable("volunteers");
 
-            builder.HasKey(v => v.Id);
+            builder.HasKey(v => v.Id).HasName("pk_volunteers");
+
+            builder.Property(p => p.Id).HasColumnName("volunteer_id");
 
             builder.ComplexProperty(v => v.FullName, b =>
             {

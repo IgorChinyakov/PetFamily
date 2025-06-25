@@ -11,7 +11,10 @@ namespace PetFamily.Specieses.Infrastructure.Configurations.Write
         {
             builder.ToTable("species");
 
-            builder.HasKey(s => s.Id);
+            builder.HasKey(s => s.Id).HasName("pk_species");
+
+            builder.Property(s => s.Id)
+                .HasColumnName("species_id");
 
             builder.HasMany(s => s.Breeds)
                 .WithOne()

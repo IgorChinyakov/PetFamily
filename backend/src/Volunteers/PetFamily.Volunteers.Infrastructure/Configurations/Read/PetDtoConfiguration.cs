@@ -12,7 +12,13 @@ namespace PetFamily.Volunteers.Infrastructure.Configurations.Read
         {
             builder.ToTable("pets");
 
-            builder.HasKey(p => p.Id);
+            builder.HasKey(p => p.Id).HasName("pk_pets");
+
+            builder.Property(p => p.Id).HasColumnName("pet_id");
+
+            builder.Property(p => p.BreedId).HasColumnName("breed_id");
+
+            builder.Property(p => p.SpeciesId).HasColumnName("species_id");
 
             builder.Property(p => p.Files)
                 .HasConversion(
@@ -24,7 +30,7 @@ namespace PetFamily.Volunteers.Infrastructure.Configurations.Read
                 .HasConversion(
                      files => JsonSerializer.Serialize(string.Empty, JsonSerializerOptions.Default),
                      json => JsonSerializer.Deserialize<DetailsDto[]>(json, JsonSerializerOptions.Default)!)
-                .HasColumnName("details");
+                .HasColumnName("details_list");
 
             builder.ComplexProperty(p => p.Address, b =>
             {
