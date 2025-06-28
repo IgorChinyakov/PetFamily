@@ -78,6 +78,9 @@ builder.Services
     .AddVolunteerRequestsModule(builder.Configuration);
 
 builder.Services
+    .AddDiscussionsModule(builder.Configuration);
+
+builder.Services
     .AddFramework();
 
 var app = builder.Build();
