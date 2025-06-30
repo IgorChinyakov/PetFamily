@@ -66,5 +66,14 @@ namespace PetFamily.Web
 
             return services;
         }
+
+        public static IServiceCollection AddDiscussionsModule(
+            this IServiceCollection services, IConfiguration configuration)
+        {
+            services
+                .AddDiscussionsInfrastructure(configuration);
+
+            return services;
+        }
     }
 }

@@ -71,7 +71,7 @@ namespace PetFamily.VolunteerRequests.Infrastructure.Configurations.Write
                     .HasColumnName("creation_date");
             });
 
-            builder.ComplexProperty(vr => vr.RequestStatus, static sb =>
+            builder.ComplexProperty(vr => vr.RequestStatus, sb =>
             {
                 sb.Property(rs => rs.Value)
                     .HasConversion(s => s.ToString(), s => ConvertToStatus(s))
