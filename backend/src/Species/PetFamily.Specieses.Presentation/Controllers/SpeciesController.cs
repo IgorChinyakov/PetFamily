@@ -15,7 +15,7 @@ using PetFamily.Specieses.Contracts.DTOs;
 using PetFamily.Specieses.Contracts.Requests.Breeds;
 using PetFamily.Specieses.Contracts.Requests.Species;
 
-namespace PetFamily.Specieses.Presentation
+namespace PetFamily.Specieses.Presentation.Controllers
 {
     public class SpeciesController : ApplicationController
     {

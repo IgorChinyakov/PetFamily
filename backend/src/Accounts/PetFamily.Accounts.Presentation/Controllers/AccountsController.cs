@@ -12,7 +12,7 @@ using PetFamily.Core.Models;
 using PetFamily.Framework;
 using PetFamily.Framework.Authorization;
 
-namespace PetFamily.Accounts.Presentation
+namespace PetFamily.Accounts.Presentation.Controllers
 {
     public class AccountsController : ApplicationController
     {
@@ -23,9 +23,9 @@ namespace PetFamily.Accounts.Presentation
         {
             var result = await handler
                 .Handle(new RegisterUserCommand(
-                    request.Email, 
-                    request.Password, 
-                    request.UserName, 
+                    request.Email,
+                    request.Password,
+                    request.UserName,
                     request.FirstName,
                     request.SecondName,
                     request.LastName));

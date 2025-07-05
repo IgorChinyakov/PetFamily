@@ -8,7 +8,7 @@ using PetFamily.Volunteers.Application.Pets.Queries.GetFilteredWithPagiation;
 using PetFamily.Volunteers.Contracts.DTOs;
 using PetFamily.Volunteers.Contracts.Requests.Pets;
 
-namespace PetFamily.Volunteers.Presentation
+namespace PetFamily.Volunteers.Presentation.Controllers
 {
     public class PetsController : ApplicationController
     {

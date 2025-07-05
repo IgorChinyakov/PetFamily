@@ -24,8 +24,8 @@ namespace PetFamily.VolunteerRequests.Infrastructure
         private static IServiceCollection AddDbContexts(
            this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddScoped<VolunteerRequestsDbContext>(_ =>
-                new VolunteerRequestsDbContext(configuration.GetConnectionString(Constants.DATABASE)!));
+            services.AddScoped<VolunteerRequestsWriteDbContext>(_ =>
+                new VolunteerRequestsWriteDbContext(configuration.GetConnectionString(Constants.DATABASE)!));
 
             return services;
         }

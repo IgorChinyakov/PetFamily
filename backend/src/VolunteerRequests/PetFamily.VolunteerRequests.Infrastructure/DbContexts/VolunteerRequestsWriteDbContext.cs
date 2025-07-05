@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace PetFamily.VolunteerRequests.Infrastructure.DbContexts
 {
-    public class VolunteerRequestsDbContext : DbContext
+    public class VolunteerRequestsWriteDbContext : DbContext
     {
         private readonly string _connectionString;
 
-        public VolunteerRequestsDbContext(string ConnectionString)
+        public VolunteerRequestsWriteDbContext(string ConnectionString)
         {
             _connectionString = ConnectionString;
         }
@@ -29,7 +29,7 @@ namespace PetFamily.VolunteerRequests.Infrastructure.DbContexts
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(
-                typeof(VolunteerRequestsDbContext).Assembly,
+                typeof(VolunteerRequestsWriteDbContext).Assembly,
                 type => type.FullName?.Contains("Configurations.Write") ?? false);
 
             modelBuilder.HasDefaultSchema("volunteer_requests");

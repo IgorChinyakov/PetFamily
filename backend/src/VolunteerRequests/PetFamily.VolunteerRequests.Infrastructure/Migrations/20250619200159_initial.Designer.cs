@@ -12,7 +12,7 @@ using PetFamily.VolunteerRequests.Infrastructure.DbContexts;
 
 namespace PetFamily.VolunteerRequests.Infrastructure.Migrations
 {
-    [DbContext(typeof(VolunteerRequestsDbContext))]
+    [DbContext(typeof(VolunteerRequestsWriteDbContext))]
     [Migration("20250619200159_initial")]
     partial class initial
     {

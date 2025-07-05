@@ -22,7 +22,7 @@ using PetFamily.Volunteers.Contracts.DTOs;
 using PetFamily.Volunteers.Contracts.Requests.Pets;
 using PetFamily.Volunteers.Contracts.Requests.Volunteers;
 
-namespace PetFamily.Volunteers.Presentation
+namespace PetFamily.Volunteers.Presentation.Controllers
 {
     public class VolunteersController : ApplicationController
     {
@@ -33,7 +33,7 @@ namespace PetFamily.Volunteers.Presentation
         public async Task<ActionResult> Get(
             [FromQuery] GetVolunteersWithPaginationRequest request,
             [FromServices] IQueryHandler<
-                PagedList<VolunteerDto>, 
+                PagedList<VolunteerDto>,
                 GetVolunteersWithPaginationQuery> handler,
             CancellationToken token = default)
         {
@@ -103,11 +103,11 @@ namespace PetFamily.Volunteers.Presentation
             CancellationToken token = default)
         {
             var command = new UpdateVolunteerMainInfoCommand(
-                volunteerId, 
-                request.FullName, 
-                request.Email, 
-                request.Description, 
-                request.Experience, 
+                volunteerId,
+                request.FullName,
+                request.Email,
+                request.Description,
+                request.Experience,
                 request.PhoneNumber);
 
             var result = await handler.Handle(command, token);
@@ -177,19 +177,19 @@ namespace PetFamily.Volunteers.Presentation
             CancellationToken token = default)
         {
             var command = new CreatePetCommand(
-                volunteerId, 
-                request.NickName, 
-                request.Description, 
-                request.SpeciesId, 
-                request.BreedId, 
-                request.Color, 
-                request.IsSterilized, 
-                request.IsVaccinated, 
-                request.HealthInformation, 
-                request.Address, 
-                request.Weight, 
-                request.Height, 
-                request.Birthday, 
+                volunteerId,
+                request.NickName,
+                request.Description,
+                request.SpeciesId,
+                request.BreedId,
+                request.Color,
+                request.IsSterilized,
+                request.IsVaccinated,
+                request.HealthInformation,
+                request.Address,
+                request.Weight,
+                request.Height,
+                request.Birthday,
                 request.PetStatus,
                 request.Details);
 
@@ -213,9 +213,9 @@ namespace PetFamily.Volunteers.Presentation
             await using var processor = new FormFileProcessor();
             var fileDtos = processor.Process(files);
             var command = new UploadPetPhotosCommand(
-                fileDtos, 
-                volunteerId, 
-                petId, 
+                fileDtos,
+                volunteerId,
+                petId,
                 BUCKET_NAME);
 
             var result = await handler.Handle(command, token);
@@ -305,9 +305,9 @@ namespace PetFamily.Volunteers.Presentation
             CancellationToken token = default)
         {
             var command = new DeletePetCommand(
-                volunteerId, 
-                petId, 
-                options, 
+                volunteerId,
+                petId,
+                options,
                 BUCKET_NAME);
 
             var result = await handler.Handle(command, token);
