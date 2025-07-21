@@ -30,6 +30,25 @@ namespace PetFamily.VolunteerRequests.Presentation.Controllers
             return Ok(Envelope.Ok(result.Value));
         }
         [Permission(Permissions.VolunteerRequest.UPDATE_STATUS)]
+        [HttpPut("{requestId:guid}/on-revision")]
+        public async Task<ActionResult> SendOnRevision(
+            [FromServices] ICommandHandler<SendRequestForRevisionCommand> handler,
+            [FromRoute] Guid requestId,
+            [FromBody] SendRequestOnRevisionRequest request)
+        {
+            var command = new SendRequestForRevisionCommand(
+                requestId,
+                GetUserId().Value,
+                request.rejectionComment);
+
+            var result = await handler.Handle(command);
+            if (result.IsFailure)
+                return result.Error.ToResponse();
+
+            return Ok(Envelope.Ok());
+        }
+
+        [Permission(Permissions.VolunteerRequest.UPDATE_STATUS)]
         [HttpPut("{requestId:guid}/rejection")]
         public async Task<ActionResult> Reject(
             [FromServices] ICommandHandler<RejectRequestCommand> handler,
