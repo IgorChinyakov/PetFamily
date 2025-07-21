@@ -10,35 +10,35 @@ using System.Threading.Tasks;
 
 namespace PetFamily.VolunteerRequests.Domain.Entities
 {
-    public class VolunteerRequest
+    public class VolunteerRequest : Entity<RequestId>
     {
         //ef core
         private VolunteerRequest()
         {
         }
 
-        public RequestId Id { get; set; }
+        public AdminId? AdminId { get; private set; }
 
-        public AdminId? AdminId { get; set; }
+        public DiscussionId? DiscussionId { get; private set; }
 
-        public DiscussionId? DiscussionId { get; set; }
+        public UserId UserId { get; private set; }
 
-        public UserId UserId { get; set; }
+        public RequestStatus RequestStatus { get; private set; }
 
-        public RequestStatus RequestStatus { get; set; }
+        public CreationDate CreationDate { get; private set; }
 
-        public CreationDate CreationDate { get; set; }
+        public VolunteerInformation VolunteerInformation { get; private set; }
 
-        public VolunteerInformation VolunteerInformation { get; set; }
+        public RejectionComment? RejectionComment { get; private set; }
 
-        public RejectionComment? RejectionComment { get; set; }
+        public RejectedRequest? RejectedRequest { get; private set; }
 
         public VolunteerRequest(
             RequestId requestId,
             UserId userId,
             RequestStatus requestStatus,
             CreationDate createdAt,
-            VolunteerInformation volunteerInformation)
+            VolunteerInformation volunteerInformation) : base(requestId)
         {
             Id = requestId;
             UserId = userId;
@@ -47,12 +47,8 @@ namespace PetFamily.VolunteerRequests.Domain.Entities
             VolunteerInformation = volunteerInformation;
         }
 
-        public static Result<VolunteerRequest, Error> Create(UserId userId, string volunteerInformation)
+        public static Result<VolunteerRequest, Error> Create(UserId userId, VolunteerInformation volunteerInformation)
         {
-            var informationResult = VolunteerInformation.Create(volunteerInformation);
-            if (informationResult.IsFailure)
-                return informationResult.Error;
-
             var id = RequestId.NewRequestId();
 
             return new VolunteerRequest(
@@ -60,32 +56,50 @@ namespace PetFamily.VolunteerRequests.Domain.Entities
                 userId,
                 RequestStatus.Create(RequestStatus.Status.Submitted).Value,
                 CreationDate.Create(DateTime.UtcNow).Value,
-                informationResult.Value);
+                volunteerInformation);
         }
 
-        public UnitResult<Error> SendForRevision(string rejectionComment)
+        public UnitResult<Error> SendForRevision(RejectionComment rejectionComment)
         {
-            var commentResult = RejectionComment.Create(rejectionComment);
-            if (commentResult.IsFailure)
-                return commentResult.Error;
+            if (RequestStatus.Value != RequestStatus.Status.OnReview)
+                return Error.Failure(
+                    "invalid.request.status", 
+                    "Request status should be OnReview", 
+                    "RequestStatus");
 
             RequestStatus = RequestStatus.Create(RequestStatus.Status.RevisionRequired).Value;
 
-            RejectionComment = commentResult.Value;
+            RejectionComment = rejectionComment;
 
             return Result.Success<Error>();
         }
 
-        public void TakeOnReview(AdminId adminId)
+        public UnitResult<Error> TakeOnReview(AdminId adminId, DiscussionId discussionId)
         {
+            if (RequestStatus.Value != RequestStatus.Status.Submitted)
+                return Error.Failure(
+                    "invalid.request.status",
+                    "Request status should be Submitted",
+                    "RequestStatus");
+
             RequestStatus = RequestStatus.Create(RequestStatus.Status.OnReview).Value;
             AdminId = adminId;
+            DiscussionId = discussionId;
+
+            return Result.Success<Error>();
         }
 
         public void Reject()
-         => RequestStatus = RequestStatus.Create(RequestStatus.Status.Rejected).Value;
+        {
+            RequestStatus = RequestStatus.Create(RequestStatus.Status.Rejected).Value;
+            var rejectedRequest = new RejectedRequest(Id, RejectionDate.Create(DateTime.UtcNow).Value);
+            RejectedRequest = rejectedRequest;
+        }
 
         public void Approve()
          => RequestStatus = RequestStatus.Create(RequestStatus.Status.Approved).Value;
+
+        public void UpdateVolunteerInformation(VolunteerInformation volunteerInformation)
+            => VolunteerInformation = volunteerInformation;
     }
 }

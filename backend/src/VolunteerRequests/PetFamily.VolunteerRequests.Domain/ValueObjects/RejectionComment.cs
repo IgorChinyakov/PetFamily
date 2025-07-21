@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PetFamily.VolunteerRequests.Domain.ValueObjects
 {
-    public record RejectionComment
+    public class RejectionComment : ValueObject
     {
         public const int MAX_LENGTH = 1500;
 
@@ -25,6 +25,11 @@ namespace PetFamily.VolunteerRequests.Domain.ValueObjects
                 return Errors.General.ValueIsInvalid("Rejection comment");
 
             return new RejectionComment(value);
+        }
+
+        protected override IEnumerable<object> GetEqualityComponents()
+        {
+            yield return Value;
         }
     }
 }

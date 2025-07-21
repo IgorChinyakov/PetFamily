@@ -8,21 +8,21 @@ using System.Threading.Tasks;
 
 namespace PetFamily.VolunteerRequests.Domain.ValueObjects
 {
-    public class CreationDate : ValueObject
+    public class RejectionDate : ValueObject
     {
         public DateTime Value { get; }
 
-        private CreationDate(DateTime value)
+        private RejectionDate(DateTime value)
         {
             Value = value;
         }
 
-        public static Result<CreationDate, Error> Create(DateTime value)
+        public static Result<RejectionDate, Error> Create(DateTime value)
         {
             if (value > DateTime.UtcNow || value < new DateTime(2000, 1, 1, 0, 0, 0))
                 return Errors.General.ValueIsInvalid("Date");
 
-            return new CreationDate(value);
+            return new RejectionDate(value);
         }
 
         protected override IEnumerable<object> GetEqualityComponents()

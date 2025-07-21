@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PetFamily.VolunteerRequests.Domain.ValueObjects
 {
-    public record RequestStatus
+    public class RequestStatus : ValueObject
     {
         public Status Value { get; }
 
@@ -21,7 +21,12 @@ namespace PetFamily.VolunteerRequests.Domain.ValueObjects
             Value = status;
         }
 
-        public static Result<RequestStatus> Create(Status status) => new RequestStatus(status); 
+        public static Result<RequestStatus> Create(Status status) => new RequestStatus(status);
+
+        protected override IEnumerable<object> GetEqualityComponents()
+        {
+            yield return Value;
+        }
 
         public enum Status
         {

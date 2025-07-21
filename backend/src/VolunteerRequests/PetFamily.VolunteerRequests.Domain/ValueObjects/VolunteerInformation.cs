@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PetFamily.VolunteerRequests.Domain.ValueObjects
 {
-    public record VolunteerInformation
+    public class VolunteerInformation : ValueObject
     {
         public const int MAX_LENGTH = 1500;
 
@@ -25,6 +25,11 @@ namespace PetFamily.VolunteerRequests.Domain.ValueObjects
                 return Errors.General.ValueIsInvalid("Volunteer information");
 
             return new VolunteerInformation(value);
+        }
+
+        protected override IEnumerable<object> GetEqualityComponents()
+        {
+            yield return Value;
         }
     }
 }
