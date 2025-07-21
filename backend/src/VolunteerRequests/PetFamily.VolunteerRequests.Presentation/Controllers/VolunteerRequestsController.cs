@@ -15,13 +15,13 @@ namespace PetFamily.VolunteerRequests.Presentation.Controllers
     public class VolunteerRequestsController
         : ApplicationController
     {
-        [HttpPost("{userId:guid}")]
+        [Permission(Permissions.VolunteerRequest.CREATE)]
+        [HttpPost]
         public async Task<ActionResult> Create(
-            [FromServices] ICommandHandler<Guid, CreateVolunteerRequestCommand> handler,
-            [FromRoute]Guid userId,
+            [FromServices] ICommandHandler<Guid, CreateRequestCommand> handler,
             [FromBody] CreateVolunteerRequestRequest request)
         {
-            var command = new CreateVolunteerRequestCommand(userId, request.VolunteerInformation);
+            var command = new CreateRequestCommand(GetUserId().Value, request.VolunteerInformation);
 
             var result = await handler.Handle(command);
             if (result.IsFailure)
