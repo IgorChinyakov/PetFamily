@@ -29,5 +29,20 @@ namespace PetFamily.VolunteerRequests.Presentation.Controllers
 
             return Ok(Envelope.Ok(result.Value));
         }
+        [Permission(Permissions.VolunteerRequest.UPDATE_STATUS)]
+        [Permission(Permissions.VolunteerRequest.UPDATE_STATUS)]
+        [HttpPut("{requestId:guid}/aprrovement")]
+        public async Task<ActionResult> Approve(
+            [FromServices] ICommandHandler<ApproveRequestCommand> handler,
+            [FromRoute] Guid requestId)
+        {
+            var command = new ApproveRequestCommand(requestId, GetUserId().Value);
+
+            var result = await handler.Handle(command);
+            if (result.IsFailure)
+                return result.Error.ToResponse();
+
+            return Ok(Envelope.Ok());
+        }
     }
 }

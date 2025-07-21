@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace PetFamily.VolunteerRequests.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class volunteer_requests_initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -32,11 +32,35 @@ namespace PetFamily.VolunteerRequests.Infrastructure.Migrations
                 {
                     table.PrimaryKey("pk_volunteer_requests", x => x.request_id);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "rejected_requests",
+                schema: "volunteer_requests",
+                columns: table => new
+                {
+                    request_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    rejection_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_rejected_requests", x => x.request_id);
+                    table.ForeignKey(
+                        name: "FK_rejected_requests_volunteer_requests_request_id",
+                        column: x => x.request_id,
+                        principalSchema: "volunteer_requests",
+                        principalTable: "volunteer_requests",
+                        principalColumn: "request_id",
+                        onDelete: ReferentialAction.Cascade);
+                });
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "rejected_requests",
+                schema: "volunteer_requests");
+
             migrationBuilder.DropTable(
                 name: "volunteer_requests",
                 schema: "volunteer_requests");

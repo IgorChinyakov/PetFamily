@@ -12,7 +12,7 @@ using PetFamily.VolunteerRequests.Infrastructure.DbContexts;
 namespace PetFamily.VolunteerRequests.Infrastructure.Migrations
 {
     [DbContext(typeof(VolunteerRequestsWriteDbContext))]
-    partial class VolunteerRequestsDbContextModelSnapshot : ModelSnapshot
+    partial class VolunteerRequestsWriteDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
@@ -23,6 +23,27 @@ namespace PetFamily.VolunteerRequests.Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("PetFamily.VolunteerRequests.Domain.Entities.RejectedRequest", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("request_id");
+
+                    b.ComplexProperty<Dictionary<string, object>>("RejectionDate", "PetFamily.VolunteerRequests.Domain.Entities.RejectedRequest.RejectionDate#RejectionDate", b1 =>
+                        {
+                            b1.IsRequired();
+
+                            b1.Property<DateTime>("Value")
+                                .HasColumnType("timestamp with time zone")
+                                .HasColumnName("rejection_date");
+                        });
+
+                    b.HasKey("Id")
+                        .HasName("pk_rejected_requests");
+
+                    b.ToTable("rejected_requests", "volunteer_requests");
+                });
 
             modelBuilder.Entity("PetFamily.VolunteerRequests.Domain.Entities.VolunteerRequest", b =>
                 {
@@ -73,6 +94,17 @@ namespace PetFamily.VolunteerRequests.Infrastructure.Migrations
                         .HasName("pk_volunteer_requests");
 
                     b.ToTable("volunteer_requests", "volunteer_requests");
+                });
+
+            modelBuilder.Entity("PetFamily.VolunteerRequests.Domain.Entities.RejectedRequest", b =>
+                {
+                    b.HasOne("PetFamily.VolunteerRequests.Domain.Entities.VolunteerRequest", "VolunteerRequest")
+                        .WithOne("RejectedRequest")
+                        .HasForeignKey("PetFamily.VolunteerRequests.Domain.Entities.RejectedRequest", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("VolunteerRequest");
                 });
 
             modelBuilder.Entity("PetFamily.VolunteerRequests.Domain.Entities.VolunteerRequest", b =>
@@ -138,6 +170,11 @@ namespace PetFamily.VolunteerRequests.Infrastructure.Migrations
                     b.Navigation("DiscussionId");
 
                     b.Navigation("RejectionComment");
+                });
+
+            modelBuilder.Entity("PetFamily.VolunteerRequests.Domain.Entities.VolunteerRequest", b =>
+                {
+                    b.Navigation("RejectedRequest");
                 });
 #pragma warning restore 612, 618
         }
