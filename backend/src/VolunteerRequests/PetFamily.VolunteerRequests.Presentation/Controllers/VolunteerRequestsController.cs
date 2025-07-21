@@ -29,6 +29,22 @@ namespace PetFamily.VolunteerRequests.Presentation.Controllers
 
             return Ok(Envelope.Ok(result.Value));
         }
+
+        [Permission(Permissions.VolunteerRequest.UPDATE_STATUS)]
+        [HttpPut("{requestId:guid}/on-review")]
+        public async Task<ActionResult> TakeOnReview(
+            [FromServices] ICommandHandler<TakeRequestOnReviewCommand> handler,
+            [FromRoute] Guid requestId)
+        {
+            var command = new TakeRequestOnReviewCommand(requestId, GetUserId().Value);
+
+            var result = await handler.Handle(command);
+            if (result.IsFailure)
+                return result.Error.ToResponse();
+
+            return Ok(Envelope.Ok());
+        }
+
         [Permission(Permissions.VolunteerRequest.UPDATE_STATUS)]
         [HttpPut("{requestId:guid}/on-revision")]
         public async Task<ActionResult> SendOnRevision(

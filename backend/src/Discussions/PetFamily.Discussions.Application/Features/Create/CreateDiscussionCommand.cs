@@ -1,0 +1,13 @@
+﻿using PetFamily.Core.Abstractions;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace PetFamily.Discussions.Application.Features.Create
+{
+    public record CreateDiscussionCommand(
+        Guid RelationId, 
+        IEnumerable<Guid> UserIds) : ICommand;
+}
