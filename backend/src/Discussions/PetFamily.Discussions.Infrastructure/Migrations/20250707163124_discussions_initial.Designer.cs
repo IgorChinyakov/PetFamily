@@ -13,7 +13,7 @@ using PetFamily.Discussions.Infrastructure.DbContexts;
 namespace PetFamily.Discussions.Infrastructure.Migrations
 {
     [DbContext(typeof(DiscussionsDbContext))]
-    [Migration("20250628110715_discussions_initial")]
+    [Migration("20250707163124_discussions_initial")]
     partial class discussions_initial
     {
         /// <inheritdoc />
@@ -127,7 +127,7 @@ namespace PetFamily.Discussions.Infrastructure.Migrations
 
                             b1.Property<Guid>("Value")
                                 .HasColumnType("uuid")
-                                .HasColumnName("id");
+                                .HasAnnotation("Relational:JsonPropertyName", "id");
 
                             b1.HasKey("DiscussionId", "__synthesizedOrdinal");
 

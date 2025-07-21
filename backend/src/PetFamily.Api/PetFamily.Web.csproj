@@ -42,11 +42,13 @@
     <ProjectReference Include="..\Accounts\PetFamily.Accounts.Infrastructure\PetFamily.Accounts.Infrastructure.csproj" />
     <ProjectReference Include="..\Accounts\PetFamily.Accounts.Presentation\PetFamily.Accounts.Presentation.csproj" />
     <ProjectReference Include="..\Discussions\PetFamily.Discussions.Infrastructure\PetFamily.Discussions.Infrastructure.csproj" />
+    <ProjectReference Include="..\Discussions\PetFamily.Discussions.Presentation\PetFamily.Discussions.Presentation.csproj" />
     <ProjectReference Include="..\Files\PetFamily.Files.Infrastructure\PetFamily.Files.Infrastructure.csproj" />
     <ProjectReference Include="..\Files\PetFamily.Files.Presentation\PetFamily.Files.Presentation.csproj" />
     <ProjectReference Include="..\Species\PetFamily.Specieses.Infrastructure\PetFamily.Specieses.Infrastructure.csproj" />
     <ProjectReference Include="..\Species\PetFamily.Specieses.Presentation\PetFamily.Specieses.Presentation.csproj" />
     <ProjectReference Include="..\VolunteerRequests\PetFamily.VolunteerRequests.Infrastructure\PetFamily.VolunteerRequests.Infrastructure.csproj" />
+    <ProjectReference Include="..\VolunteerRequests\PetFamily.VolunteerRequests.Presentation\PetFamily.VolunteerRequests.Presentation.csproj" />
     <ProjectReference Include="..\Volunteers\PetFamily.Volunteers.Infrastructure\PetFamily.Volunteers.Infrastructure.csproj" />
     <ProjectReference Include="..\Volunteers\PetFamily.Volunteers.Presentation\PetFamily.Volunteers.Presentation.csproj" />
   </ItemGroup>

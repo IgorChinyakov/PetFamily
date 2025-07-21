@@ -23,15 +23,15 @@ namespace PetFamily.Discussions.Domain.Entities
         {
         }
 
-        public DiscussionId Id { get; set; }
+        public DiscussionId Id { get; private set; }
 
         public IReadOnlyList<Message> Messages => _messages;
 
         public IReadOnlyList<UserId> UserIds => _userIds;
 
-        public RelationId RelationId { get; set; }
+        public RelationId RelationId { get; private set; }
 
-        public DiscussionStatus Status { get; set; }
+        public DiscussionStatus Status { get; private set; }
 
         private Discussion(
             DiscussionId discussionId,

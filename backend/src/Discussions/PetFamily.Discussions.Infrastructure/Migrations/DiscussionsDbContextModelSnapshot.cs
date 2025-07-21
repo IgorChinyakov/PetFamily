@@ -124,7 +124,7 @@ namespace PetFamily.Discussions.Infrastructure.Migrations
 
                             b1.Property<Guid>("Value")
                                 .HasColumnType("uuid")
-                                .HasColumnName("id");
+                                .HasAnnotation("Relational:JsonPropertyName", "id");
 
                             b1.HasKey("DiscussionId", "__synthesizedOrdinal");
 

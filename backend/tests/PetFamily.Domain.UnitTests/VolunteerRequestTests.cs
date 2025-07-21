@@ -16,25 +16,32 @@ namespace PetFamily.Domain.UnitTests
         {
             // arrange
             var userId = UserId.Create(Guid.NewGuid());
+            var information = VolunteerInformation.Create("some information").Value;
 
             // act
-            var request = VolunteerRequest.Create(userId, "some information");
+            var request = VolunteerRequest.Create(userId, information);
 
             // assert
             request.IsSuccess.Should().BeTrue();
         }
 
         [Fact]
-        public void Create_Request_With_Invalid_Information_Should_Return_Failure()
+        public void TakeOnReview_Should_Change_Status_AdminId_And_DiscussionId()
         {
             // arrange
             var userId = UserId.Create(Guid.NewGuid());
+            var information = VolunteerInformation.Create("some information").Value;
+            var request = VolunteerRequest.Create(userId, information);
+            var adminId = AdminId.Create(Guid.NewGuid());
+            var discussionId = DiscussionId.Create(Guid.NewGuid());
 
             // act
-            var request = VolunteerRequest.Create(userId, "");
+            request.Value.TakeOnReview(adminId, discussionId);
 
             // assert
-            request.IsSuccess.Should().BeFalse();
+            request.Value.RequestStatus.Value.Should().Be(RequestStatus.Status.OnReview);
+            request.Value.AdminId.Should().Be(adminId);
+            request.Value.DiscussionId.Should().Be(discussionId);
         }
 
         [Fact]
@@ -42,10 +49,15 @@ namespace PetFamily.Domain.UnitTests
         {
             // arrange
             var userId = UserId.Create(Guid.NewGuid());
-            var request = VolunteerRequest.Create(userId, "some information");
+            var information = VolunteerInformation.Create("some information").Value;
+            var rejectionComment = RejectionComment.Create("rejection comment").Value;
+            var request = VolunteerRequest.Create(userId, information);
+            var discussionId = DiscussionId.Create(Guid.NewGuid());
+            var adminId = AdminId.Create(Guid.NewGuid());
+            request.Value.TakeOnReview(adminId, discussionId);
 
             // act
-            var sendForRevisionResult = request.Value.SendForRevision("rejection comment");
+            var sendForRevisionResult = request.Value.SendForRevision(rejectionComment);
 
             // assert
             sendForRevisionResult.IsSuccess.Should().BeTrue();
@@ -54,45 +66,15 @@ namespace PetFamily.Domain.UnitTests
         }
 
         [Fact]
-        public void SendForRevision_With_Invalid_Rejection_Comment_Should_Return_Failure()
-        {
-            // arrange
-            var userId = UserId.Create(Guid.NewGuid());
-            var request = VolunteerRequest.Create(userId, "some information");
-
-            // act
-            var sendForRevisionResult = request.Value.SendForRevision("");
-
-            // assert
-            sendForRevisionResult.IsSuccess.Should().BeFalse();
-            request.Value.RequestStatus.Value.Should().Be(RequestStatus.Status.Submitted);
-            request.Value.RejectionComment.Should().BeNull();
-        }
-
-        [Fact]
-        public void TakeOnReview_Should_Change_Status_And_AdminId()
-        {
-            // arrange
-            var userId = UserId.Create(Guid.NewGuid());
-            var request = VolunteerRequest.Create(userId, "some information");
-            var adminId = AdminId.Create(Guid.NewGuid());
-
-            // act
-            request.Value.TakeOnReview(adminId);
-
-            // assert
-            request.Value.RequestStatus.Value.Should().Be(RequestStatus.Status.OnReview);
-            request.Value.AdminId.Should().Be(adminId);
-        }
-
-        [Fact]
         public void Reject_Should_Change_Status()
         {
             // arrange
             var userId = UserId.Create(Guid.NewGuid());
-            var request = VolunteerRequest.Create(userId, "some information");
+            var information = VolunteerInformation.Create("some information").Value;
+            var request = VolunteerRequest.Create(userId, information);
             var adminId = AdminId.Create(Guid.NewGuid());
-            request.Value.TakeOnReview(adminId);
+            var discussionId = DiscussionId.Create(Guid.NewGuid());
+            request.Value.TakeOnReview(adminId, discussionId);
 
             // act
             request.Value.Reject();
@@ -106,9 +88,11 @@ namespace PetFamily.Domain.UnitTests
         {
             // arrange
             var userId = UserId.Create(Guid.NewGuid());
-            var request = VolunteerRequest.Create(userId, "some information");
+            var information = VolunteerInformation.Create("some information").Value;
+            var request = VolunteerRequest.Create(userId, information);
             var adminId = AdminId.Create(Guid.NewGuid());
-            request.Value.TakeOnReview(adminId);
+            var discussionId = DiscussionId.Create(Guid.NewGuid());
+            request.Value.TakeOnReview(adminId, discussionId);
 
             // act
             request.Value.Approve();

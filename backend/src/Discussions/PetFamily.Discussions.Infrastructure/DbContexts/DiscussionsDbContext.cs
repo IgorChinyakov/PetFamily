@@ -18,7 +18,7 @@ namespace PetFamily.Discussions.Infrastructure.DbContexts
             _connectionString = ConnectionString;
         }
 
-        public DbSet<Discussion> VolunteerRequests => Set<Discussion>();
+        public DbSet<Discussion> Discussions => Set<Discussion>();
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

@@ -2,7 +2,13 @@
 using PetFamily.Core.Abstractions;
 using PetFamily.Core.Models;
 using PetFamily.Framework;
+using PetFamily.Framework.Authorization;
+using PetFamily.VolunteerRequests.Application.Commands.Approve;
 using PetFamily.VolunteerRequests.Application.Commands.CreateVolunteerRequest;
+using PetFamily.VolunteerRequests.Application.Commands.Reject;
+using PetFamily.VolunteerRequests.Application.Commands.SendForRevision;
+using PetFamily.VolunteerRequests.Application.Commands.TakeOnReview;
+using PetFamily.VolunteerRequests.Application.Commands.Update;
 using PetFamily.VolunteerRequests.Contracts.Requests;
 using System;
 using System.Collections.Generic;
@@ -86,6 +92,25 @@ namespace PetFamily.VolunteerRequests.Presentation.Controllers
             [FromRoute] Guid requestId)
         {
             var command = new ApproveRequestCommand(requestId, GetUserId().Value);
+
+            var result = await handler.Handle(command);
+            if (result.IsFailure)
+                return result.Error.ToResponse();
+
+            return Ok(Envelope.Ok());
+        }
+
+        [Permission(Permissions.VolunteerRequest.UPDATE)]
+        [HttpPut("{requestId:guid}")]
+        public async Task<ActionResult> Update(
+            [FromServices] ICommandHandler<UpdateRequestCommand> handler,
+            [FromRoute] Guid requestId,
+            [FromBody] UpdateVolunteerRequestRequest request)
+        {
+            var command = new UpdateRequestCommand(
+                requestId, 
+                GetUserId().Value, 
+                request.UpdatedInformation);
 
             var result = await handler.Handle(command);
             if (result.IsFailure)

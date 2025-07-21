@@ -10,6 +10,8 @@ namespace PetFamily.Core.Options
     {
         Volunteers,
         Species,
-        Accounts
+        Accounts,
+        VolunteerRequests,
+        Discussions
     }
 }
