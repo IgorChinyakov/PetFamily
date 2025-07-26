@@ -5,8 +5,13 @@ using Microsoft.Extensions.DependencyInjection;
 using PetFamily.Accounts.Application.Providers;
 using PetFamily.Accounts.Domain.Entities;
 using PetFamily.Accounts.Infrastructure.Authorization.Managers;
+using PetFamily.Accounts.Infrastructure.Authorization.Seeding;
+using PetFamily.Discussions.Infrastructure.DbContexts;
 using PetFamily.Specieses.Application.Database;
 using PetFamily.Specieses.Infrastructure.DbContexts;
+using PetFamily.VolunteerRequests.Application.Database;
+using PetFamily.VolunteerRequests.Domain.ValueObjects;
+using PetFamily.VolunteerRequests.Infrastructure.DbContexts;
 using PetFamily.Volunteers.Application.Database;
 using PetFamily.Volunteers.Infrastructure.DbContexts;
 
@@ -17,12 +22,16 @@ namespace PetFamily.IntegrationTests
     {
         protected readonly SpeciesWriteDbContext SpeciesWriteDbContext;
         protected readonly VolunteersWriteDbContext VolunteersWriteDbContext;
+        protected readonly VolunteerRequestsWriteDbContext VolunteerRequestsWriteDbContext;
+        protected readonly DiscussionsDbContext DiscussionsDbContext;
         protected readonly ISpeciesReadDbContext SpeciesReadDbContext;
         protected readonly IVolunteersReadDbContext VolunteersReadDbContext;
+        protected readonly IVolunteerRequestsReadDbContext VolunteerRequestsReadDbContext;
         protected readonly UserManager<User> UserManager;
         protected readonly RoleManager<Role> RoleManager;
         protected readonly IParticipantAccountManager ParticipantAccountManager;
         protected readonly IVolunteerAccountManager VolunteerAccountManager;
+        protected readonly IAdminAccountManager AdminAccountManager;
         protected readonly IServiceScope Scope;
         protected readonly IFixture Fixture;
         protected readonly IntegrationTestsWebFactory Factory;
@@ -35,12 +44,16 @@ namespace PetFamily.IntegrationTests
             Scope = factory.Services.CreateScope();
             SpeciesReadDbContext = Scope.ServiceProvider.GetRequiredService<ISpeciesReadDbContext>();
             VolunteersReadDbContext = Scope.ServiceProvider.GetRequiredService<IVolunteersReadDbContext>();
+            VolunteerRequestsReadDbContext = Scope.ServiceProvider.GetRequiredService<IVolunteerRequestsReadDbContext>();
+            VolunteerRequestsWriteDbContext = Scope.ServiceProvider.GetRequiredService<VolunteerRequestsWriteDbContext>();
             SpeciesWriteDbContext = Scope.ServiceProvider.GetRequiredService<SpeciesWriteDbContext>();
             VolunteersWriteDbContext = Scope.ServiceProvider.GetRequiredService<VolunteersWriteDbContext>();
+            DiscussionsDbContext = Scope.ServiceProvider.GetRequiredService<DiscussionsDbContext>();
             UserManager = Scope.ServiceProvider.GetRequiredService<UserManager<User>>();
             RoleManager = Scope.ServiceProvider.GetRequiredService<RoleManager<Role>>();
             ParticipantAccountManager = Scope.ServiceProvider.GetRequiredService<IParticipantAccountManager>();
             VolunteerAccountManager = Scope.ServiceProvider.GetRequiredService<IVolunteerAccountManager>();
+            AdminAccountManager = Scope.ServiceProvider.GetRequiredService<IAdminAccountManager>();
         }
 
         public Task InitializeAsync() => Task.CompletedTask;
@@ -49,6 +62,12 @@ namespace PetFamily.IntegrationTests
         {
             Scope.Dispose();
             await Factory.ResetDatabase();
+        }
+
+        public async Task SeedAccounts()
+        {
+            var seeder = Scope.ServiceProvider.GetRequiredService<AccountsSeeder>();
+            await seeder.SeedAsync();
         }
 
         public async Task<Guid> SeedSpecies()
@@ -113,6 +132,20 @@ namespace PetFamily.IntegrationTests
             return userResult.Value.Id;
         }
 
+        public async Task SeedParticipantUsers(int count)
+        {
+            var role = await RoleManager.FindByNameAsync(ParticipantAccount.PARTICIPANT);
+
+            for (int i = 0; i < count; i++)
+            {
+                var userResult = Fixture.CreateParticipantUser(role!);  
+                await UserManager.CreateAsync(userResult.Value, userResult.Key);
+
+                var participantAccount = new ParticipantAccount(userResult.Value);
+                await ParticipantAccountManager.CreateParticipantAccount(participantAccount);
+            }
+        }
+
         public async Task<Guid> SeedVolunteerUser()
         {
             var role = await RoleManager.FindByNameAsync(VolunteerAccount.VOLUNTEER);
@@ -120,10 +153,67 @@ namespace PetFamily.IntegrationTests
 
             await UserManager.CreateAsync(userResult.Value, userResult.Key);
 
-            var volunteerAccount = new VolunteerAccount(userResult.Value, 5);
+            var volunteerAccount = new VolunteerAccount(userResult.Value);
             await VolunteerAccountManager.CreateVolunteerAccount(volunteerAccount);
 
             return userResult.Value.Id;
+        }
+
+        public async Task<Guid> SeedAdminUser()
+        {
+            var role = await RoleManager.FindByNameAsync(AdminAccount.ADMIN);
+            var userResult = Fixture.CreateAdminUser(role!);
+
+            await UserManager.CreateAsync(userResult.Value, userResult.Key);
+
+            var adminAccount = new AdminAccount(userResult.Value);
+            await AdminAccountManager.CreateAdminAccount(adminAccount);
+
+            return userResult.Value.Id;
+        }
+
+        public async Task<Guid> SeedVolunteerRequest(Guid userId)
+        {
+            var request = Fixture.CreateVolunteerRequest(userId);
+            await VolunteerRequestsWriteDbContext.VolunteerRequests.AddAsync(request);
+
+            await VolunteerRequestsWriteDbContext.SaveChangesAsync();
+
+            return request.Id.Value;
+        }
+
+        public async Task<Guid> SeedRejectedVolunteerRequest(Guid userId)
+        {
+            var request = Fixture.CreateVolunteerRequest(userId);
+            await VolunteerRequestsWriteDbContext.VolunteerRequests.AddAsync(request);
+            request.Reject();
+
+            await VolunteerRequestsWriteDbContext.SaveChangesAsync();
+
+            return request.Id.Value;
+        }
+
+        public async Task<Guid> SeedOnReviewVolunteerRequest(Guid userId, Guid adminId)
+        {
+            var request = Fixture.CreateVolunteerRequest(userId);
+            await VolunteerRequestsWriteDbContext.VolunteerRequests.AddAsync(request);
+            request.TakeOnReview(AdminId.Create(adminId), DiscussionId.NewDiscussionId());
+
+            await VolunteerRequestsWriteDbContext.SaveChangesAsync();
+
+            return request.Id.Value;
+        }
+
+        public async Task<Guid> SeedRevisionRequiredVolunteerRequest(Guid userId, Guid adminId)
+        {
+            var request = Fixture.CreateVolunteerRequest(userId);
+            await VolunteerRequestsWriteDbContext.VolunteerRequests.AddAsync(request);
+            request.TakeOnReview(AdminId.Create(adminId), DiscussionId.NewDiscussionId());
+            request.SendForRevision(RejectionComment.Create("rejection comment").Value);
+
+            await VolunteerRequestsWriteDbContext.SaveChangesAsync();
+
+            return request.Id.Value;
         }
 
         public async Task SeedVolunteers(int count)

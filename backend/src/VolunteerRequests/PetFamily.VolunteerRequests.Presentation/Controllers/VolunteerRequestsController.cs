@@ -3,12 +3,16 @@ using PetFamily.Core.Abstractions;
 using PetFamily.Core.Models;
 using PetFamily.Framework;
 using PetFamily.Framework.Authorization;
-using PetFamily.VolunteerRequests.Application.Commands.Approve;
-using PetFamily.VolunteerRequests.Application.Commands.CreateVolunteerRequest;
-using PetFamily.VolunteerRequests.Application.Commands.Reject;
-using PetFamily.VolunteerRequests.Application.Commands.SendForRevision;
-using PetFamily.VolunteerRequests.Application.Commands.TakeOnReview;
-using PetFamily.VolunteerRequests.Application.Commands.Update;
+using PetFamily.VolunteerRequests.Application.Features.Commands.Approve;
+using PetFamily.VolunteerRequests.Application.Features.Commands.Create;
+using PetFamily.VolunteerRequests.Application.Features.Commands.Reject;
+using PetFamily.VolunteerRequests.Application.Features.Commands.SendForRevision;
+using PetFamily.VolunteerRequests.Application.Features.Commands.TakeOnReview;
+using PetFamily.VolunteerRequests.Application.Features.Commands.Update;
+using PetFamily.VolunteerRequests.Application.Features.Queries.GetRequestsByAdminId;
+using PetFamily.VolunteerRequests.Application.Features.Queries.GetRequestsByuserId;
+using PetFamily.VolunteerRequests.Application.Features.Queries.GetSubmittedWithPagination;
+using PetFamily.VolunteerRequests.Contracts.DTOs;
 using PetFamily.VolunteerRequests.Contracts.Requests;
 using System;
 using System.Collections.Generic;
@@ -108,8 +112,8 @@ namespace PetFamily.VolunteerRequests.Presentation.Controllers
             [FromBody] UpdateVolunteerRequestRequest request)
         {
             var command = new UpdateRequestCommand(
-                requestId, 
-                GetUserId().Value, 
+                requestId,
+                GetUserId().Value,
                 request.UpdatedInformation);
 
             var result = await handler.Handle(command);
@@ -117,6 +121,57 @@ namespace PetFamily.VolunteerRequests.Presentation.Controllers
                 return result.Error.ToResponse();
 
             return Ok(Envelope.Ok());
+        }
+
+        [Permission(Permissions.VolunteerRequest.GET)]
+        [HttpGet("submitted-requests")]
+        public async Task<ActionResult> GetSubmittedRequests(
+            [FromServices] IQueryHandler<PagedList<VolunteerRequestDto>, GetSubmittedRequestsQuery> handler,
+            [FromBody] GetSubmittedRequestsRequest request)
+        {
+            var query = new GetSubmittedRequestsQuery(
+                request.Page,
+                request.PageSize);
+
+            var result = await handler.Handle(query);
+
+            return Ok(Envelope.Ok(result));
+        }
+
+        [Permission(Permissions.VolunteerRequest.GET)]
+        [HttpGet("admin-requests")]
+        public async Task<ActionResult> GetRequestsByAdminId(
+            [FromServices] IQueryHandler<PagedList<VolunteerRequestDto>, GetRequestsByAdminIdQuery> handler,
+            [FromRoute] Guid requestId,
+            [FromBody] GetRequestsByAdminIdRequest request)
+        {
+            var query = new GetRequestsByAdminIdQuery(
+                GetUserId().Value,
+                request.Page,
+                request.PageSize,
+                request.Status);
+
+            var result = await handler.Handle(query);
+
+            return Ok(Envelope.Ok(result));
+        }
+
+        [Permission(Permissions.VolunteerRequest.GET_BY_USER_ID)]
+        [HttpGet("users-requests")]
+        public async Task<ActionResult> GetRequestsByUserId(
+            [FromServices] IQueryHandler<PagedList<VolunteerRequestDto>, GetRequestsByUserIdQuery> handler,
+            [FromRoute] Guid userId,
+            [FromBody] GetRequestsByUserIdRequest request)
+        {
+            var query = new GetRequestsByUserIdQuery(
+                GetUserId().Value,
+                request.Page,
+                request.PageSize,
+                request.Status);
+
+            var result = await handler.Handle(query);
+
+            return Ok(Envelope.Ok(result));
         }
     }
 }

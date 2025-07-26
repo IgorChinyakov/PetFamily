@@ -55,7 +55,6 @@ namespace PetFamily.Discussions.Application.Features.Create
             var userIds = command.UserIds.Select(UserId.Create).ToList();
 
             var discussion = Discussion.Create(userIds, relationId);
-
             if (discussion.IsFailure)
                 return discussion.Error.ToErrorsList();
 

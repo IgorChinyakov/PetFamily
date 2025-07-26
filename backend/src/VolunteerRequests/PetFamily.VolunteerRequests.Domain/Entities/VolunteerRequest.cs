@@ -76,7 +76,8 @@ namespace PetFamily.VolunteerRequests.Domain.Entities
 
         public UnitResult<Error> TakeOnReview(AdminId adminId, DiscussionId discussionId)
         {
-            if (RequestStatus.Value != RequestStatus.Status.Submitted)
+            if (RequestStatus.Value != RequestStatus.Status.Submitted && 
+                RequestStatus.Value != RequestStatus.Status.RevisionRequired)
                 return Error.Failure(
                     "invalid.request.status",
                     "Request status should be Submitted",

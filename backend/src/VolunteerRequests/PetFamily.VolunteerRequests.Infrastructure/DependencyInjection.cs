@@ -35,6 +35,9 @@ namespace PetFamily.VolunteerRequests.Infrastructure
             services.AddScoped<VolunteerRequestsWriteDbContext>(_ =>
                 new VolunteerRequestsWriteDbContext(configuration.GetConnectionString(Constants.DATABASE)!));
 
+            services.AddScoped<IVolunteerRequestsReadDbContext>(_ =>
+                new VolunteerRequestsReadDbContext(configuration.GetConnectionString(Constants.DATABASE)!));
+
             return services;
         }
 

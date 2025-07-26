@@ -6,12 +6,6 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Configurations\Read\**" />
-    <EmbeddedResource Remove="Configurations\Read\**" />
-    <None Remove="Configurations\Read\**" />
-  </ItemGroup>
-
 	<ItemGroup>
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.4" />
 		<PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.0" />
@@ -22,6 +16,7 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\..\Shared\PetFamily.Core\PetFamily.Core.csproj" />
 	  <ProjectReference Include="..\PetFamily.VolunteerRequests.Application\PetFamily.VolunteerRequests.Application.csproj" />
+	  <ProjectReference Include="..\PetFamily.VolunteerRequests.Contracts\PetFamily.VolunteerRequests.Contracts.csproj" />
 	  <ProjectReference Include="..\PetFamily.VolunteerRequests.Domain\PetFamily.VolunteerRequests.Domain.csproj" />
 	</ItemGroup>
 
