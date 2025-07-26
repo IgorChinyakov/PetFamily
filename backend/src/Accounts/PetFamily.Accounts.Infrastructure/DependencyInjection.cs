@@ -28,7 +28,7 @@ namespace PetFamily.Accounts.Infrastructure
             services
                 .AddIdentity();
 
-            services.AddScoped
+            services.AddScoped<AccountDbContext>
                 (_ => new AccountDbContext(configuration.GetConnectionString(Constants.DATABASE)!));
 
             services.AddKeyedScoped<IUnitOfWork, UnitOfWork>(UnitOfWorkKeys.Accounts);

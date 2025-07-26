@@ -1,6 +1,8 @@
-﻿namespace PetFamily.VolunteerRequests.Domain.ValueObjects
+﻿using CSharpFunctionalExtensions;
+
+namespace PetFamily.VolunteerRequests.Domain.ValueObjects
 {
-    public record UserId
+    public class UserId : ValueObject
     {
         public Guid Value { get; }
 
@@ -14,5 +16,10 @@
         public static UserId Empty() => new(Guid.Empty);
 
         public static UserId Create(Guid id) => new(id);
+
+        protected override IEnumerable<object> GetEqualityComponents()
+        {
+            yield return Value;
+        }
     }
 }

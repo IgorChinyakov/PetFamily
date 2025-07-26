@@ -13,7 +13,7 @@ namespace PetFamily.Accounts.Domain.Entities
 
         public Guid Id { get; set; }
 
-        public int Experience { get; set; }
+        public int Experience { get; set; } = 0;
 
         public List<Details> Details { get; set; } = [];
 
@@ -26,11 +26,9 @@ namespace PetFamily.Accounts.Domain.Entities
         {
         }
 
-        public VolunteerAccount(User user, int experience)
+        public VolunteerAccount(User user)
         {
-            //Id = Guid.NewGuid();
             User = user;
-            Experience = experience;
         }
 
         public void UpdateDetails(List<Details> details)

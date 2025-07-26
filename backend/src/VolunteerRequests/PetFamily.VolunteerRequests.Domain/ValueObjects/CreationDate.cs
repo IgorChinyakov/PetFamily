@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PetFamily.VolunteerRequests.Domain.ValueObjects
 {
-    public record CreationDate
+    public class CreationDate : ValueObject
     {
         public DateTime Value { get; }
 
@@ -23,6 +23,11 @@ namespace PetFamily.VolunteerRequests.Domain.ValueObjects
                 return Errors.General.ValueIsInvalid("Date");
 
             return new CreationDate(value);
+        }
+
+        protected override IEnumerable<object> GetEqualityComponents()
+        {
+            yield return Value;
         }
     }
 }

@@ -18,12 +18,18 @@
       "species.update.breed",
       "species.get.breed",
       "accounts.update",
-      "accounts.get"
+      "accounts.get",
+      "volunteer.requests.update.status",
+      "volunteer.requests.get",
+      "volunteer.requests.get.by.user.id"
     ],
     "Participant": [
       "volunteers.get.pet",
       "accounts.update",
-      "accounts.get"
+      "accounts.get",
+      "volunteer.requests.create",
+      "volunteer.requests.update",
+      "volunteer.requests.get.by.user.id"
     ],
     "Volunteer": [
       "volunteers.create",
@@ -63,6 +69,13 @@
       "accounts.update",
       "accounts.volunteer.update",
       "accounts.get"
+    ],
+    "VolunteerRequests": [
+      "volunteer.requests.create",
+      "volunteer.requests.update.status",
+      "volunteer.requests.update",
+      "volunteer.requests.get",
+      "volunteer.requests.get.by.user.id"
     ]
   }
 }

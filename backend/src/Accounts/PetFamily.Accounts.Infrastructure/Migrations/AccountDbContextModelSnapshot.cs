@@ -326,7 +326,6 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
                                 .HasColumnName("name");
 
                             b1.Property<string>("SecondName")
-                                .IsRequired()
                                 .HasColumnType("text")
                                 .HasColumnName("second_name");
                         });

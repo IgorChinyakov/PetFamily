@@ -39,7 +39,7 @@ namespace PetFamily.Discussions.Infrastructure.Configurations.Write
 
                 ub.Property(ui => ui.Value)
                     .IsRequired(true)
-                    .HasColumnName("id");
+                    .HasJsonPropertyName("id");
             });
 
             builder.ComplexProperty(d => d.Status, sb =>

@@ -10,6 +10,9 @@ using PetFamily.Accounts.Application;
 using PetFamily.Accounts.Infrastructure;
 using PetFamily.Accounts.Presentation;
 using PetFamily.VolunteerRequests.Infrastructure;
+using PetFamily.VolunteerRequests.Application;
+using PetFamily.Discussions.Application;
+using PetFamily.Discussions.Presentation;
 
 namespace PetFamily.Web
 {
@@ -62,7 +65,8 @@ namespace PetFamily.Web
             this IServiceCollection services, IConfiguration configuration)
         {
             services
-                .AddVolunteerRequestsInfrastructure(configuration);
+                .AddVolunteerRequestsInfrastructure(configuration)
+                .AddVolunteerRequestsApplication();
 
             return services;
         }
@@ -71,7 +75,9 @@ namespace PetFamily.Web
             this IServiceCollection services, IConfiguration configuration)
         {
             services
-                .AddDiscussionsInfrastructure(configuration);
+                .AddDiscussionsInfrastructure(configuration)
+                .AddDiscussionsApplication()
+                .AddDiscussionsContracts();
 
             return services;
         }

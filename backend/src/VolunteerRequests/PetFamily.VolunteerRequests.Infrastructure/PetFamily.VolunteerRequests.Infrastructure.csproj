@@ -14,6 +14,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\..\Shared\PetFamily.Core\PetFamily.Core.csproj" />
+	  <ProjectReference Include="..\PetFamily.VolunteerRequests.Application\PetFamily.VolunteerRequests.Application.csproj" />
+	  <ProjectReference Include="..\PetFamily.VolunteerRequests.Contracts\PetFamily.VolunteerRequests.Contracts.csproj" />
 	  <ProjectReference Include="..\PetFamily.VolunteerRequests.Domain\PetFamily.VolunteerRequests.Domain.csproj" />
 	</ItemGroup>
 

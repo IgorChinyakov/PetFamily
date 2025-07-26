@@ -9,6 +9,14 @@ using PetFamily.Specieses.Application.Specieses.Commands.Create;
 using PetFamily.Specieses.Application.Specieses.Commands.Delete;
 using PetFamily.Specieses.Domain.Entities;
 using PetFamily.Specieses.Domain.ValueObjects;
+using PetFamily.VolunteerRequests.Application.Features.Commands.Approve;
+using PetFamily.VolunteerRequests.Application.Features.Commands.Create;
+using PetFamily.VolunteerRequests.Application.Features.Commands.Reject;
+using PetFamily.VolunteerRequests.Application.Features.Commands.SendForRevision;
+using PetFamily.VolunteerRequests.Application.Features.Commands.TakeOnReview;
+using PetFamily.VolunteerRequests.Application.Features.Commands.Update;
+using PetFamily.VolunteerRequests.Domain.Entities;
+using PetFamily.VolunteerRequests.Domain.ValueObjects;
 using PetFamily.Volunteers.Application.Pets.Commands.Create;
 using PetFamily.Volunteers.Application.Pets.Commands.Delete;
 using PetFamily.Volunteers.Application.Pets.Commands.Move;
@@ -27,6 +35,59 @@ namespace PetFamily.IntegrationTests
 {
     public static class FixtureExtensions
     {
+        public static CreateRequestCommand CreateCreateRequestCommand(
+            this IFixture fixture, Guid userId)
+        {
+            return fixture.Build<CreateRequestCommand>()
+                .With(c => c.UserId, userId)
+                .Create();
+        }
+
+        public static SendRequestForRevisionCommand CreateSendRequestForRevisionCommand(
+            this IFixture fixture, Guid requestId, Guid adminId)
+        {
+            return fixture.Build<SendRequestForRevisionCommand>()
+                .With(c => c.RequestId, requestId)
+                .With(c => c.AdminId, adminId)
+                .Create();
+        }
+
+        public static RejectRequestCommand CreateRejectRequestCommand(
+            this IFixture fixture, Guid requestId, Guid adminId)
+        {
+            return fixture.Build<RejectRequestCommand>()
+                .With(c => c.RequestId, requestId)
+                .With(c => c.AdminId, adminId)
+                .Create();
+        }
+
+        public static ApproveRequestCommand CreateApproveRequestCommand(
+            this IFixture fixture, Guid requestId, Guid adminId)
+        {
+            return fixture.Build<ApproveRequestCommand>()
+                .With(c => c.RequestId, requestId)
+                .With(c => c.AdminId, adminId)
+                .Create();
+        }
+
+        public static UpdateRequestCommand CreateUpdateRequestCommand(
+           this IFixture fixture, Guid requestId, Guid userId)
+        {
+            return fixture.Build<UpdateRequestCommand>()
+                .With(c => c.RequestId, requestId)
+                .With(c => c.UserId, userId)
+                .Create();
+        }
+
+        public static TakeRequestOnReviewCommand CreateTakeRequestOnReviewCommand(
+            this IFixture fixture, Guid requestId, Guid adminId)
+        {
+            return fixture.Build<TakeRequestOnReviewCommand>()
+                .With(c => c.RequestId, requestId)
+                .With(c => c.AdminId, adminId)
+                .Create();
+        }
+
         public static CreateVolunteerCommand CreateCreateVolunteerCommand(
             this IFixture fixture)
         {
@@ -189,8 +250,8 @@ namespace PetFamily.IntegrationTests
             return new Volunteer(
                 Guid.NewGuid(),
                 FullName.Create(
-                    fixture.Create<string>(), 
-                    fixture.Create<string>(), 
+                    fixture.Create<string>(),
+                    fixture.Create<string>(),
                     fixture.Create<string>()).Value,
                 Email.Create("oojdngjndjg@gmail.com").Value,
                 Description.Create(fixture.Create<string>()).Value,
@@ -203,11 +264,30 @@ namespace PetFamily.IntegrationTests
             Role role)
         {
             return new KeyValuePair<string, User>(
-                "admin123@A", 
+                "participant123@A",
                 User.CreateParticipant(
-                fixture.Create<string>(), 
+                fixture.Create<string>(),
                 "oojdngjndjg@gmail.com",
-                new PetFamily.Accounts.Domain.ValueObjects.FullName {
+                new PetFamily.Accounts.Domain.ValueObjects.FullName
+                {
+                    Name = fixture.Create<string>(),
+                    SecondName = fixture.Create<string>(),
+                    FamilyName = fixture.Create<string>()
+                },
+                role).Value);
+        }
+
+        public static KeyValuePair<string, User> CreateAdminUser(
+            this IFixture fixture,
+            Role role)
+        {
+            return new KeyValuePair<string, User>(
+                "admin123@A",
+                User.CreateAdmin(
+                fixture.Create<string>(),
+                "oojdngjndjg@gmail.com",
+                new PetFamily.Accounts.Domain.ValueObjects.FullName
+                {
                     Name = fixture.Create<string>(),
                     SecondName = fixture.Create<string>(),
                     FamilyName = fixture.Create<string>()
@@ -220,7 +300,7 @@ namespace PetFamily.IntegrationTests
             Role role)
         {
             return new KeyValuePair<string, User>(
-                "admin123@A",
+                "volunteer123@A",
                 User.CreateVolunteer(
                 fixture.Create<string>(),
                 "qqqqwwrwrrr@gmail.com",
@@ -255,7 +335,7 @@ namespace PetFamily.IntegrationTests
                 Weight.Create(fixture.Create<int>()).Value,
                 Height.Create(fixture.Create<int>()).Value,
                 Birthday.Create(DateTime.UtcNow.AddDays(-new Random().Next(1, 365))).Value,
-                CreationDate.Create(DateTime.UtcNow.AddDays(-new Random().Next(1, 365))).Value,
+                PetFamily.Volunteers.Domain.PetsVO.CreationDate.Create(DateTime.UtcNow.AddDays(-new Random().Next(1, 365))).Value,
                 PhoneNumber.Create("89103454545").Value,
                 PetStatus.Create(fixture.Create<Status>()).Value,
                 [Details.Create(fixture.Create<string>(), fixture.Create<string>()).Value]
@@ -274,6 +354,15 @@ namespace PetFamily.IntegrationTests
             return new Breed(
                 Guid.Empty,
                 Name.Create("Name").Value);
+        }
+
+        public static VolunteerRequest CreateVolunteerRequest(
+            this IFixture fixture,
+            Guid userId)
+        {
+            return VolunteerRequest.Create(
+                UserId.Create(userId), 
+                VolunteerInformation.Create(fixture.Create<string>()).Value).Value;
         }
     }
 }
