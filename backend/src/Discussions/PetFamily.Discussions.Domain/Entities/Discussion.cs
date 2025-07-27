@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace PetFamily.Discussions.Domain.Entities
 {
-    public class Discussion
+    public class Discussion : Entity<DiscussionId>
     {
         public const int DISCUSSION_MEMBERS_COUNT = 2;
 
@@ -22,8 +22,6 @@ namespace PetFamily.Discussions.Domain.Entities
         private Discussion()
         {
         }
-
-        public DiscussionId Id { get; private set; }
 
         public IReadOnlyList<Message> Messages => _messages;
 
@@ -37,7 +35,7 @@ namespace PetFamily.Discussions.Domain.Entities
             DiscussionId discussionId,
             List<UserId> userIds,
             RelationId relationId,
-            DiscussionStatus status)
+            DiscussionStatus status) : base(discussionId)
         {
             Id = discussionId;
             _userIds = userIds;

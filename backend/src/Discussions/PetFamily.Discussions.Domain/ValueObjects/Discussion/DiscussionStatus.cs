@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PetFamily.Discussions.Domain.ValueObjects.Discussion
 {
-    public class DiscussionStatus
+    public class DiscussionStatus : ValueObject
     {
         public Status Value { get; }
 
@@ -23,10 +23,15 @@ namespace PetFamily.Discussions.Domain.ValueObjects.Discussion
 
         public static DiscussionStatus Create(Status status) => new DiscussionStatus(status);
 
+        protected override IEnumerable<object> GetEqualityComponents()
+        {
+            yield return Value;
+        }
+
         public enum Status
         {
             Open,
-            Closed,
+            Closed
         }
     }
 }

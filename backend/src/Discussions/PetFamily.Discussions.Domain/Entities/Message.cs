@@ -1,4 +1,5 @@
-﻿using PetFamily.Discussions.Domain.ValueObjects.Message;
+﻿using CSharpFunctionalExtensions;
+using PetFamily.Discussions.Domain.ValueObjects.Message;
 using PetFamily.Discussions.Domain.ValueObjects.Shared;
 using System;
 using System.Collections.Generic;
@@ -8,14 +9,12 @@ using System.Threading.Tasks;
 
 namespace PetFamily.Discussions.Domain.Entities
 {
-    public class Message
+    public class Message : Entity<MessageId>
     {
         //ef core
         private Message()
         {
         }
-
-        public MessageId Id {  get; set; }
 
         public UserId UserId {  get; set; }
 
@@ -29,7 +28,7 @@ namespace PetFamily.Discussions.Domain.Entities
             UserId userId, 
             Text text, 
             CreationDate creationDate, 
-            IsEdited isEdited)
+            IsEdited isEdited) : base(messageId)
         {
             Id = messageId;
             UserId = userId;

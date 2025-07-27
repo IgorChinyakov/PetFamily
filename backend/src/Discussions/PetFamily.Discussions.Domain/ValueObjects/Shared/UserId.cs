@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CSharpFunctionalExtensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PetFamily.Discussions.Domain.ValueObjects.Shared
 {
-    public record UserId
+    public class UserId : ValueObject
     {
         private UserId(Guid value)
         {
@@ -20,5 +21,10 @@ namespace PetFamily.Discussions.Domain.ValueObjects.Shared
         public static UserId New() => new(Guid.NewGuid());
 
         public static UserId Empty() => new(Guid.Empty);
+
+        protected override IEnumerable<object> GetEqualityComponents()
+        {
+            yield return Value;
+        }
     }
 }

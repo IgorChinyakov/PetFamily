@@ -16,7 +16,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PetFamily.Discussions.Application.Features.Create
+namespace PetFamily.Discussions.Application.Features.Commands.Create
 {
     public class CreateDiscussionHandler : 
         ICommandHandler<Guid, CreateDiscussionCommand>
