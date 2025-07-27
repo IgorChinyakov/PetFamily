@@ -10,6 +10,7 @@ using Npgsql;
 using NSubstitute;
 using PetFamily.Accounts.Infrastructure;
 using PetFamily.Accounts.Infrastructure.Authorization.Seeding;
+using PetFamily.Discussions.Application.Database;
 using PetFamily.Discussions.Infrastructure.DbContexts;
 using PetFamily.Files.Application;
 using PetFamily.Files.Contracts;
@@ -61,7 +62,7 @@ namespace PetFamily.IntegrationTests
                 s.ServiceType == typeof(VolunteerRequestsWriteDbContext));
 
             var discussionsDbContext = services.SingleOrDefault(s =>
-                s.ServiceType == typeof(DiscussionsDbContext));
+                s.ServiceType == typeof(DiscussionsWriteDbContext));
 
             var accountDbContext = services.SingleOrDefault(s =>
                 s.ServiceType == typeof(AccountDbContext));
@@ -77,6 +78,9 @@ namespace PetFamily.IntegrationTests
 
             var volunteerRequestsReadContext = services.SingleOrDefault(s =>
                 s.ServiceType == typeof(IVolunteerRequestsReadDbContext));
+
+            var discussionsReadContext = services.SingleOrDefault(s =>
+                s.ServiceType == typeof(IDiscussionsReadDbContext));
 
             //background jobs
             var accountSeeder = services.SingleOrDefault(s =>
@@ -131,6 +135,12 @@ namespace PetFamily.IntegrationTests
             if (speciesReadContext is not null)
                 services.Remove(speciesReadContext);
 
+            if (discussionsReadContext is not null)
+                services.Remove(discussionsReadContext);
+
+            if (volunteerRequestsReadContext is not null)
+                services.Remove(volunteerRequestsReadContext);
+
             //addition
             services.AddSingleton(_ => _filesProviderMock);
 
@@ -143,7 +153,7 @@ namespace PetFamily.IntegrationTests
                 new VolunteerRequestsWriteDbContext(_dbContainer.GetConnectionString()));
 
             services.AddScoped(_ =>
-                new DiscussionsDbContext(_dbContainer.GetConnectionString()));
+                new DiscussionsWriteDbContext(_dbContainer.GetConnectionString()));
 
             services.AddScoped(_ =>
                 new AccountDbContext(_dbContainer.GetConnectionString()));
@@ -159,6 +169,9 @@ namespace PetFamily.IntegrationTests
 
             services.AddScoped<IVolunteerRequestsReadDbContext>(_ =>
                 new VolunteerRequestsReadDbContext(_dbContainer.GetConnectionString()));
+
+            services.AddScoped<IDiscussionsReadDbContext>(_ =>
+                new DiscussionsReadDbContext(_dbContainer.GetConnectionString()));
         }
 
         public void SetupSuccessFilesProviderMock()
@@ -195,11 +208,14 @@ namespace PetFamily.IntegrationTests
             var volunteerRequestsWriteDbContext = scope.ServiceProvider.GetRequiredService<VolunteerRequestsWriteDbContext>();
             await volunteerRequestsWriteDbContext.Database.MigrateAsync();
 
-            var discussionsDbContext = scope.ServiceProvider.GetRequiredService<DiscussionsDbContext>();
+            var discussionsDbContext = scope.ServiceProvider.GetRequiredService<DiscussionsWriteDbContext>();
             await discussionsDbContext.Database.MigrateAsync();
 
             var volunteersWriteDbContext = scope.ServiceProvider.GetRequiredService<VolunteersWriteDbContext>();
             await volunteersWriteDbContext.Database.MigrateAsync();
+
+            var discussionsWriteDbContext = scope.ServiceProvider.GetRequiredService<DiscussionsWriteDbContext>();
+            await discussionsWriteDbContext.Database.MigrateAsync();
 
             var speciesWriteDbContext = scope.ServiceProvider.GetRequiredService<SpeciesWriteDbContext>();
             await speciesWriteDbContext.Database.MigrateAsync();

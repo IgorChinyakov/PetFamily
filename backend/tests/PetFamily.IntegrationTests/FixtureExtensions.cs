@@ -1,8 +1,16 @@
 ﻿using AutoFixture;
+using Org.BouncyCastle.Bcpg.OpenPgp;
 using PetFamily.Accounts.Application.Features.UpdateDetails;
 using PetFamily.Accounts.Application.Features.UpdateSocialMedia;
 using PetFamily.Accounts.Domain.Entities;
 using PetFamily.Core.Options;
+using PetFamily.Discussions.Application.Features.Commands.AddMessage;
+using PetFamily.Discussions.Application.Features.Commands.Create;
+using PetFamily.Discussions.Application.Features.Commands.EditMessage;
+using PetFamily.Discussions.Application.Features.Commands.RemoveMessage;
+using PetFamily.Discussions.Domain.Entities;
+using PetFamily.Discussions.Domain.ValueObjects.Discussion;
+using PetFamily.Discussions.Domain.ValueObjects.Shared;
 using PetFamily.Specieses.Application.Breeds.Commands.Create;
 using PetFamily.Specieses.Application.Breeds.Commands.Delete;
 using PetFamily.Specieses.Application.Specieses.Commands.Create;
@@ -35,6 +43,52 @@ namespace PetFamily.IntegrationTests
 {
     public static class FixtureExtensions
     {
+        public static RemoveMessageCommand CreateRemoveMessageCommand(
+            this IFixture fixture,
+            Guid discussionId,
+            Guid userId,
+            Guid messageId)
+        {
+            return fixture.Build<RemoveMessageCommand>()
+                .With(c => c.DiscussionId, discussionId)
+                .With(c => c.UserId, userId)
+                .With(c => c.MessageId, messageId)
+                .Create();
+        }
+
+        public static EditMessageCommand CreateEditMessageCommand(
+            this IFixture fixture, 
+            Guid discussionId, 
+            Guid userId, 
+            Guid messageId, 
+            string editedMessage)
+        {
+            return fixture.Build<EditMessageCommand>()
+                .With(c => c.DiscussionId, discussionId)
+                .With(c => c.UserId, userId)
+                .With(c => c.MessageId, messageId)
+                .With(c => c.EditedMessage, editedMessage)
+                .Create();
+        }
+
+        public static AddMessageToDiscussionCommand CreateAddMessageToDiscussionCommand(
+            this IFixture fixture, Guid discussionId, Guid userId)
+        {
+            return fixture.Build<AddMessageToDiscussionCommand>()
+                .With(c => c.DiscussionId, discussionId)
+                .With(c => c.UserId, userId)
+                .Create();
+        }
+
+        public static CreateDiscussionCommand CreateCreateDiscussionCommand(
+            this IFixture fixture, Guid relationId, IEnumerable<Guid> userIds)
+        {
+            return fixture.Build<CreateDiscussionCommand>()
+                .With(c => c.RelationId, relationId)
+                .With(c => c.UserIds, userIds)
+                .Create();
+        }
+
         public static CreateRequestCommand CreateCreateRequestCommand(
             this IFixture fixture, Guid userId)
         {
@@ -259,6 +313,15 @@ namespace PetFamily.IntegrationTests
                 PhoneNumber.Create("89103454545").Value);
         }
 
+        public static Discussion CreateDiscussion(
+            this IFixture fixture, Guid userId, Guid adminId, Guid relationId)
+        {
+            return Discussion.Create(
+                [PetFamily.Discussions.Domain.ValueObjects.Shared.UserId.Create(userId),
+                PetFamily.Discussions.Domain.ValueObjects.Shared.UserId.Create(adminId)],
+                RelationId.Create(relationId)).Value;
+        }
+
         public static KeyValuePair<string, User> CreateParticipantUser(
             this IFixture fixture,
             Role role)
@@ -361,7 +424,7 @@ namespace PetFamily.IntegrationTests
             Guid userId)
         {
             return VolunteerRequest.Create(
-                UserId.Create(userId), 
+                PetFamily.VolunteerRequests.Domain.ValueObjects.UserId.Create(userId), 
                 VolunteerInformation.Create(fixture.Create<string>()).Value).Value;
         }
     }
