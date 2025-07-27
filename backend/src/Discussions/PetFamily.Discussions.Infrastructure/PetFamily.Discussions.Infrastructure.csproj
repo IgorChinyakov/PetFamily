@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PetFamily.Discussions.Application\PetFamily.Discussions.Application.csproj" />
+    <ProjectReference Include="..\PetFamily.Discussions.Contracts\PetFamily.Discussions.Contracts.csproj" />
     <ProjectReference Include="..\PetFamily.Discussions.Domain\PetFamily.Discussions.Domain.csproj" />
   </ItemGroup>
 

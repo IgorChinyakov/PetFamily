@@ -12,9 +12,9 @@ namespace PetFamily.Discussions.Infrastructure
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly DiscussionsDbContext _dbContext;
+        private readonly DiscussionsWriteDbContext _dbContext;
 
-        public UnitOfWork(DiscussionsDbContext dbContext)
+        public UnitOfWork(DiscussionsWriteDbContext dbContext)
         {
             _dbContext = dbContext;
         }

@@ -13,6 +13,9 @@ namespace PetFamily.Discussions.Application.Database
     public interface IDiscussionsRepository
     {
         Task<Guid> Add(Discussion discussion, CancellationToken token = default);
+
+        Task<Result<Discussion, Error>> GetById(DiscussionId discussionId);
+
         Task<Result<Discussion, Error>> GetByRelationId(RelationId relationId);
     }
 }

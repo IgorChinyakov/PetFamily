@@ -7,11 +7,12 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PetFamily.Discussions.Infrastructure.DbContexts;
 
+
 #nullable disable
 
 namespace PetFamily.Discussions.Infrastructure.Migrations
 {
-    [DbContext(typeof(DiscussionsDbContext))]
+    [DbContext(typeof(DiscussionsWriteDbContext))]
     partial class DiscussionsDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

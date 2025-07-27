@@ -26,8 +26,11 @@ namespace PetFamily.VolunteerRequests.Infrastructure
         private static IServiceCollection AddDbContexts(
            this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddScoped<DiscussionsDbContext>(_ =>
-                new DiscussionsDbContext(configuration.GetConnectionString(Constants.DATABASE)!));
+            services.AddScoped(_ =>
+                new DiscussionsWriteDbContext(configuration.GetConnectionString(Constants.DATABASE)!));
+
+            services.AddScoped<IDiscussionsReadDbContext>(_ =>
+                new DiscussionsReadDbContext(configuration.GetConnectionString(Constants.DATABASE)!));
 
             return services;
         }
