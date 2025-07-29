@@ -15,9 +15,9 @@ namespace PetFamily.Discussions.Infrastructure.Repositories
 {
     public class DiscussionsRepository : IDiscussionsRepository
     {
-        private readonly DiscussionsDbContext _dbContext;
+        private readonly DiscussionsWriteDbContext _dbContext;
 
-        public DiscussionsRepository(DiscussionsDbContext dbContext)
+        public DiscussionsRepository(DiscussionsWriteDbContext dbContext)
         {
             _dbContext = dbContext;
         }
@@ -33,6 +33,17 @@ namespace PetFamily.Discussions.Infrastructure.Repositories
         {
             var discussionResult = await _dbContext.Discussions
                 .FirstOrDefaultAsync(v => v.RelationId == relationId);
+
+            if (discussionResult == null)
+                return Errors.General.NotFound();
+
+            return discussionResult;
+        }
+
+        public async Task<Result<Discussion, Error>> GetById(DiscussionId discussionId)
+        {
+            var discussionResult = await _dbContext.Discussions
+                .FirstOrDefaultAsync(v => v.Id == discussionId);
 
             if (discussionResult == null)
                 return Errors.General.NotFound();

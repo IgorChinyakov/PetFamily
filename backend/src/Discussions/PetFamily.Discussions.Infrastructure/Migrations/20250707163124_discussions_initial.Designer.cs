@@ -8,11 +8,12 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PetFamily.Discussions.Infrastructure.DbContexts;
 
+
 #nullable disable
 
 namespace PetFamily.Discussions.Infrastructure.Migrations
 {
-    [DbContext(typeof(DiscussionsDbContext))]
+    [DbContext(typeof(DiscussionsWriteDbContext))]
     [Migration("20250707163124_discussions_initial")]
     partial class discussions_initial
     {

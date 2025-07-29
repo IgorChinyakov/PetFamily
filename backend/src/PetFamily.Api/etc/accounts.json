@@ -21,7 +21,12 @@
       "accounts.get",
       "volunteer.requests.update.status",
       "volunteer.requests.get",
-      "volunteer.requests.get.by.user.id"
+      "volunteer.requests.get.by.user.id",
+      "discussions.update",
+      "discussions.get",
+      "messages.delete",
+      "messages.update",
+      "messages.create"
     ],
     "Participant": [
       "volunteers.get.pet",
@@ -29,7 +34,10 @@
       "accounts.get",
       "volunteer.requests.create",
       "volunteer.requests.update",
-      "volunteer.requests.get.by.user.id"
+      "volunteer.requests.get.by.user.id",
+      "messages.delete",
+      "messages.update",
+      "messages.create"
     ],
     "Volunteer": [
       "volunteers.create",
@@ -76,6 +84,13 @@
       "volunteer.requests.update",
       "volunteer.requests.get",
       "volunteer.requests.get.by.user.id"
+    ],
+    "Discussions": [
+      "discussions.update",
+      "discussions.get",
+      "messages.delete",
+      "messages.update",
+      "messages.create"
     ]
   }
 }

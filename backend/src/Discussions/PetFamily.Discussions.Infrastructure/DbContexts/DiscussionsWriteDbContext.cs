@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace PetFamily.Discussions.Infrastructure.DbContexts
 {
-    public class DiscussionsDbContext : DbContext
+    public class DiscussionsWriteDbContext : DbContext
     {
         private readonly string _connectionString;
 
-        public DiscussionsDbContext(string ConnectionString)
+        public DiscussionsWriteDbContext(string ConnectionString)
         {
             _connectionString = ConnectionString;
         }
@@ -29,7 +29,7 @@ namespace PetFamily.Discussions.Infrastructure.DbContexts
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(
-                typeof(DiscussionsDbContext).Assembly,
+                typeof(DiscussionsWriteDbContext).Assembly,
                 type => type.FullName?.Contains("Configurations.Write") ?? false);
 
             modelBuilder.HasDefaultSchema("discussions");

@@ -1,5 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
-using PetFamily.Discussions.Application.Features.Create;
+using PetFamily.Discussions.Application.Features.Commands.Create;
 using PetFamily.Discussions.Contracts;
 using PetFamily.Discussions.Contracts.Requests;
 using PetFamily.SharedKernel;

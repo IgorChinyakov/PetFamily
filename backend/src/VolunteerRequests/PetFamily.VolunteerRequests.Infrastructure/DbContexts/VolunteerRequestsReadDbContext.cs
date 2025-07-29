@@ -27,6 +27,7 @@ namespace PetFamily.VolunteerRequests.Infrastructure.DbContexts
         {
             optionsBuilder.UseNpgsql(_connectionString);
             optionsBuilder.UseLoggerFactory(CreateLoggerFactory());
+            optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

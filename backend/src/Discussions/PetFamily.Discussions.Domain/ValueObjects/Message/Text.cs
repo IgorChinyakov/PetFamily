@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PetFamily.Discussions.Domain.ValueObjects.Message
 {
-    public class Text
+    public class Text : ValueObject
     {
         private Text(string value)
         {
@@ -23,6 +23,11 @@ namespace PetFamily.Discussions.Domain.ValueObjects.Message
                 return Errors.General.ValueIsInvalid("text");
 
             return new Text(value);
+        }
+
+        protected override IEnumerable<object> GetEqualityComponents()
+        {
+            yield return Value;
         }
     }
 }

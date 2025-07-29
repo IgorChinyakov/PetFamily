@@ -6,6 +6,11 @@ using PetFamily.Accounts.Application.Providers;
 using PetFamily.Accounts.Domain.Entities;
 using PetFamily.Accounts.Infrastructure.Authorization.Managers;
 using PetFamily.Accounts.Infrastructure.Authorization.Seeding;
+using PetFamily.Discussions.Application.Database;
+using PetFamily.Discussions.Domain.Entities;
+using PetFamily.Discussions.Domain.ValueObjects.Discussion;
+using PetFamily.Discussions.Domain.ValueObjects.Message;
+using PetFamily.Discussions.Domain.ValueObjects.Shared;
 using PetFamily.Discussions.Infrastructure.DbContexts;
 using PetFamily.Specieses.Application.Database;
 using PetFamily.Specieses.Infrastructure.DbContexts;
@@ -23,7 +28,8 @@ namespace PetFamily.IntegrationTests
         protected readonly SpeciesWriteDbContext SpeciesWriteDbContext;
         protected readonly VolunteersWriteDbContext VolunteersWriteDbContext;
         protected readonly VolunteerRequestsWriteDbContext VolunteerRequestsWriteDbContext;
-        protected readonly DiscussionsDbContext DiscussionsDbContext;
+        protected readonly DiscussionsWriteDbContext DiscussionsWriteDbContext;
+        protected readonly IDiscussionsReadDbContext DiscussionsReadDbContext;
         protected readonly ISpeciesReadDbContext SpeciesReadDbContext;
         protected readonly IVolunteersReadDbContext VolunteersReadDbContext;
         protected readonly IVolunteerRequestsReadDbContext VolunteerRequestsReadDbContext;
@@ -45,10 +51,11 @@ namespace PetFamily.IntegrationTests
             SpeciesReadDbContext = Scope.ServiceProvider.GetRequiredService<ISpeciesReadDbContext>();
             VolunteersReadDbContext = Scope.ServiceProvider.GetRequiredService<IVolunteersReadDbContext>();
             VolunteerRequestsReadDbContext = Scope.ServiceProvider.GetRequiredService<IVolunteerRequestsReadDbContext>();
+            DiscussionsReadDbContext = Scope.ServiceProvider.GetRequiredService<IDiscussionsReadDbContext>();
             VolunteerRequestsWriteDbContext = Scope.ServiceProvider.GetRequiredService<VolunteerRequestsWriteDbContext>();
             SpeciesWriteDbContext = Scope.ServiceProvider.GetRequiredService<SpeciesWriteDbContext>();
             VolunteersWriteDbContext = Scope.ServiceProvider.GetRequiredService<VolunteersWriteDbContext>();
-            DiscussionsDbContext = Scope.ServiceProvider.GetRequiredService<DiscussionsDbContext>();
+            DiscussionsWriteDbContext = Scope.ServiceProvider.GetRequiredService<DiscussionsWriteDbContext>();
             UserManager = Scope.ServiceProvider.GetRequiredService<UserManager<User>>();
             RoleManager = Scope.ServiceProvider.GetRequiredService<RoleManager<Role>>();
             ParticipantAccountManager = Scope.ServiceProvider.GetRequiredService<IParticipantAccountManager>();
@@ -117,6 +124,64 @@ namespace PetFamily.IntegrationTests
             await VolunteersWriteDbContext.SaveChangesAsync();
 
             return volunteer.Id;
+        }
+
+        public async Task<Guid> SeedMessageToDiscussion(
+            Guid discussionId, Guid userId, string text)
+        {
+            var discussion = await DiscussionsWriteDbContext.Discussions
+                .Include(d => d.Messages)
+                .FirstOrDefaultAsync(d => d.Id == 
+                PetFamily.Discussions.Domain.ValueObjects.Discussion.DiscussionId.Create(discussionId));
+
+            var messageId = discussion!.AddMessage(Text.Create(text).Value, 
+                PetFamily.Discussions.Domain.ValueObjects.Shared.UserId.Create(userId)).Value;
+
+            await DiscussionsWriteDbContext.SaveChangesAsync();
+
+            return messageId.Value;
+        }
+
+        public async Task SeedMessagesToDiscussion(
+            Guid discussionId, Guid userId, int count)
+        {
+            var discussion = await DiscussionsWriteDbContext.Discussions
+                .Include(d => d.Messages)
+                .FirstOrDefaultAsync(d => d.Id == 
+                PetFamily.Discussions.Domain.ValueObjects.Discussion.DiscussionId.Create(discussionId));
+
+            for (int i = 0; i < count; i++)
+            {
+                discussion!.AddMessage(Text.Create("text").Value,
+                PetFamily.Discussions.Domain.ValueObjects.Shared.UserId.Create(userId));
+            }
+
+            await DiscussionsWriteDbContext.SaveChangesAsync();
+        }
+
+        public async Task<Discussion> SeedDiscussion(
+            Guid userId, Guid adminId, Guid relationId)
+        {
+            var discussion = Fixture.CreateDiscussion(userId, adminId, relationId);
+
+            await DiscussionsWriteDbContext.Discussions.AddAsync(discussion);
+
+            await DiscussionsWriteDbContext.SaveChangesAsync();
+
+            return discussion;
+        }
+
+        public async Task<Guid> SeedClosedDiscussion(
+            Guid userId, Guid adminId, Guid relationId)
+        {
+            var discussion = Fixture.CreateDiscussion(userId, adminId, relationId);
+            discussion.Close();
+
+            await DiscussionsWriteDbContext.Discussions.AddAsync(discussion);
+
+            await DiscussionsWriteDbContext.SaveChangesAsync();
+
+            return discussion.Id.Value;
         }
 
         public async Task<Guid> SeedParticipantUser()
@@ -197,7 +262,8 @@ namespace PetFamily.IntegrationTests
         {
             var request = Fixture.CreateVolunteerRequest(userId);
             await VolunteerRequestsWriteDbContext.VolunteerRequests.AddAsync(request);
-            request.TakeOnReview(AdminId.Create(adminId), DiscussionId.NewDiscussionId());
+            request.TakeOnReview(AdminId.Create(adminId), 
+                PetFamily.VolunteerRequests.Domain.ValueObjects.DiscussionId.NewDiscussionId());
 
             await VolunteerRequestsWriteDbContext.SaveChangesAsync();
 
@@ -208,7 +274,8 @@ namespace PetFamily.IntegrationTests
         {
             var request = Fixture.CreateVolunteerRequest(userId);
             await VolunteerRequestsWriteDbContext.VolunteerRequests.AddAsync(request);
-            request.TakeOnReview(AdminId.Create(adminId), DiscussionId.NewDiscussionId());
+            request.TakeOnReview(AdminId.Create(adminId), 
+                PetFamily.VolunteerRequests.Domain.ValueObjects.DiscussionId.NewDiscussionId());
             request.SendForRevision(RejectionComment.Create("rejection comment").Value);
 
             await VolunteerRequestsWriteDbContext.SaveChangesAsync();

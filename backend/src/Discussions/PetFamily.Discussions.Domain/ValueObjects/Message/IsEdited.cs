@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CSharpFunctionalExtensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PetFamily.Discussions.Domain.ValueObjects.Message
 {
-    public class IsEdited
+    public class IsEdited : ValueObject
     {
         private IsEdited(bool value)
         {
@@ -17,5 +18,10 @@ namespace PetFamily.Discussions.Domain.ValueObjects.Message
 
         public static IsEdited Create(bool value) 
             => new(value);
+
+        protected override IEnumerable<object> GetEqualityComponents()
+        {
+            yield return Value;
+        }
     }
 }

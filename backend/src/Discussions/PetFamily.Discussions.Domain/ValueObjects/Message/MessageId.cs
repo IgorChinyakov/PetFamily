@@ -1,4 +1,5 @@
-﻿using PetFamily.Discussions.Domain.ValueObjects.Discussion;
+﻿using CSharpFunctionalExtensions;
+using PetFamily.Discussions.Domain.ValueObjects.Discussion;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PetFamily.Discussions.Domain.ValueObjects.Message
 {
-    public class MessageId
+    public class MessageId : ValueObject, IComparable<MessageId>
     {
         private MessageId(Guid value)
         {
@@ -21,5 +22,18 @@ namespace PetFamily.Discussions.Domain.ValueObjects.Message
         public static MessageId New() => new(Guid.NewGuid());
 
         public static MessageId Empty() => new(Guid.Empty);
+
+        protected override IEnumerable<object> GetEqualityComponents()
+        {
+            yield return Value;
+        }
+
+        public int CompareTo(MessageId? obj)
+        {
+            if (obj == null)
+                throw new Exception();
+
+            return Value.CompareTo(obj.Value);
+        }
     }
 }
