@@ -1,0 +1,66 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>1b426776-84b3-434e-a831-dd9e42e1b787</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>..\..</DockerfileContext>
+  </PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="DotNetEnv" Version="3.1.1" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.15" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.4">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.2" />
+		<PackageReference Include="oqo0.SwaggerThemes" Version="1.4.3" />
+		<PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
+		<PackageReference Include="Serilog.Enrichers.Environment" Version="3.0.1" />
+		<PackageReference Include="Serilog.Enrichers.Thread" Version="4.0.0" />
+		<PackageReference Include="Serilog.Exceptions" Version="8.4.0" />
+		<PackageReference Include="Serilog.Sinks.Http" Version="9.1.1" />
+		<PackageReference Include="Serilog.Sinks.Seq" Version="9.0.0" />
+		<PackageReference Include="Serilog.Sinks.Trace" Version="4.0.0" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.1" />
+		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="8.1.1" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Accounts\PetFamily.Accounts.Application\PetFamily.Accounts.Application.csproj" />
+		<ProjectReference Include="..\Accounts\PetFamily.Accounts.Contracts\PetFamily.Accounts.Contracts.csproj" />
+		<ProjectReference Include="..\Accounts\PetFamily.Accounts.Domain\PetFamily.Accounts.Domain.csproj" />
+		<ProjectReference Include="..\Accounts\PetFamily.Accounts.Infrastructure\PetFamily.Accounts.Infrastructure.csproj" />
+		<ProjectReference Include="..\Accounts\PetFamily.Accounts.Presentation\PetFamily.Accounts.Presentation.csproj" />
+		<ProjectReference Include="..\Discussions\PetFamily.Discussions.Application\PetFamily.Discussions.Application.csproj" />
+		<ProjectReference Include="..\Discussions\PetFamily.Discussions.Contracts\PetFamily.Discussions.Contracts.csproj" />
+		<ProjectReference Include="..\Discussions\PetFamily.Discussions.Domain\PetFamily.Discussions.Domain.csproj" />
+		<ProjectReference Include="..\Discussions\PetFamily.Discussions.Infrastructure\PetFamily.Discussions.Infrastructure.csproj" />
+		<ProjectReference Include="..\Discussions\PetFamily.Discussions.Presentation\PetFamily.Discussions.Presentation.csproj" />
+		<ProjectReference Include="..\Files\PetFamily.Files.Application\PetFamily.Files.Application.csproj" />
+		<ProjectReference Include="..\Files\PetFamily.Files.Contracts\PetFamily.Files.Contracts.csproj" />
+		<ProjectReference Include="..\Files\PetFamily.Files.Infrastructure\PetFamily.Files.Infrastructure.csproj" />
+		<ProjectReference Include="..\Files\PetFamily.Files.Presentation\PetFamily.Files.Presentation.csproj" />
+		<ProjectReference Include="..\Shared\PetFamily.Framework\PetFamily.Framework.csproj" />
+		<ProjectReference Include="..\Shared\PetFamily.SharedKernel\PetFamily.SharedKernel.csproj" />
+		<ProjectReference Include="..\Species\PetFamily.Specieses.Application\PetFamily.Specieses.Application.csproj" />
+		<ProjectReference Include="..\Species\PetFamily.Specieses.Contracts\PetFamily.Specieses.Contracts.csproj" />
+		<ProjectReference Include="..\Species\PetFamily.Specieses.Domain\PetFamily.Specieses.Domain.csproj" />
+		<ProjectReference Include="..\Species\PetFamily.Specieses.Infrastructure\PetFamily.Specieses.Infrastructure.csproj" />
+		<ProjectReference Include="..\Species\PetFamily.Specieses.Presentation\PetFamily.Specieses.Presentation.csproj" />
+		<ProjectReference Include="..\VolunteerRequests\PetFamily.VolunteerRequests.Application\PetFamily.VolunteerRequests.Application.csproj" />
+		<ProjectReference Include="..\VolunteerRequests\PetFamily.VolunteerRequests.Contracts\PetFamily.VolunteerRequests.Contracts.csproj" />
+		<ProjectReference Include="..\VolunteerRequests\PetFamily.VolunteerRequests.Domain\PetFamily.VolunteerRequests.Domain.csproj" />
+		<ProjectReference Include="..\VolunteerRequests\PetFamily.VolunteerRequests.Infrastructure\PetFamily.VolunteerRequests.Infrastructure.csproj" />
+		<ProjectReference Include="..\VolunteerRequests\PetFamily.VolunteerRequests.Presentation\PetFamily.VolunteerRequests.Presentation.csproj" />
+		<ProjectReference Include="..\Volunteers\PetFamily.Volunteers.Application\PetFamily.Volunteers.Application.csproj" />
+		<ProjectReference Include="..\Volunteers\PetFamily.Volunteers.Contracts\PetFamily.Volunteers.Contracts.csproj" />
+		<ProjectReference Include="..\Volunteers\PetFamily.Volunteers.Domain\PetFamily.Volunteers.Domain.csproj" />
+		<ProjectReference Include="..\Volunteers\PetFamily.Volunteers.Infrastructure\PetFamily.Volunteers.Infrastructure.csproj" />
+		<ProjectReference Include="..\Volunteers\PetFamily.Volunteers.Presentation\PetFamily.Volunteers.Presentation.csproj" />
+	</ItemGroup>
+
+</Project>
