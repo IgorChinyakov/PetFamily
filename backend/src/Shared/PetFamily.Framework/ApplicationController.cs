@@ -7,7 +7,7 @@ using System.Security.Claims;
 namespace PetFamily.Framework
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class ApplicationController : ControllerBase
     {
         protected Result<Guid, Error> GetUserId()
