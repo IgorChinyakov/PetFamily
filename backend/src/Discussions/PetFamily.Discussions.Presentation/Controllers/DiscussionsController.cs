@@ -11,6 +11,8 @@ using PetFamily.Discussions.Contracts.DTOs;
 using PetFamily.Discussions.Contracts.Requests;
 using PetFamily.Framework;
 using PetFamily.Framework.Authorization;
+using PetFamily.Framework.Filters;
+using PetFamily.Framework.Processors;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +21,7 @@ using System.Threading.Tasks;
 
 namespace PetFamily.Discussions.Presentation.Controllers
 {
+    [ServiceFilter(typeof(UserScopedDataFilter))]
     public class DiscussionsController : ApplicationController
     {
         [Permission(Permissions.Discussions.UPDATE)]
@@ -44,8 +47,8 @@ namespace PetFamily.Discussions.Presentation.Controllers
             [FromBody] AddMessageToDiscussionRequest request)
         {
             var command = new AddMessageToDiscussionCommand(
-                discussionId, 
-                GetUserId().Value, 
+                discussionId,
+                UserScopedData!.Id!.Value, 
                 request.Text);
 
             var result = await handler.Handle(command);
@@ -66,7 +69,7 @@ namespace PetFamily.Discussions.Presentation.Controllers
             var command = new EditMessageCommand(
                 discussionId,
                 messageId,
-                GetUserId().Value,
+                UserScopedData!.Id!.Value,
                 request.EditedMessage);
 
             var result = await handler.Handle(command);
@@ -86,7 +89,7 @@ namespace PetFamily.Discussions.Presentation.Controllers
             var command = new RemoveMessageCommand(
                 discussionId,
                 messageId,
-                GetUserId().Value);
+                UserScopedData!.Id!.Value);
 
             var result = await handler.Handle(command);
             if (result.IsFailure)

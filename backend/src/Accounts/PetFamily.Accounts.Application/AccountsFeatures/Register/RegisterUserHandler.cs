@@ -59,7 +59,7 @@ namespace PetFamily.Accounts.Application.Accounts.Register
             if (userResult.IsFailure)
                 return userResult.Error.ToErrorsList();
 
-            var transaction = await  _unitOfWork.BeginTransaction();
+            var transaction = await _unitOfWork.BeginTransaction();
 
             var result = await _userManager.CreateAsync(userResult.Value, command.Password);
             if (!result.Succeeded)

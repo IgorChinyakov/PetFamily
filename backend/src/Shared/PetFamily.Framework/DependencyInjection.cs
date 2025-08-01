@@ -2,7 +2,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 using PetFamily.Accounts.Contracts;
+using PetFamily.Core.Models;
 using PetFamily.Framework.Authorization;
+using PetFamily.Framework.Filters;
+using PetFamily.Framework.Processors;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +21,9 @@ namespace PetFamily.Framework
         {
             services.AddSingleton<IAuthorizationHandler, PermissionRequirementHandler>();
             services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
+            services.AddHttpContextAccessor();
+            services.AddScoped<UserScopedDataProccessor>();
+            services.AddScoped<UserScopedDataFilter>();
 
             return services;
         }
