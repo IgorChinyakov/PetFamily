@@ -3,6 +3,8 @@ using PetFamily.Core.Abstractions;
 using PetFamily.Core.Models;
 using PetFamily.Framework;
 using PetFamily.Framework.Authorization;
+using PetFamily.Framework.Filters;
+using PetFamily.Framework.Processors;
 using PetFamily.VolunteerRequests.Application.Features.Commands.Approve;
 using PetFamily.VolunteerRequests.Application.Features.Commands.Create;
 using PetFamily.VolunteerRequests.Application.Features.Commands.Reject;
@@ -22,6 +24,7 @@ using System.Threading.Tasks;
 
 namespace PetFamily.VolunteerRequests.Presentation.Controllers
 {
+    [ServiceFilter(typeof(UserScopedDataFilter))]
     public class VolunteerRequestsController
         : ApplicationController
     {
@@ -31,7 +34,7 @@ namespace PetFamily.VolunteerRequests.Presentation.Controllers
             [FromServices] ICommandHandler<Guid, CreateRequestCommand> handler,
             [FromBody] CreateVolunteerRequestRequest request)
         {
-            var command = new CreateRequestCommand(GetUserId().Value, request.VolunteerInformation);
+            var command = new CreateRequestCommand(UserScopedData!.Id!.Value, request.VolunteerInformation);
 
             var result = await handler.Handle(command);
             if (result.IsFailure)
@@ -46,7 +49,7 @@ namespace PetFamily.VolunteerRequests.Presentation.Controllers
             [FromServices] ICommandHandler<TakeRequestOnReviewCommand> handler,
             [FromRoute] Guid requestId)
         {
-            var command = new TakeRequestOnReviewCommand(requestId, GetUserId().Value);
+            var command = new TakeRequestOnReviewCommand(requestId, UserScopedData!.Id!.Value);
 
             var result = await handler.Handle(command);
             if (result.IsFailure)
@@ -64,7 +67,7 @@ namespace PetFamily.VolunteerRequests.Presentation.Controllers
         {
             var command = new SendRequestForRevisionCommand(
                 requestId,
-                GetUserId().Value,
+                UserScopedData!.Id!.Value,
                 request.rejectionComment);
 
             var result = await handler.Handle(command);
@@ -80,7 +83,7 @@ namespace PetFamily.VolunteerRequests.Presentation.Controllers
             [FromServices] ICommandHandler<RejectRequestCommand> handler,
             [FromRoute] Guid requestId)
         {
-            var command = new RejectRequestCommand(GetUserId().Value, requestId);
+            var command = new RejectRequestCommand(UserScopedData!.Id!.Value, requestId);
 
             var result = await handler.Handle(command);
             if (result.IsFailure)
@@ -95,7 +98,7 @@ namespace PetFamily.VolunteerRequests.Presentation.Controllers
             [FromServices] ICommandHandler<ApproveRequestCommand> handler,
             [FromRoute] Guid requestId)
         {
-            var command = new ApproveRequestCommand(requestId, GetUserId().Value);
+            var command = new ApproveRequestCommand(requestId, UserScopedData!.Id!.Value);
 
             var result = await handler.Handle(command);
             if (result.IsFailure)
@@ -113,7 +116,7 @@ namespace PetFamily.VolunteerRequests.Presentation.Controllers
         {
             var command = new UpdateRequestCommand(
                 requestId,
-                GetUserId().Value,
+                UserScopedData!.Id!.Value,
                 request.UpdatedInformation);
 
             var result = await handler.Handle(command);
@@ -146,7 +149,7 @@ namespace PetFamily.VolunteerRequests.Presentation.Controllers
             [FromBody] GetRequestsByAdminIdRequest request)
         {
             var query = new GetRequestsByAdminIdQuery(
-                GetUserId().Value,
+                UserScopedData!.Id!.Value,
                 request.Page,
                 request.PageSize,
                 request.Status);
@@ -164,7 +167,7 @@ namespace PetFamily.VolunteerRequests.Presentation.Controllers
             [FromBody] GetRequestsByUserIdRequest request)
         {
             var query = new GetRequestsByUserIdQuery(
-                GetUserId().Value,
+                UserScopedData!.Id!.Value,
                 request.Page,
                 request.PageSize,
                 request.Status);
