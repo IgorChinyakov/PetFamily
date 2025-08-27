@@ -1,18 +1,28 @@
-﻿using PetFamily.Volunteers.Application;
-using PetFamily.Specieses.Application;
-using PetFamily.Volunteers.Infrastructure;
-using PetFamily.Files.Infrastructure;
-using PetFamily.Specieses.Infrastructure;
-using PetFamily.Volunteers.Presentation;
-using PetFamily.Specieses.Presentation;
-using PetFamily.Files.Presentation;
+﻿using MassTransit;
+using MassTransit.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using PetFamily.Accounts.Application;
 using PetFamily.Accounts.Infrastructure;
+using PetFamily.Accounts.Infrastructure.Consumers;
 using PetFamily.Accounts.Presentation;
-using PetFamily.VolunteerRequests.Infrastructure;
-using PetFamily.VolunteerRequests.Application;
+using PetFamily.Core.Options;
 using PetFamily.Discussions.Application;
+using PetFamily.Discussions.Infrastructure;
+using PetFamily.Discussions.Infrastructure.Consumers;
 using PetFamily.Discussions.Presentation;
+using PetFamily.Files.Infrastructure;
+using PetFamily.Files.Presentation;
+using PetFamily.Specieses.Application;
+using PetFamily.Specieses.Infrastructure;
+using PetFamily.Specieses.Presentation;
+using PetFamily.VolunteerRequests.Application;
+using PetFamily.VolunteerRequests.Infrastructure;
+using PetFamily.VolunteerRequests.Infrastructure.Consumers;
+using PetFamily.VolunteerRequests.Presentation;
+using PetFamily.Volunteers.Application;
+using PetFamily.Volunteers.Infrastructure;
+using PetFamily.Volunteers.Presentation;
 
 namespace PetFamily.Web
 {
@@ -66,7 +76,8 @@ namespace PetFamily.Web
         {
             services
                 .AddVolunteerRequestsInfrastructure(configuration)
-                .AddVolunteerRequestsApplication();
+                .AddVolunteerRequestsApplication()
+                .AddVolunteerRequestsContracts();
 
             return services;
         }
@@ -78,6 +89,35 @@ namespace PetFamily.Web
                 .AddDiscussionsInfrastructure(configuration)
                 .AddDiscussionsApplication()
                 .AddDiscussionsContracts();
+
+            return services;
+        }
+
+        public static IServiceCollection AddMessageBus(
+            this IServiceCollection services,
+            IConfiguration configuration)
+        {
+            var options = configuration.GetSection(RabbitMQOptions.RABBIT_MQ).Get<RabbitMQOptions>()!;
+
+            services.AddMassTransit(conf =>
+            {
+                conf.AddConsumer<RequestTakenOnReview_CreateDiscussionConsumer>();
+                conf.AddConsumer<DiscussionCreated_UpdateRequestConsumer>();
+                conf.AddConsumer<RequestApproved_CreateVolunteerAccountConsumer>();
+
+                conf.UsingRabbitMq((context, cfg) =>
+                {
+                    cfg.Host(new Uri(options.Host), h =>
+                    {
+                        h.Username(options.UserName);
+                        h.Password(options.Password);
+                    });
+
+                    cfg.Durable = true;
+
+                    cfg.ConfigureEndpoints(context);
+                });
+            });
 
             return services;
         }

@@ -74,7 +74,7 @@ namespace PetFamily.VolunteerRequests.Domain.Entities
             return Result.Success<Error>();
         }
 
-        public UnitResult<Error> TakeOnReview(AdminId adminId, DiscussionId discussionId)
+        public UnitResult<Error> TakeOnReview(AdminId adminId)
         {
             if (RequestStatus.Value != RequestStatus.Status.Submitted && 
                 RequestStatus.Value != RequestStatus.Status.RevisionRequired)
@@ -85,10 +85,12 @@ namespace PetFamily.VolunteerRequests.Domain.Entities
 
             RequestStatus = RequestStatus.Create(RequestStatus.Status.OnReview).Value;
             AdminId = adminId;
-            DiscussionId = discussionId;
 
             return Result.Success<Error>();
         }
+
+        public void UpdateDiscussionId(DiscussionId discussionId)
+            => DiscussionId = discussionId;
 
         public void Reject()
         {

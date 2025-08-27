@@ -1,4 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
+using DotNet.Testcontainers.Builders;
+using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -6,11 +8,14 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Npgsql;
 using NSubstitute;
 using PetFamily.Accounts.Infrastructure;
 using PetFamily.Accounts.Infrastructure.Authorization.Seeding;
+using PetFamily.Accounts.Infrastructure.Consumers;
 using PetFamily.Discussions.Application.Database;
+using PetFamily.Discussions.Infrastructure.Consumers;
 using PetFamily.Discussions.Infrastructure.DbContexts;
 using PetFamily.Files.Application;
 using PetFamily.Files.Contracts;
@@ -21,13 +26,17 @@ using PetFamily.Specieses.Application.Database;
 using PetFamily.Specieses.Infrastructure.BackgroundServices;
 using PetFamily.Specieses.Infrastructure.DbContexts;
 using PetFamily.VolunteerRequests.Application.Database;
+using PetFamily.VolunteerRequests.Infrastructure.Consumers;
 using PetFamily.VolunteerRequests.Infrastructure.DbContexts;
 using PetFamily.Volunteers.Application.Database;
 using PetFamily.Volunteers.Infrastructure.BackgroundServices;
 using PetFamily.Volunteers.Infrastructure.DbContexts;
 using Respawn;
+using System.ComponentModel;
 using System.Data.Common;
 using Testcontainers.PostgreSql;
+using Testcontainers.RabbitMq;
+using static MassTransit.Logging.DiagnosticHeaders.Messaging;
 
 namespace PetFamily.IntegrationTests
 {
@@ -43,6 +52,14 @@ namespace PetFamily.IntegrationTests
             .WithPassword("1234")
             .Build();
 
+        private readonly RabbitMqContainer _rabbitMQContainer = new RabbitMqBuilder()
+            .WithImage("rabbitmq:3.13.7-management")
+            .WithUsername("test")
+            .WithPassword("rabbitmqtest")
+            .WithEnvironment("RABBITMQ_DEFAULT_USER", "test")
+            .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(5672))
+            .Build();
+
         private Respawner _respawner = default!;
         private DbConnection _dbConnection = default!;
 
@@ -54,6 +71,14 @@ namespace PetFamily.IntegrationTests
 
         protected virtual void ConfigureDefaultServices(IServiceCollection services)
         {
+            //rabbit
+            var descriptors = services
+                .Where(d => d.ImplementationType?.Name?.Contains("MassTransit") == true
+                    || d.ServiceType.FullName?.Contains("MassTransit") == true)
+                .ToList();
+
+            foreach (var d in descriptors)
+                services.Remove(d);
             //contexts
             var volunteersWriteContext = services.SingleOrDefault(s =>
                 s.ServiceType == typeof(VolunteersWriteDbContext));
@@ -172,6 +197,26 @@ namespace PetFamily.IntegrationTests
 
             services.AddScoped<IDiscussionsReadDbContext>(_ =>
                 new DiscussionsReadDbContext(_dbContainer.GetConnectionString()));
+
+            services.AddMassTransit(conf =>
+            {
+                conf.AddConsumer<RequestTakenOnReview_CreateDiscussionConsumer>();
+                conf.AddConsumer<DiscussionCreated_UpdateRequestConsumer>();
+                conf.AddConsumer<RequestApproved_CreateVolunteerAccountConsumer>();
+
+                conf.UsingRabbitMq((context, cfg) =>
+                {
+                    cfg.Host(new Uri($"amqp://test:rabbitmqtest@localhost:{_rabbitMQContainer.GetMappedPublicPort(5672)}"), h =>
+                    {
+                        h.Username("test");
+                        h.Password("rabbitmqtest");
+                    });
+
+                    cfg.Durable = true;
+
+                    cfg.ConfigureEndpoints(context);
+                });
+            });
         }
 
         public void SetupSuccessFilesProviderMock()
@@ -196,20 +241,20 @@ namespace PetFamily.IntegrationTests
         public new async Task DisposeAsync()
         {
             await _dbContainer.StopAsync();
+            await _rabbitMQContainer.StopAsync();
             await _dbContainer.DisposeAsync();
+            await _rabbitMQContainer.DisposeAsync();
         }
 
         public async Task InitializeAsync()
         {
             await _dbContainer.StartAsync();
+            await _rabbitMQContainer.StartAsync();
 
             using var scope = Services.CreateScope();
 
             var volunteerRequestsWriteDbContext = scope.ServiceProvider.GetRequiredService<VolunteerRequestsWriteDbContext>();
             await volunteerRequestsWriteDbContext.Database.MigrateAsync();
-
-            var discussionsDbContext = scope.ServiceProvider.GetRequiredService<DiscussionsWriteDbContext>();
-            await discussionsDbContext.Database.MigrateAsync();
 
             var volunteersWriteDbContext = scope.ServiceProvider.GetRequiredService<VolunteersWriteDbContext>();
             await volunteersWriteDbContext.Database.MigrateAsync();

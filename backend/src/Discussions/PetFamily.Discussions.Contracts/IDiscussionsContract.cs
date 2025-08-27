@@ -11,7 +11,7 @@ namespace PetFamily.Discussions.Contracts
 {
     public interface IDiscussionsContract
     {
-        public Task<Result<Guid, ErrorsList>> CreateDiscussion(
+        Task<Result<Guid, ErrorsList>> CreateDiscussion(
             CreateDiscussionRequest request,
             CancellationToken cancellationToken = default);
     }
