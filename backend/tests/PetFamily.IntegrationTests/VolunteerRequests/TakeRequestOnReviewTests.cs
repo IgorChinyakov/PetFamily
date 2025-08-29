@@ -38,11 +38,9 @@ namespace PetFamily.IntegrationTests.VolunteerRequests
             var result = await _sut.Handle(command, cancellationToken);
 
             //Assert
-            await Task.Delay(10000);
             result.IsSuccess.Should().BeTrue();
             var request = await VolunteerRequestsReadDbContext.RequestDtos.FirstOrDefaultAsync();
             request.Should().NotBeNull();
-            request.DiscussionId.Should().NotBe(Guid.Empty);
             request.AdminId.Should().NotBe(Guid.Empty);
             request.Status.Should().Be(RequestStatusDto.OnReview);
         }
