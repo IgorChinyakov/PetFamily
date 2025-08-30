@@ -83,6 +83,9 @@ builder.Services
 builder.Services
     .AddFramework();
 
+builder.Services
+    .AddMessageBus(builder.Configuration);
+
 var app = builder.Build();
 
 app.UseExceptionMiddleware();

@@ -1,14 +1,14 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using MassTransit;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using PetFamily.Core.Abstractions.Database;
 using PetFamily.Core.Options;
 using PetFamily.Discussions.Application.Database;
-using PetFamily.Discussions.Infrastructure;
 using PetFamily.Discussions.Infrastructure.DbContexts;
 using PetFamily.Discussions.Infrastructure.Repositories;
 using PetFamily.SharedKernel;
 
-namespace PetFamily.VolunteerRequests.Infrastructure
+namespace PetFamily.Discussions.Infrastructure
 {
     public static class DependencyInjection
     {

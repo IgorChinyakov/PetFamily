@@ -61,7 +61,7 @@ namespace PetFamily.VolunteerRequests.Application.Features.Commands.Update
 
             var volunteerInformation = VolunteerInformation.Create(command.UpdatedInformation).Value;
             request.Value.UpdateVolunteerInformation(volunteerInformation);
-            request.Value.TakeOnReview(request.Value.AdminId!, request.Value.DiscussionId!);
+            request.Value.TakeOnReview(request.Value.AdminId!);
 
             await _unitOfWork.SaveChanges();
 

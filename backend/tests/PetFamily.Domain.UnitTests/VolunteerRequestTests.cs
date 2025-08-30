@@ -36,12 +36,11 @@ namespace PetFamily.Domain.UnitTests
             var discussionId = DiscussionId.Create(Guid.NewGuid());
 
             // act
-            request.Value.TakeOnReview(adminId, discussionId);
+            request.Value.TakeOnReview(adminId);
 
             // assert
             request.Value.RequestStatus.Value.Should().Be(RequestStatus.Status.OnReview);
             request.Value.AdminId.Should().Be(adminId);
-            request.Value.DiscussionId.Should().Be(discussionId);
         }
 
         [Fact]
@@ -52,9 +51,8 @@ namespace PetFamily.Domain.UnitTests
             var information = VolunteerInformation.Create("some information").Value;
             var rejectionComment = RejectionComment.Create("rejection comment").Value;
             var request = VolunteerRequest.Create(userId, information);
-            var discussionId = DiscussionId.Create(Guid.NewGuid());
             var adminId = AdminId.Create(Guid.NewGuid());
-            request.Value.TakeOnReview(adminId, discussionId);
+            request.Value.TakeOnReview(adminId);
 
             // act
             var sendForRevisionResult = request.Value.SendForRevision(rejectionComment);
@@ -73,8 +71,7 @@ namespace PetFamily.Domain.UnitTests
             var information = VolunteerInformation.Create("some information").Value;
             var request = VolunteerRequest.Create(userId, information);
             var adminId = AdminId.Create(Guid.NewGuid());
-            var discussionId = DiscussionId.Create(Guid.NewGuid());
-            request.Value.TakeOnReview(adminId, discussionId);
+            request.Value.TakeOnReview(adminId);
 
             // act
             request.Value.Reject();
@@ -92,7 +89,7 @@ namespace PetFamily.Domain.UnitTests
             var request = VolunteerRequest.Create(userId, information);
             var adminId = AdminId.Create(Guid.NewGuid());
             var discussionId = DiscussionId.Create(Guid.NewGuid());
-            request.Value.TakeOnReview(adminId, discussionId);
+            request.Value.TakeOnReview(adminId);
 
             // act
             request.Value.Approve();

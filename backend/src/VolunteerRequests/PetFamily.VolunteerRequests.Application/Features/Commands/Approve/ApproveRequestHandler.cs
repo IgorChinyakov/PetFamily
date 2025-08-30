@@ -1,5 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using FluentValidation;
+using MassTransit;
+using MassTransit.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using PetFamily.Accounts.Contracts;
 using PetFamily.Accounts.Contracts.Requests;
@@ -9,6 +11,7 @@ using PetFamily.Core.Extensions;
 using PetFamily.Core.Options;
 using PetFamily.SharedKernel;
 using PetFamily.VolunteerRequests.Application.Database;
+using PetFamily.VolunteerRequests.Contracts.Messaging;
 using PetFamily.VolunteerRequests.Domain.ValueObjects;
 using System;
 using System.Collections.Generic;
@@ -21,20 +24,20 @@ namespace PetFamily.VolunteerRequests.Application.Features.Commands.Approve
     public class ApproveRequestHandler : ICommandHandler<ApproveRequestCommand>
     {
         private readonly IVolunteerRequestsRepository _repository;
-        private readonly IAccountsContract _accountsContract;
         private readonly IValidator<ApproveRequestCommand> _validator;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IPublishEndpoint _publishEndpoint;
 
         public ApproveRequestHandler(
             IVolunteerRequestsRepository repository,
             IValidator<ApproveRequestCommand> validator,
             [FromKeyedServices(UnitOfWorkKeys.VolunteerRequests)] IUnitOfWork unitOfWork,
-            IAccountsContract accountsContract)
+            IPublishEndpoint publishEndpoint)
         {
             _repository = repository;
             _validator = validator;
             _unitOfWork = unitOfWork;
-            _accountsContract = accountsContract;
+            _publishEndpoint = publishEndpoint;
         }
 
         public async Task<UnitResult<ErrorsList>> Handle(
@@ -55,12 +58,20 @@ namespace PetFamily.VolunteerRequests.Application.Features.Commands.Approve
                     "request.by.another.admin",
                     "Can't approve request which is on review by another admin").ToErrorsList();
 
-            var createVolunteerAccountResult = await _accountsContract.CreateVolunteerAccount(
-                new CreateVolunteerAccountRequest(request.Value.UserId.Value));
-            if (createVolunteerAccountResult.IsFailure)
-                return createVolunteerAccountResult.Error;
-
             request.Value.Approve();
+
+            try
+            {
+                await _publishEndpoint.Publish(
+                    new RequestApprovedEvent(request.Value.UserId.Value), 
+                    cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                return Error.Failure(
+                    "accounts.module.failure",
+                    ex.Message).ToErrorsList();
+            }
 
             await _unitOfWork.SaveChanges();
 

@@ -262,8 +262,7 @@ namespace PetFamily.IntegrationTests
         {
             var request = Fixture.CreateVolunteerRequest(userId);
             await VolunteerRequestsWriteDbContext.VolunteerRequests.AddAsync(request);
-            request.TakeOnReview(AdminId.Create(adminId), 
-                PetFamily.VolunteerRequests.Domain.ValueObjects.DiscussionId.NewDiscussionId());
+            request.TakeOnReview(AdminId.Create(adminId));
 
             await VolunteerRequestsWriteDbContext.SaveChangesAsync();
 
@@ -274,8 +273,7 @@ namespace PetFamily.IntegrationTests
         {
             var request = Fixture.CreateVolunteerRequest(userId);
             await VolunteerRequestsWriteDbContext.VolunteerRequests.AddAsync(request);
-            request.TakeOnReview(AdminId.Create(adminId), 
-                PetFamily.VolunteerRequests.Domain.ValueObjects.DiscussionId.NewDiscussionId());
+            request.TakeOnReview(AdminId.Create(adminId));
             request.SendForRevision(RejectionComment.Create("rejection comment").Value);
 
             await VolunteerRequestsWriteDbContext.SaveChangesAsync();

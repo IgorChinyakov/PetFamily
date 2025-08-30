@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using FluentValidation;
+using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using PetFamily.Accounts.Contracts;
@@ -11,6 +12,7 @@ using PetFamily.Discussions.Contracts;
 using PetFamily.Discussions.Contracts.Requests;
 using PetFamily.SharedKernel;
 using PetFamily.VolunteerRequests.Application.Database;
+using PetFamily.VolunteerRequests.Contracts.Messaging;
 using PetFamily.VolunteerRequests.Domain.ValueObjects;
 using System;
 using System.Collections.Generic;
@@ -24,23 +26,23 @@ namespace PetFamily.VolunteerRequests.Application.Features.Commands.TakeOnReview
         ICommandHandler<TakeRequestOnReviewCommand>
     {
         private readonly IValidator<TakeRequestOnReviewCommand> _validator;
-        private readonly IDiscussionsContract _discussionsContract;
         private readonly IVolunteerRequestsRepository _repository;
         private readonly ILogger<TakeRequestOnReviewHandler> _logger;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IPublishEndpoint _publishEndpoint;
 
         public TakeRequestOnReviewHandler(
             IValidator<TakeRequestOnReviewCommand> validator,
             IVolunteerRequestsRepository repository,
             [FromKeyedServices(UnitOfWorkKeys.VolunteerRequests)] IUnitOfWork unitOfWork,
             ILogger<TakeRequestOnReviewHandler> logger,
-            IDiscussionsContract discussionsContract)
+            IPublishEndpoint publishEndpoint)
         {
             _validator = validator;
             _repository = repository;
             _unitOfWork = unitOfWork;
             _logger = logger;
-            _discussionsContract = discussionsContract;
+            _publishEndpoint = publishEndpoint;
         }
 
         public async Task<UnitResult<ErrorsList>> Handle(
@@ -55,19 +57,23 @@ namespace PetFamily.VolunteerRequests.Application.Features.Commands.TakeOnReview
             if (request.IsFailure)
                 return request.Error.ToErrorsList();
 
-            var discussion = await _discussionsContract.CreateDiscussion(
-                new CreateDiscussionRequest(
-                    request.Value.Id.Value,
-                    [request.Value.UserId.Value, command.AdminId]),
-                cancellationToken);
-            if (discussion.IsFailure)
-                return discussion.Error;
-
             var takeOnReviewResult = request.Value.TakeOnReview(
-                AdminId.Create(command.AdminId),
-                DiscussionId.Create(discussion.Value));
+                AdminId.Create(command.AdminId));
             if (takeOnReviewResult.IsFailure)
                 return takeOnReviewResult.Error.ToErrorsList();
+
+            try
+            {
+                await _publishEndpoint.Publish(new RequestTakenOnReviewEvent(
+                    request.Value.Id.Value,
+                    [request.Value.UserId.Value, command.AdminId]), cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                return Error.Failure(
+                    "discussion.module.failure", 
+                    ex.Message).ToErrorsList();
+            }
 
             await _unitOfWork.SaveChanges();
 
