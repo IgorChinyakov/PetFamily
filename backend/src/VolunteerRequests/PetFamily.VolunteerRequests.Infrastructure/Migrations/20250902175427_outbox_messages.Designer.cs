@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PetFamily.VolunteerRequests.Infrastructure.DbContexts;
@@ -12,9 +13,11 @@ using PetFamily.VolunteerRequests.Infrastructure.DbContexts;
 namespace PetFamily.VolunteerRequests.Infrastructure.Migrations
 {
     [DbContext(typeof(VolunteerRequestsWriteDbContext))]
-    partial class VolunteerRequestsWriteDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250902175427_outbox_messages")]
+    partial class outbox_messages
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -104,8 +107,7 @@ namespace PetFamily.VolunteerRequests.Infrastructure.Migrations
                         .HasColumnName("id");
 
                     b.Property<string>("Error")
-                        .HasColumnType("text")
-                        .HasColumnName("error");
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("OccuredOnUtc")
                         .HasColumnType("timestamp with time zone")
@@ -135,7 +137,7 @@ namespace PetFamily.VolunteerRequests.Infrastructure.Migrations
 
                     NpgsqlIndexBuilderExtensions.IncludeProperties(b.HasIndex("OccuredOnUtc", "ProcessedOnUtc"), new[] { "Id", "Type", "Payload" });
 
-                    b.ToTable("outbox_messages", "volunteer_requests");
+                    b.ToTable("OutboxMessages", "volunteer_requests");
                 });
 
             modelBuilder.Entity("PetFamily.VolunteerRequests.Domain.Entities.RejectedRequest", b =>
