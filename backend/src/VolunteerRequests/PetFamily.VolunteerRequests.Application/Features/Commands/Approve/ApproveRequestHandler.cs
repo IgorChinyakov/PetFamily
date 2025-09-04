@@ -23,7 +23,8 @@ namespace PetFamily.VolunteerRequests.Application.Features.Commands.Approve
 {
     public class ApproveRequestHandler : ICommandHandler<ApproveRequestCommand>
     {
-        private readonly IVolunteerRequestsRepository _repository;
+        private readonly IVolunteerRequestsRepository _requestsRepository;
+        private readonly IOutboxRepository _outboxRepository;
         private readonly IValidator<ApproveRequestCommand> _validator;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IPublishEndpoint _publishEndpoint;
@@ -32,12 +33,14 @@ namespace PetFamily.VolunteerRequests.Application.Features.Commands.Approve
             IVolunteerRequestsRepository repository,
             IValidator<ApproveRequestCommand> validator,
             [FromKeyedServices(UnitOfWorkKeys.VolunteerRequests)] IUnitOfWork unitOfWork,
-            IPublishEndpoint publishEndpoint)
+            IPublishEndpoint publishEndpoint,
+            [FromKeyedServices(OutboxKeys.VolunteerRequests)] IOutboxRepository outboxRepository)
         {
-            _repository = repository;
+            _requestsRepository = repository;
             _validator = validator;
             _unitOfWork = unitOfWork;
             _publishEndpoint = publishEndpoint;
+            _outboxRepository = outboxRepository;
         }
 
         public async Task<UnitResult<ErrorsList>> Handle(
@@ -49,7 +52,7 @@ namespace PetFamily.VolunteerRequests.Application.Features.Commands.Approve
                 return validationResult.ToErrorsList();
 
             var requestId = RequestId.Create(command.RequestId);
-            var request = await _repository.GetById(requestId);
+            var request = await _requestsRepository.GetById(requestId);
             if (request.IsFailure)
                 return request.Error.ToErrorsList();
 
@@ -60,18 +63,7 @@ namespace PetFamily.VolunteerRequests.Application.Features.Commands.Approve
 
             request.Value.Approve();
 
-            try
-            {
-                await _publishEndpoint.Publish(
-                    new RequestApprovedEvent(request.Value.UserId.Value), 
-                    cancellationToken);
-            }
-            catch (Exception ex)
-            {
-                return Error.Failure(
-                    "accounts.module.failure",
-                    ex.Message).ToErrorsList();
-            }
+            await _outboxRepository.Add(new RequestApprovedEvent(request.Value.UserId.Value), cancellationToken);
 
             await _unitOfWork.SaveChanges();
 

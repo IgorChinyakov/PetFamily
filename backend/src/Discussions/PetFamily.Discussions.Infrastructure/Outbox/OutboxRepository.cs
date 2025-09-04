@@ -1,5 +1,5 @@
 ﻿using PetFamily.Core.Abstractions.Database;
-using PetFamily.VolunteerRequests.Infrastructure.DbContexts;
+using PetFamily.Discussions.Infrastructure.DbContexts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,13 +7,13 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace PetFamily.VolunteerRequests.Infrastructure.Outbox
+namespace PetFamily.Discussions.Infrastructure.Outbox
 {
     public class OutboxRepository : IOutboxRepository
     {
-        private readonly VolunteerRequestsWriteDbContext _context;
+        private readonly DiscussionsWriteDbContext _context;
 
-        public OutboxRepository(VolunteerRequestsWriteDbContext context)
+        public OutboxRepository(DiscussionsWriteDbContext context)
         {
             _context = context;
         }

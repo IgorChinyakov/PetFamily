@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PetFamily.VolunteerRequests.Application.Database
+namespace PetFamily.Core.Abstractions.Database
 {
     public interface IOutboxRepository
     {
+        Task Add<T>(T message, CancellationToken cancellationToken);
     }
 }
