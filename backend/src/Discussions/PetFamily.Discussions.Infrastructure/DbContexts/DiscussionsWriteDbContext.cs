@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using PetFamily.Discussions.Domain.Entities;
+using PetFamily.Discussions.Infrastructure.Outbox;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,8 @@ namespace PetFamily.Discussions.Infrastructure.DbContexts
         }
 
         public DbSet<Discussion> Discussions => Set<Discussion>();
+
+        public DbSet<OutboxMessage> OutboxMessages => Set<OutboxMessage>();
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

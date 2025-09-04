@@ -5,8 +5,10 @@ using PetFamily.Core.Abstractions.Database;
 using PetFamily.Core.Options;
 using PetFamily.Discussions.Application.Database;
 using PetFamily.Discussions.Infrastructure.DbContexts;
+using PetFamily.Discussions.Infrastructure.Outbox;
 using PetFamily.Discussions.Infrastructure.Repositories;
 using PetFamily.SharedKernel;
+using Quartz;
 
 namespace PetFamily.Discussions.Infrastructure
 {
@@ -18,6 +20,7 @@ namespace PetFamily.Discussions.Infrastructure
             services
                 .AddDbContexts(configuration)
                 .AddUnitOfWork()
+                .AddQuartzService()
                 .AddRepositories();
 
             return services;
@@ -35,6 +38,27 @@ namespace PetFamily.Discussions.Infrastructure
             return services;
         }
 
+        private static IServiceCollection AddQuartzService(
+           this IServiceCollection services)
+        {
+            services.AddQuartz(configure =>
+            {
+                var jobKey = new JobKey(nameof(ProcessDiscussionsOutboxMessagesJob));
+
+                configure
+                    .AddJob<ProcessDiscussionsOutboxMessagesJob>(jobKey)
+                    .AddTrigger(trigger => trigger
+                        .ForJob(jobKey)
+                        .WithSimpleSchedule(schedule => schedule.WithIntervalInSeconds(1).RepeatForever()));
+            });
+
+            services.AddQuartzHostedService(options => { options.WaitForJobsToComplete = true; });
+
+            services.AddScoped<ProcessDiscussionsOutboxMessagesService>();
+
+            return services;
+        }
+
         private static IServiceCollection AddUnitOfWork(this IServiceCollection services)
         {
             services.AddKeyedScoped<IUnitOfWork, UnitOfWork>(UnitOfWorkKeys.Discussions);
@@ -45,6 +69,7 @@ namespace PetFamily.Discussions.Infrastructure
         private static IServiceCollection AddRepositories(this IServiceCollection services)
         {
             services.AddScoped<IDiscussionsRepository, DiscussionsRepository>();
+            services.AddKeyedScoped<IOutboxRepository, OutboxRepository>(OutboxKeys.Discussions);
 
             return services;
         }
