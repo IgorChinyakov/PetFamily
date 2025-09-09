@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using PetFamily.VolunteerRequests.Domain.Entities;
+using PetFamily.VolunteerRequests.Infrastructure.Outbox;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,8 @@ namespace PetFamily.VolunteerRequests.Infrastructure.DbContexts
         }
 
         public DbSet<VolunteerRequest> VolunteerRequests => Set<VolunteerRequest>();
+
+        public DbSet<OutboxMessage> OutboxMessages => Set<OutboxMessage>();
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

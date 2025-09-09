@@ -6,7 +6,9 @@ using PetFamily.Core.Options;
 using PetFamily.SharedKernel;
 using PetFamily.VolunteerRequests.Application.Database;
 using PetFamily.VolunteerRequests.Infrastructure.DbContexts;
+using PetFamily.VolunteerRequests.Infrastructure.Outbox;
 using PetFamily.VolunteerRequests.Infrastructure.Repositories;
+using Quartz;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +27,7 @@ namespace PetFamily.VolunteerRequests.Infrastructure
                 .AddDbContexts(configuration)
                 .AddVolunteerRequestOptions(configuration)
                 .AddUnitOfWork()
+                .AddQuartzService()
                 .AddRepositories();
 
             return services;
@@ -42,6 +45,27 @@ namespace PetFamily.VolunteerRequests.Infrastructure
             return services;
         }
 
+        private static IServiceCollection AddQuartzService(
+           this IServiceCollection services)
+        {
+            services.AddQuartz(configure =>
+            {
+                var jobKey = new JobKey(nameof(ProcessRequestsOutboxMessagesJob));
+
+                configure
+                    .AddJob<ProcessRequestsOutboxMessagesJob>(jobKey)
+                    .AddTrigger(trigger => trigger
+                        .ForJob(jobKey)
+                        .WithSimpleSchedule(schedule => schedule.WithIntervalInSeconds(1).RepeatForever()));
+            });
+
+            services.AddQuartzHostedService(options => { options.WaitForJobsToComplete = true; });
+
+            services.AddScoped<ProcessRequestsOutboxMessagesService>();
+
+            return services;
+        }
+
         private static IServiceCollection AddUnitOfWork(this IServiceCollection services)
         {
             services.AddKeyedScoped<IUnitOfWork, UnitOfWork>(UnitOfWorkKeys.VolunteerRequests);
@@ -52,6 +76,7 @@ namespace PetFamily.VolunteerRequests.Infrastructure
         private static IServiceCollection AddRepositories(this IServiceCollection services)
         {
             services.AddScoped<IVolunteerRequestsRepository, VolunteerRequestsRepository>();
+            services.AddKeyedScoped<IOutboxRepository, OutboxRepository>(OutboxKeys.VolunteerRequests);
 
             return services;
         }

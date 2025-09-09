@@ -7,6 +7,7 @@ using PetFamily.Core.Abstractions.Database;
 using PetFamily.Core.Extensions;
 using PetFamily.Core.Options;
 using PetFamily.Discussions.Application.Database;
+using PetFamily.Discussions.Contracts.Messaging;
 using PetFamily.Discussions.Domain.Entities;
 using PetFamily.Discussions.Domain.ValueObjects.Discussion;
 using PetFamily.Discussions.Domain.ValueObjects.Shared;
@@ -23,19 +24,22 @@ namespace PetFamily.Discussions.Application.Features.Commands.Create
     {
         private readonly IValidator<CreateDiscussionCommand> _validator;
         private readonly ILogger<CreateDiscussionHandler> _logger;
-        private readonly IDiscussionsRepository _repository;
+        private readonly IDiscussionsRepository _dsicussionsRepository;
+        private readonly IOutboxRepository _outboxRepository;
         private readonly IUnitOfWork _unitOfWork;
 
         public CreateDiscussionHandler(
-            IValidator<CreateDiscussionCommand> validator, 
-            ILogger<CreateDiscussionHandler> logger, 
-            IDiscussionsRepository repository, 
-            [FromKeyedServices(UnitOfWorkKeys.Discussions)]IUnitOfWork unitOfWork)
+            IValidator<CreateDiscussionCommand> validator,
+            ILogger<CreateDiscussionHandler> logger,
+            IDiscussionsRepository dsicussionsRepository,
+            [FromKeyedServices(UnitOfWorkKeys.Discussions)] IUnitOfWork unitOfWork,
+            [FromKeyedServices(OutboxKeys.Discussions)] IOutboxRepository outboxRepository)
         {
             _validator = validator;
             _logger = logger;
-            _repository = repository;
+            _dsicussionsRepository = dsicussionsRepository;
             _unitOfWork = unitOfWork;
+            _outboxRepository = outboxRepository;
         }
 
         public async Task<Result<Guid, ErrorsList>> Handle(
@@ -48,7 +52,7 @@ namespace PetFamily.Discussions.Application.Features.Commands.Create
 
             var relationId = RelationId.Create(command.RelationId);
 
-            var existingDiscussion = await _repository.GetByRelationId(relationId);
+            var existingDiscussion = await _dsicussionsRepository.GetByRelationId(relationId);
             if (existingDiscussion.IsSuccess)
                 return Errors.General.Conflict("discussion").ToErrorsList();
 
@@ -58,7 +62,12 @@ namespace PetFamily.Discussions.Application.Features.Commands.Create
             if (discussion.IsFailure)
                 return discussion.Error.ToErrorsList();
 
-            await _repository.Add(discussion.Value, cancellationToken);
+            await _dsicussionsRepository.Add(discussion.Value, cancellationToken);
+
+            await _outboxRepository.Add(
+                new DiscussionCreatedEvent(command.RelationId, discussion.Value.Id.Value), 
+                cancellationToken);
+
             await _unitOfWork.SaveChanges(cancellationToken);
 
             _logger.LogInformation(

@@ -96,6 +96,48 @@ namespace PetFamily.VolunteerRequests.Infrastructure.Migrations
                     b.ToTable("volunteer_requests", "volunteer_requests");
                 });
 
+            modelBuilder.Entity("PetFamily.VolunteerRequests.Infrastructure.Outbox.OutboxMessage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Error")
+                        .HasColumnType("text")
+                        .HasColumnName("error");
+
+                    b.Property<DateTime>("OccuredOnUtc")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("occured_on_utc");
+
+                    b.Property<string>("Payload")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("jsonb")
+                        .HasColumnName("payload");
+
+                    b.Property<DateTime?>("ProcessedOnUtc")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("processed_on_utc");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)")
+                        .HasColumnName("type");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OccuredOnUtc", "ProcessedOnUtc")
+                        .HasDatabaseName("idx_outbox_messages_unprocessed")
+                        .HasFilter("processed_on_utc is NULL");
+
+                    NpgsqlIndexBuilderExtensions.IncludeProperties(b.HasIndex("OccuredOnUtc", "ProcessedOnUtc"), new[] { "Id", "Type", "Payload" });
+
+                    b.ToTable("outbox_messages", "volunteer_requests");
+                });
+
             modelBuilder.Entity("PetFamily.VolunteerRequests.Domain.Entities.RejectedRequest", b =>
                 {
                     b.HasOne("PetFamily.VolunteerRequests.Domain.Entities.VolunteerRequest", "VolunteerRequest")

@@ -29,20 +29,20 @@ namespace PetFamily.VolunteerRequests.Application.Features.Commands.TakeOnReview
         private readonly IVolunteerRequestsRepository _repository;
         private readonly ILogger<TakeRequestOnReviewHandler> _logger;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IPublishEndpoint _publishEndpoint;
+        private readonly IOutboxRepository _outboxRepository;
 
         public TakeRequestOnReviewHandler(
             IValidator<TakeRequestOnReviewCommand> validator,
             IVolunteerRequestsRepository repository,
             [FromKeyedServices(UnitOfWorkKeys.VolunteerRequests)] IUnitOfWork unitOfWork,
             ILogger<TakeRequestOnReviewHandler> logger,
-            IPublishEndpoint publishEndpoint)
+            [FromKeyedServices(OutboxKeys.VolunteerRequests)] IOutboxRepository outboxRepository)
         {
             _validator = validator;
             _repository = repository;
             _unitOfWork = unitOfWork;
             _logger = logger;
-            _publishEndpoint = publishEndpoint;
+            _outboxRepository = outboxRepository;
         }
 
         public async Task<UnitResult<ErrorsList>> Handle(
@@ -62,18 +62,9 @@ namespace PetFamily.VolunteerRequests.Application.Features.Commands.TakeOnReview
             if (takeOnReviewResult.IsFailure)
                 return takeOnReviewResult.Error.ToErrorsList();
 
-            try
-            {
-                await _publishEndpoint.Publish(new RequestTakenOnReviewEvent(
-                    request.Value.Id.Value,
-                    [request.Value.UserId.Value, command.AdminId]), cancellationToken);
-            }
-            catch (Exception ex)
-            {
-                return Error.Failure(
-                    "discussion.module.failure", 
-                    ex.Message).ToErrorsList();
-            }
+            await _outboxRepository.Add(new RequestTakenOnReviewEvent(
+                request.Value.Id.Value,
+                [request.Value.UserId.Value, command.AdminId]), cancellationToken);
 
             await _unitOfWork.SaveChanges();
 

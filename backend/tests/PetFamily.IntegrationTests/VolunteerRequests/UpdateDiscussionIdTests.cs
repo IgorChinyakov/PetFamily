@@ -30,7 +30,6 @@ namespace PetFamily.IntegrationTests.VolunteerRequests
             await SeedAccounts();
 
             var userId = await SeedParticipantUser();
-            var adminId = await SeedAdminUser();
             var requestId = await SeedVolunteerRequest(userId);
             var command = new UpdateDiscussionIdCommand(requestId, Guid.NewGuid());
 

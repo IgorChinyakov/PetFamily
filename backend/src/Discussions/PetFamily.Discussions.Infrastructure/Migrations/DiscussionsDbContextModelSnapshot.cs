@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PetFamily.Discussions.Infrastructure.DbContexts;
 
-
 #nullable disable
 
 namespace PetFamily.Discussions.Infrastructure.Migrations
@@ -110,6 +109,48 @@ namespace PetFamily.Discussions.Infrastructure.Migrations
                     b.HasIndex("discussion_id");
 
                     b.ToTable("messages", "discussions");
+                });
+
+            modelBuilder.Entity("PetFamily.Discussions.Infrastructure.Outbox.OutboxMessage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Error")
+                        .HasColumnType("text")
+                        .HasColumnName("error");
+
+                    b.Property<DateTime>("OccuredOnUtc")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("occured_on_utc");
+
+                    b.Property<string>("Payload")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("jsonb")
+                        .HasColumnName("payload");
+
+                    b.Property<DateTime?>("ProcessedOnUtc")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("processed_on_utc");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)")
+                        .HasColumnName("type");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OccuredOnUtc", "ProcessedOnUtc")
+                        .HasDatabaseName("idx_outbox_messages_unprocessed")
+                        .HasFilter("processed_on_utc is NULL");
+
+                    NpgsqlIndexBuilderExtensions.IncludeProperties(b.HasIndex("OccuredOnUtc", "ProcessedOnUtc"), new[] { "Id", "Type", "Payload" });
+
+                    b.ToTable("outbox_messages", "discussions");
                 });
 
             modelBuilder.Entity("PetFamily.Discussions.Domain.Entities.Discussion", b =>
